@@ -1,18 +1,17 @@
 from datetime import datetime, timedelta
 from typing import Union
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from starlette import status
 
 from app.models.user import User
 from app.repositories.user import UserRepository
-from app.utils.exceptions import InvalidCredentialsHttpException
+from app.utils.exceptions import InvalidJWTHttpException
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # TODO: Get values from config
@@ -39,20 +38,10 @@ class TokenData(BaseModel):
     exp: Union[datetime, None] = None
 
 
-def create_token(data: TokenData):
-    """
-    Creates an encoded JWT token to return to the user
-    :param data:
-    :return:
-    """
-    data.exp = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    return jwt.encode(data.dict(), SECRET_KEY, algorithm=ALGORITHM)
-
-
 def authenticate_user(
+        user_repository: UserRepository,
         email: str,
         password: str,
-        user_repository: UserRepository = Depends(UserRepository),
 ) -> Union[User, bool]:
     """
     Attempts to authenticate a user by given email and password
@@ -66,6 +55,16 @@ def authenticate_user(
     if not (user or verify_password(password, user.password_hash)):
         return False
     return user
+
+
+def create_token(data: TokenData):
+    """
+    Creates an encoded JWT token to return to the user
+    :param data:
+    :return:
+    """
+    data.exp = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    return jwt.encode(data.dict(), SECRET_KEY, algorithm=ALGORITHM)
 
 
 def get_request_user(
@@ -84,10 +83,10 @@ def get_request_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: int = payload.get("sub")
         if user_id is None:
-            raise InvalidCredentialsHttpException()
+            raise InvalidJWTHttpException()
     except JWTError:
-        raise InvalidCredentialsHttpException()
+        raise InvalidJWTHttpException()
     user = user_repository.get(user_id)
     if user is None:
-        raise InvalidCredentialsHttpException()
+        raise InvalidJWTHttpException()
     return user

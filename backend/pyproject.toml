@@ -11,12 +11,39 @@ sqlmodel = "^0.0.6"
 uvicorn = "^0.18.2"
 python-jose = "^3.3.0"
 cryptography = "^37.0.3"
-passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^7.0"
 flake8 = "^4.0.1"
 black = "^22.6.0"
+pytest-cov = "^3.0.0"
+pytest-asyncio = "^0.18.3"
+pytest-env = "^0.6.2"
+pytest-xdist = "^2.5.0"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+filterwarnings = "error"
+addopts = '''
+  --strict-markers
+  --tb=short
+  --cov=app
+  --cov=tests
+  --cov-branch
+  --cov-report=term-missing
+  --cov-report=html
+  --cov-report=xml
+  --no-cov-on-fail
+  --cov-fail-under=0
+  --numprocesses=auto
+  --asyncio-mode=auto
+'''
+env = [
+    "MAX_CONNECTIONS_COUNT=1",
+    "MIN_CONNECTIONS_COUNT=1"
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
