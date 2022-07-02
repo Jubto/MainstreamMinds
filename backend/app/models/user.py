@@ -11,6 +11,7 @@ class UserBase(SQLModel):
 
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    password_hash: str = Field()
 
 
 class UserRead(UserBase):
