@@ -14,5 +14,16 @@ class User(UserBase, table=True):
     password_hash: str = Field()
 
 
+class UserCreate(UserBase):
+    password: str = Field()
+
+
+class UserUpdate(SQLModel):
+    first_name: Optional[str] = Field()
+    last_name: Optional[str] = Field()
+    email: Optional[str] = Field()
+    password: Optional[str] = Field()
+
+
 class UserRead(UserBase):
     id: int

@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlmodel import Session
 
 from app.db import get_session
-from app.models.user import UserRead, User
+from app.models.user import UserRead, User, UserCreate
 from app.repositories.user import UserRepository, get_user_repository
 
 
@@ -17,6 +17,9 @@ class UserService:
                  ):
         self.repository = user_repository
         self.session = session
+
+    def create(self, user_create: UserCreate):
+        pass
 
     def get_all(self) -> List[User]:
         return self.repository.get_all()

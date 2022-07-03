@@ -52,7 +52,7 @@ def authenticate_user(
     :return:
     """
     user = user_repository.get_by_email(email)
-    if not (user or verify_password(password, user.password_hash)):
+    if not user or not verify_password(password, user.password_hash):
         return False
     return user
 
