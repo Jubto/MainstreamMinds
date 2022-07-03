@@ -12,7 +12,7 @@ class TagBase(SQLModel):
 class Tag(TagBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # primary key as int for fast joins with user/story
 
-    user_links = List["User"] = Relationship(back_populates="tag_links", link_model="UserTagLink")
+    user_links: List["User"] = Relationship(back_populates="tag_links", link_model="UserTagLink")
 
 
 class TagRead(TagBase):
@@ -20,11 +20,11 @@ class TagRead(TagBase):
 
 
 class UserTagLink(SQLModel, table=True):
-    user_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="user.id")
-    tag_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
+    user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.id")
+    tag_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
 
 
 class StoryTagLink(SQLModel, table=True):
-    story_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
-    tag_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
+    story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
+    tag_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
 
