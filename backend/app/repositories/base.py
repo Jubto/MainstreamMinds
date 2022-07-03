@@ -9,11 +9,9 @@ T = TypeVar('T', bound=SQLModel)
 
 
 class BaseRepository(Generic[T]):
-    model = None  # Classes inheriting from this need to set this
 
-    def __init__(self,
-                 session: Session = Depends(get_session())
-                 ):
+    def __init__(self, model: Type[T], session: Session):
+        self.model = model
         self.session = session
 
     def get(self, entity_id: Any) -> T:
