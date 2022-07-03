@@ -17,3 +17,14 @@ class Tag(TagBase, table=True):
 
 class TagRead(TagBase):
     pass  # user only provides tag name
+
+
+class UserTagLink(SQLModel, table=True):
+    user_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="user.id")
+    tag_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
+
+
+class StoryTagLink(SQLModel, table=True):
+    story_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
+    tag_id = Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
+
