@@ -12,6 +12,6 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    sub: Optional[str] = None
-    exp: Optional[datetime] = None
-    role: Optional[Role] = None
+    sub: Optional[str]
+    exp: Optional[datetime]
+    role: Optional[Role]
