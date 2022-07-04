@@ -14,3 +14,9 @@ class InvalidJWTHttpException(HTTPException):
         super(InvalidJWTHttpException, self).__init__(status_code=status.HTTP_401_UNAUTHORIZED,
                                                       detail="Could not validate token",
                                                       headers={"WWW-Authenticate": "Bearer"}, )
+
+
+class MissingPermissionsHttpException(HTTPException):
+    def __init__(self):
+        super(MissingPermissionsHttpException, self).__init__(status_code=status.HTTP_403_FORBIDDEN,
+                                                              detail="Missing permissions to perform this action", )

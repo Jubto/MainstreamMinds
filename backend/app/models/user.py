@@ -1,6 +1,14 @@
+import enum
 from typing import Optional
 
+from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field
+
+
+class Role(int, enum.Enum):
+    ADMIN = 0
+    RESEARCHER = 1
+    CONSUMER = 2
 
 
 class UserBase(SQLModel):
@@ -12,6 +20,7 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     password_hash: str = Field()
+    role: Role = Field(sa_column=Column(Enum(Role)), default=Role.CONSUMER)
 
 
 class UserCreate(UserBase):
@@ -27,3 +36,4 @@ class UserUpdate(SQLModel):
 
 class UserRead(UserBase):
     id: int
+    role: Role = Field(sa_column=Column(Enum(Role)))
