@@ -4,11 +4,11 @@ from fastapi import Depends
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.user import User
+from app.models.user import User, UserUpdate, UserCreate
 from app.repositories.base import BaseRepository
 
 
-class UserRepository(BaseRepository[User]):
+class UserRepository(BaseRepository[User, UserUpdate, UserCreate]):
     model = User
 
     def __init__(self, session: Session):

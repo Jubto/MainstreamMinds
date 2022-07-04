@@ -3,7 +3,7 @@ from typing import TypeVar, Generic, Any, Type, List
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, select
 from app.db import get_session
-from app.utils.model import assign_members_from_dict
+from app.utils.model import assign_members_from_dict, ModelFieldsMapping
 
 ModelT = TypeVar('ModelT', bound=SQLModel)
 UpdateModelT = TypeVar('UpdateModelT', bound=SQLModel)
@@ -27,15 +27,16 @@ class BaseRepository(Generic[ModelT, UpdateModelT, CreateModelT]):
     def get_all(self) -> List[ModelT]:
         return self.session.exec(select(self.model)).all()
 
-    def create(self, create_model: CreateModelT) -> ModelT:
-        entity = self.model(**create_model)
+    def create(self, create_model: CreateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
+        entity = self.model()
+        assign_members_from_dict(entity, create_model.dict(exclude_unset=True), mappings)
         self.session.add(entity)
         self.session.commit()
         return entity
 
-    def update(self, entity_id: Any, update_model: UpdateModelT) -> ModelT:
+    def update(self, entity_id: Any, update_model: UpdateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
         entity = self.get(entity_id)
-        assign_members_from_dict(entity, update_model.dict(exclude_unset=True))
+        assign_members_from_dict(entity, update_model.dict(exclude_unset=True), mappings)
         self.session.commit()
         return entity
 

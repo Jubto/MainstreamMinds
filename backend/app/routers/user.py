@@ -19,7 +19,6 @@ router = APIRouter(tags=['user'])
 @router.get("", response_model=List[UserRead], name="users:get-all")
 async def get_all_users(
         user_service: UserService = Depends(UserService),
-        user: User = Depends(get_request_user)
 ):
     return user_service.get_all()
 
@@ -37,9 +36,10 @@ async def login_with_password(
 
 @router.post("/register", response_model=Token)
 async def register_user(
-        created_user: UserCreate
+        created_user: UserCreate,
+        user_service: UserService = Depends(UserService),
 ):
-    pass
+    user_service.create(created_user)
 # /api/users/register
 # /api/users/login
 # /api/users/logout
