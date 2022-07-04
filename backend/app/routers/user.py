@@ -3,8 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.core.security import get_request_user, authenticate_user, Token, create_token, TokenData, is_admin, \
+from app.core.security import get_request_user, authenticate_user, create_token, is_admin, \
     is_researcher, is_consumer
+from app.models.security import Token, TokenData
 from app.models.user import UserRead, User, UserCreate
 from app.repositories.user import UserRepository, get_user_repository
 from app.services.user import UserService

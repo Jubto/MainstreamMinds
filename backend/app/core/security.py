@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
-from typing import Union, List, Optional
+from typing import Union
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
-from pydantic import BaseModel
 
+from app.models.security import TokenData
 from app.models.user import User, Role
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.exceptions import InvalidJWTHttpException, MissingPermissionsHttpException
@@ -18,29 +18,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-
-def can_role_access(required_role: Role, role: Role):
-    return role <= required_role
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    sub: Union[str, None] = None
-    exp: Union[datetime, None] = None
-    role: Union[Role, None] = None
 
 
 def authenticate_user(
@@ -90,7 +67,7 @@ def get_request_user(
         if user_id is None:
             raise InvalidJWTHttpException()
 
-    except JWTError as e:
+    except JWTError:
         raise InvalidJWTHttpException()
     user = user_repository.get(user_id)
     if user is None:
@@ -129,3 +106,15 @@ def does_request_user_have_permission(
 
     except JWTError:
         raise InvalidJWTHttpException()
+
+
+def can_role_access(required_role: Role, role: Role):
+    return role <= required_role
+
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
