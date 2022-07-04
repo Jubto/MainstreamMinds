@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Union
+from typing import Union, Optional
 
 from pydantic import BaseModel
 
@@ -12,6 +12,6 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    sub: Union[str, None] = None
-    exp: Union[datetime, None] = None
-    role: Union[Role, None] = None
+    sub: Optional[str] = None
+    exp: Optional[datetime] = None
+    role: Optional[Role] = None

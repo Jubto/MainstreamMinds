@@ -16,11 +16,9 @@ class UserService:
     field_mappings: ModelFieldsMapping
 
     def __init__(self,
-                 session: Session = Depends(get_session),
                  user_repository: UserRepository = Depends(get_user_repository),
                  ):
         self.repository = user_repository
-        self.session = session
         self.field_mappings = ModelFieldsMapping()
         self.field_mappings.add_field_mapping('password', 'password_hash', value_mapping_func=get_password_hash)
 
