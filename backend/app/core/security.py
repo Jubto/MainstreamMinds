@@ -116,7 +116,7 @@ def does_request_user_have_permission(
 ):
     """
     Attempts to validate and decode the current JWT access token for the HTTP
-    request and checks if the contained role attribute
+    request and checks if the user has the required role specified by min_role_required
     :param min_role_required: The minimum role required to access this route
     :param token:
     :raises InvalidCredentialsHttpException

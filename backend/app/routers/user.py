@@ -2,14 +2,10 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlmodel import Session
 
 from app.core.security import get_request_user, authenticate_user, Token, create_token, TokenData, is_admin, \
     is_researcher, is_consumer
-from app.db import get_session
 from app.models.user import UserRead, User, UserCreate
-from app.repositories import TestRepository
-from app.repositories.base import BaseRepository
 from app.repositories.user import UserRepository, get_user_repository
 from app.services.user import UserService
 from app.utils.exceptions import InvalidUserCredentials
@@ -42,6 +38,3 @@ async def register_user(
         user_service: UserService = Depends(UserService),
 ):
     user_service.create(created_user)
-# /api/users/register
-# /api/users/login
-# /api/users/logout
