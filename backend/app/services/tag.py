@@ -6,7 +6,7 @@ from sqlmodel import Session
 
 from app.core.security import get_request_user_id
 from app.db import get_session
-from app.models.tag import Tag, TagRead
+from app.models.tag import Tag, TagRW
 from app.repositories.tag import TagRepository, get_tag_repository
 from app.utils.model import ModelFieldsMapping
 
@@ -20,3 +20,9 @@ class TagService:
 
     def get_preference_tags(self, current_user_id: int) -> List[Tag]:
         return self.repository.get_preference_tags(current_user_id)
+
+    def add_preference_tag(self, current_user_id: int, tag: str):
+        self.repository.add_preference_tag(current_user_id, tag)
+
+    def create_tag(self, tag: TagRW):
+        self.repository.create_tag(tag)

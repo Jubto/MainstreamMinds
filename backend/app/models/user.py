@@ -15,7 +15,7 @@ class Role(int, enum.Enum):
 class UserBase(SQLModel):
     first_name: str = Field()
     last_name: str = Field()
-    email: str = Field()
+    email: str = Field(sa_column_kwargs={'unique': True})
 
 
 class User(UserBase, table=True):

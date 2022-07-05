@@ -20,9 +20,12 @@ class Tag(TagBase, table=True):
     user_links: List["User"] = Relationship(back_populates="tag_links", link_model=UserTagLink)
 
 
-class TagRead(TagBase):
+class TagRW(TagBase):
     pass  # user only provides tag name
 
+
+class TagCreate(TagBase):
+    pass  # as above
 
 
 
