@@ -4,18 +4,26 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlmodel import Session
 
+from app.core.security import get_password_hash
 from app.db import get_session
-from app.models.user import UserRead, User
+from app.models.user import UserRead, User, UserCreate
+from app.repositories.user import UserRepository, get_user_repository
+from app.utils.model import ModelFieldsMapping
 
 
 class UserService:
 
+    field_mappings: ModelFieldsMapping
+
     def __init__(self,
-                 session: Session = Depends(get_session)
+                 user_repository: UserRepository = Depends(get_user_repository),
                  ):
-        self.session = session
+        self.repository = user_repository
+        self.field_mappings = ModelFieldsMapping()
+        self.field_mappings.add_field_mapping('password', 'password_hash', value_mapping_func=get_password_hash)
+
+    def create(self, user_create: UserCreate):
+        self.repository.create(user_create, mappings=self.field_mappings)
 
     def get_all(self) -> List[User]:
-        users = self.session.exec(select(User)).all()
-        print(users)
-        return [] # TODO: Figure out mapping of SQLModel with inheritance
+        return self.repository.get_all()
