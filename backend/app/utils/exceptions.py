@@ -26,4 +26,3 @@ class EmailAlreadyExistsHttpException(HTTPException):
     def __init__(self):
         super(EmailAlreadyExistsHttpException, self).__init__(status_code=status.HTTP_409_CONFLICT,
                                                               detail="Email already belongs to a registered user", )
-

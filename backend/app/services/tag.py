@@ -1,14 +1,9 @@
 from typing import List
 
 from fastapi import Depends
-from sqlalchemy import select
-from sqlmodel import Session
 
-from app.core.security import get_request_user_id
-from app.db import get_session
 from app.models.tag import Tag, TagRW
 from app.repositories.tag import TagRepository, get_tag_repository
-from app.utils.model import ModelFieldsMapping
 
 
 class TagService:

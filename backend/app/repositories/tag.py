@@ -6,12 +6,9 @@ from sqlmodel import select, Session
 from app.db import get_session
 from app.models.tag import Tag, TagRW
 from app.models.user import User
-from app.repositories.base import BaseRepository
 
 
-class TagRepository():
-    # model = Tag
-
+class TagRepository:
     def __init__(self, session: Session):
         self.session = session
 

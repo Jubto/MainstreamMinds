@@ -11,7 +11,6 @@ If you want poetry to create virtual environments in the project directory (help
 poetry config virtualenvs.in-project true
 ```
 
-
 To create a virtual environment using `poetry` run:
 
 ```shell
