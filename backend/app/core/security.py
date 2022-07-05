@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Union
+from typing import Union, Optional
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -49,14 +49,10 @@ def create_token(data: TokenData):
     return jwt.encode(data.dict(), SECRET_KEY, algorithm=ALGORITHM)
 
 
-def get_request_user(
-        user_repository: UserRepository = Depends(get_user_repository),
-        token: str = Depends(oauth2_scheme)
-) -> User:
+def get_request_user_id(token: str = Depends(oauth2_scheme)) -> int:
     """
     Attempts to validate and decode the current JWT access token for the HTTP
-    request returning the user if it is successful else raising InvalidCredentialsHttpException
-    :param user_repository:
+    request returning the user id if it is successful else raising InvalidCredentialsHttpException
     :param token:
     :raises InvalidCredentialsHttpException
     :return: Validated User
@@ -69,6 +65,23 @@ def get_request_user(
 
     except JWTError:
         raise InvalidJWTHttpException()
+
+    return user_id
+
+
+def get_request_user(
+        user_repository: UserRepository = Depends(get_user_repository),
+        token: str = Depends(oauth2_scheme)
+) -> User:
+    """
+    Attempts to validate and decode the current JWT access token for the HTTP
+    request returning the user if it is successful else raising InvalidCredentialsHttpException
+    :param user_repository:
+    :param token:
+    :raises InvalidCredentialsHttpException
+    :return: Validated User
+    """
+    user_id = get_request_user(user_repository, token)
     user = user_repository.get(user_id)
     if user is None:
         raise InvalidJWTHttpException()
