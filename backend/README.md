@@ -25,3 +25,6 @@ the app with hot reloading enabled.
 
 If you get the issue `uvicorn is not a recognised command` or similar
 then try running the backend using `poetry run python3 -m uvicorn app.main:app --reload`
+
+## Docs
+`https://127.0.0.1:8000/docs`
