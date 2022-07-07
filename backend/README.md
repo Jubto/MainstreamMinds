@@ -6,6 +6,11 @@ Poetry documentation: `https://python-poetry.org/docs/`
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 ```
 
+If you want poetry to create virtual environments in the project directory (helps with locating interpreter for IDEs), run:
+```shell
+poetry config virtualenvs.in-project true
+```
+
 To create a virtual environment using `poetry` run:
 
 ```shell
