@@ -13,16 +13,18 @@ class Institution(InstitutionBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     # Institution contact - User object?
 
-    researcher_links: List["Researcher"] = Relationship(back_populates="___", link_model="InstitutionResearcherLink")
-    story_links: List["Story"] = Relationship(back_populates="___", link_model="InstitutionStoryLink")
+    researcher_links: List["Researcher"] = Relationship(back_populates="institution_links", link_model="InstitutionResearcherLink")
+    story_links: List["Story"] = Relationship(back_populates="institution_links ", link_model="InstitutionStoryLink")
 
 
 class InstitutionRead(InstitutionBase):
     pass
 
 class InstitutionResearcherLink(SQLModel, table=True):
-    user_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="user.id")
-    tag_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
+    institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
+    researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id")
 
 class InstitutionStoryLink(SQLModel, table=True):
-    pass
+    institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
+    story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
+
