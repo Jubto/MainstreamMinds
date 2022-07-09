@@ -49,5 +49,3 @@ class ResearchStoryCreate(ResearchStoryBase):
 class ResearchStoryUpdate(ResearchStoryBase):
     pass
 
-    # tag_links: List["Tag"] = Relationship(back_populates="user_links", link_model=UserTagLink)
-    # story_like_links: List["Tag"] = Relationship(back_populates="user_links", link_model=StoryLikeLink)

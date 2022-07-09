@@ -14,8 +14,6 @@ class ResearchStoryRepository:
     def __init__(self, session: Session):
         super(ResearchStoryRepository, self).__init__(ResearchStory, session)
 
-    
-
 
 def get_researchstory_repository(session: Session = Depends(get_session)) -> ResearchStoryRepository:
     return ResearchStoryRepository(session)
