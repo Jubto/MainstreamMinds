@@ -43,6 +43,6 @@ class TagTest(SQLModel):
 
 class UserRead(UserBase):
     id: int
-    story_like_links : List[StoryLikeLink]
-    tag_links: List[UserTagLink]
+    # story_like_links : List[StoryLikeLink]
+    # tag_links: List[UserTagLink]
     role: Role = Field(sa_column=Column(Enum(Role)))

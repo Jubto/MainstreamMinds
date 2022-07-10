@@ -25,4 +25,10 @@ class MissingPermissionsHttpException(HTTPException):
 class EmailAlreadyExistsHttpException(HTTPException):
     def __init__(self):
         super(EmailAlreadyExistsHttpException, self).__init__(status_code=status.HTTP_409_CONFLICT,
-                                                              detail="Email already belongs to a registered user", )
+                                               detail="Email already belongs to a registered user", )
+
+
+class AuthorDetailsMissing(HTTPException):
+    def __init__(self):
+        super(AuthorDetailsMissing, self).__init__(status_code=status.HTTP_400_BAD_REQUEST,
+                                                              detail="The research_id of the POST request is not present in the authors field", )

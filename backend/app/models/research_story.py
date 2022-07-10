@@ -53,11 +53,12 @@ class ResearchStoryBase(SQLModel):
     summary: str = Field()
     authors: List[ResearchStoryAuthor] = Field()
     papers: List[ResearchStoryPaper] = Field()
+    tags: List[ResearchStorytags] = Field()
     content_body: str = Field()
     thumbnail: str = Field()
     video_link: str = Field()
     transcript: str = Field()
-    # publish_date: str = Field()
+    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
 class ResearchStory(ResearchStoryBase, table=True):
@@ -81,14 +82,14 @@ class ResearchStoryShortRead(SQLModel):
     story_summary: str = Field()
     thumbnail: str = Field()
     video_link: str = Field()
-    # publish_date: str = Field()
+    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
 class ResearchStoryLongRead(ResearchStoryBase):
     id: int
     like_count: int = Field()
     like_list: List[ResearchStoryLikes] = Field()
-    tags: List[ResearchStorytags] = Field()
+    comment_count: int = Field()
 
 
 class ResearchStoryCreate(SQLModel):
@@ -96,6 +97,7 @@ class ResearchStoryCreate(SQLModel):
     summary: str = Field()
     authors: List[ResearchStoryAuthor] = Field()
     papers: List[ResearchStoryPaper] = Field()
+    tags: List[ResearchStorytags] = Field()
     content_body: Optional[str] = Field()
     thumbnail: Optional[str] = Field()
     video_link: Optional[str] = Field()
@@ -107,6 +109,7 @@ class ResearchStoryUpdate(SQLModel):
     title: Optional[str] = Field()
     summary: Optional[str] = Field()
     papers: Optional[List[ResearchStoryPaper]] = Field()
+    tags: Optional[List[ResearchStorytags]] = Field()
     content_body: Optional[str] = Field()
     thumbnail: Optional[str] = Field()
     video_link: Optional[str] = Field()

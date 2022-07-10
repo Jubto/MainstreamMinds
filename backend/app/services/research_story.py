@@ -31,8 +31,14 @@ class ResearchStoryService:
     def get(self, story_id: int) -> ResearchStoryLongRead:
         self.repository.get(story_id)
 
-    def create(self, create_story: ResearchStoryCreate) -> ResearchStory:
+    def create(self, researcher_id: int, create_story: ResearchStoryCreate) -> ResearchStory:
+
         self.repository.create(create_story)
 
-    def update(self, story_id: int, update_story: ResearchStoryUpdate) -> ResearchStory:
+    def update(self, story_id: int, researcher_id: int, update_story: ResearchStoryUpdate) -> ResearchStory:
+        # confirm researcher_id is key of story
         self.repository.update(story_id, update_story)
+
+    def delete(self, story_id: int, researcher_id: int) -> str:
+        # confirm researcher_id is key of story
+        self.repository.delete(story_id)
