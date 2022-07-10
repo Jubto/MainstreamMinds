@@ -88,16 +88,16 @@ async def get_story_by_id(
     "/research_stories",
     description='Create a new story in the database, only valid researchers can access this endpoint',
     response_model=ResearchStory,
-    dependencies=[Depends(is_researcher)]
+    # dependencies=[Depends(is_researcher)]
 )
 async def post_story(
     create_story: ResearchStoryCreate,
     jwt_derived_researcher_id: int = Depends(get_request_user_id),
     story_service: ResearchStoryService = Depends()
 ):
-    if not [author for author in create_story.authors if author.researcher_id == jwt_derived_researcher_id]:
-        raise AuthorDetailsMissing()
-    return story_service.create(jwt_derived_researcher_id, create_story)
+    # if not [author for author in create_story.authors if author.researcher_id == jwt_derived_researcher_id]:
+    #     raise AuthorDetailsMissing()
+    return story_service.create(create_story)
 
 
 @router.put(
