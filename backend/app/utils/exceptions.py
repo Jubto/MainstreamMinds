@@ -31,4 +31,10 @@ class EmailAlreadyExistsHttpException(HTTPException):
 class AuthorDetailsMissing(HTTPException):
     def __init__(self):
         super(AuthorDetailsMissing, self).__init__(status_code=status.HTTP_400_BAD_REQUEST,
-                                                              detail="The research_id of the POST request is not present in the authors field", )
+                                                              detail="The research_id of the request is not present in the authors field", )
+
+
+class NonExistentResearchStory(HTTPException):
+    def __init__(self):
+        super(NonExistentResearchStory, self).__init__(status_code=status.HTTP_404_NOT_FOUND,
+                                                              detail="No research story with the provided story_id exists in the database.", )

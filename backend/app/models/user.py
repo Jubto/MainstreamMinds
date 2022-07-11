@@ -24,7 +24,7 @@ class User(UserBase, table=True):
     password_hash: str = Field()
     role: Role = Field(sa_column=Column(Enum(Role)), default=Role.CONSUMER)
 
-    story_like_links: List["ResearchStory"] = Relationship(back_populates="like_links", link_model=StoryLikeLink) 
+    story_likes: List["ResearchStory"] = Relationship(back_populates="likes", link_model=StoryLikeLink) 
     tag_links: List["Tag"] = Relationship(back_populates="user_links", link_model=UserTagLink)
 
 

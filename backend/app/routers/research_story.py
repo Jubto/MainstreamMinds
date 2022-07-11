@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, Path, Query
 
 from app.core.security import get_request_user_id, is_consumer, is_researcher
 from app.models.research_story import (
-    ResearchStory,
     ResearchStoryShortRead,
     ResearchStoryLongRead,
     ResearchStoryCreate,
@@ -14,13 +13,14 @@ from app.models.research_story import (
 from app.services.research_story import ResearchStoryService
 from app.utils.exceptions import AuthorDetailsMissing
 
+
 router = APIRouter(tags=['story'])
 
 class ordering(str, Enum):
     ASC = 'ascending'
     DESC = 'descending'
 
-# GET /research_stories/{story_id}/transcript
+# GET /research_stories/{story_id}/transcript TODO
 
 @router.get(
     "/research_stories",
@@ -87,7 +87,7 @@ async def get_story_by_id(
 @router.post(
     "/research_stories",
     description='Create a new story in the database, only valid researchers can access this endpoint',
-    response_model=ResearchStory,
+    response_model=ResearchStoryLongRead,
     # dependencies=[Depends(is_researcher)]
 )
 async def post_story(
@@ -96,15 +96,15 @@ async def post_story(
     story_service: ResearchStoryService = Depends()
 ):
     # if not [author for author in create_story.authors if author.researcher_id == jwt_derived_researcher_id]:
-    #     raise AuthorDetailsMissing()
+    #     raise AuthorDetailsMissing TODO
     return story_service.create(create_story)
 
 
 @router.put(
     "/research_stories/{story_id}",
     description='Update an existing story in the database, only valid researchers who are authors of the story can access this endpoint',
-    response_model=ResearchStory,
-    dependencies=[Depends(is_researcher)]
+    response_model=ResearchStoryLongRead,
+    # dependencies=[Depends(is_researcher)] TODO
 )
 async def update_story_by_id(
     update_story: ResearchStoryUpdate,
@@ -118,7 +118,7 @@ async def update_story_by_id(
 @router.delete(
     "/research_stories/{story_id}",
     description='Delete an existing story in the database, only valid researchers who are authors of the story can access this endpoint',
-    dependencies=[Depends(is_researcher)]
+    # dependencies=[Depends(is_researcher)] TODO
 )
 async def delete_story_by_id(
     story_id: int = Path(default=..., gt=0),

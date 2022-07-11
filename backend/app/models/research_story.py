@@ -6,8 +6,8 @@ from sqlmodel import Relationship, SQLModel, Field
 
 class StoryAuthorLink(SQLModel, table=True):
     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
-    # researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id")
-    # institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
+    # researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id") TODO
+    # institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id") TODO
 
 
 class StoryLikeLink(SQLModel, table=True):
@@ -25,7 +25,9 @@ class StoryTagLink(SQLModel, table=True):
 
 class ResearchStoryAuthor(SQLModel):
     researcher_id: int = Field()
+    researcher_name: Optional[str] = Field()
     institution_id: int = Field()
+    institution_name: Optional[str] = Field()
 
 
 class ResearchStoryPaper(SQLModel):
@@ -42,30 +44,31 @@ class ResearchStoryLikes(SQLModel):
 
 class ResearchStorytags(SQLModel):
     tag_id: int = Field()
+    name: Optional[str] = Field()
 
 
 # ============================= research story models / table =============================
 
-
+# TODO Considering moving transcript into its own table
 class ResearchStoryBase(SQLModel):
-    title: str = Field(sa_column_kwargs={'unique': True})
+    title: str = Field()
     summary: str = Field()
-    # papers: List[ResearchStoryPaper] = Field() Sqlite cannot handle Lists
-    papers: str = Field()
+    # papers: List[ResearchStoryPaper] = Field() Sqlite cannot handle Lists TODO
+    papers: str = Field() # temp
     content_body: str = Field()
     thumbnail: str = Field()
     video_link: str = Field()
     transcript: str = Field()
-    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False) TODO
 
 
 class ResearchStory(ResearchStoryBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     
-    # researcher_links: List["Researcher"] = Relationship(back_populates="story_links", link_model=StoryAuthorLink)
-    # institution_links: List["Institution"] = Relationship(back_populates="story_links", link_model=StoryAuthorLink)
-    like_links: List["User"] = Relationship(back_populates="story_like_links", link_model=StoryLikeLink)
-    tag_links: List["Tag"] = Relationship(back_populates="story_links", link_model=StoryTagLink)
+    # researchers: List["Researcher"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)
+    # institutions: List["Institution"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)
+    likes: List["User"] = Relationship(back_populates="story_likes", link_model=StoryLikeLink)
+    tags: List["Tag"] = Relationship(back_populates="story_tags", link_model=StoryTagLink)
 
 
 # ============================= research story helper models =============================
@@ -73,14 +76,14 @@ class ResearchStory(ResearchStoryBase, table=True):
 
 class ResearchStoryShortRead(SQLModel):
     id: int
+    title: str = Field()
+    summary: str = Field()
     authors: List[ResearchStoryAuthor]
-    like_count: int = Field()
     tags: List[ResearchStorytags]
-    story_title: str = Field()
-    story_summary: str = Field()
     thumbnail: str = Field()
     video_link: str = Field()
-    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    like_count: int = Field()
+    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False) TODO
 
 
 class ResearchStoryLongRead(ResearchStoryBase):
