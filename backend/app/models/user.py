@@ -38,8 +38,6 @@ class UserUpdate(SQLModel):
     email: Optional[str] = Field()
     password: Optional[str] = Field()
 
-class TagTest(SQLModel):
-    name: str = Field(index=True)
 
 class UserRead(UserBase):
     id: int

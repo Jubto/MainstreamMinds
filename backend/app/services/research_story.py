@@ -13,29 +13,31 @@ from app.repositories.research_story import ResearchStoryRepository, get_researc
 from app.utils.model import ModelFieldsMapping
 from app.utils.exceptions import AuthorDetailsMissing
 
+
 class ResearchStoryService:
 
     field_mappings: ModelFieldsMapping
 
     def __init__(self,
-                 story_repository: ResearchStoryRepository = Depends(get_researchstory_repository),
+                 story_repository: ResearchStoryRepository = Depends(
+                     get_researchstory_repository),
                  ):
         self.repository = story_repository
         self.field_mappings = ModelFieldsMapping()
-    
+
     def get_all(self, offset: int, limit: int) -> List[ResearchStoryShortRead]:
         return [ResearchStoryShortRead(
-                    id=story.id,
-                    title=story.title,
-                    summary=story.summary,
-                    authors=[{'researcher_id': 1, 'institution_id':3}],
-                    tags=[{'tag_id': tag.id, 'name': tag.name } for tag in story.tags],
-                    thumbnail=story.thumbnail,
-                    video_link=story.video_link,
-                    like_count=len(story.likes)
-                )
-                for story in self.repository.get_all(offset, limit)
-            ]
+            id=story.id,
+            title=story.title,
+            summary=story.summary,
+            authors=[{'researcher_id': 1, 'institution_id': 3}],
+            tags=[{'tag_id': tag.id, 'name': tag.name} for tag in story.tags],
+            thumbnail=story.thumbnail,
+            video_link=story.video_link,
+            like_count=len(story.likes)
+        )
+            for story in self.repository.get_all(offset, limit)
+        ]
 
     def get_trending(self, offset: int, limit: int) -> List[ResearchStoryShortRead]:
         # comptue trending logic
@@ -75,9 +77,10 @@ class ResearchStoryService:
             thumbnail=story.thumbnail,
             video_link=story.video_link,
             transcript=story.transcript,
-            authors=[{'researcher_id': 1, 'institution_id':3}],
-            tags=[{'tag_id': tag.id, 'name': tag.name } for tag in story.tags],
+            authors=[{'researcher_id': 1, 'institution_id': 3}],
+            tags=[{'tag_id': tag.id, 'name': tag.name} for tag in story.tags],
             like_count=len(story.likes),
-            like_list=[{'user_id': user.id, 'user_email': user.email } for user in story.likes],
+            like_list=[{'user_id': user.id, 'user_email': user.email}
+                       for user in story.likes],
             comment_count=3
         )
