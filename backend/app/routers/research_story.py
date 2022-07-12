@@ -8,7 +8,8 @@ from app.models.research_story import (
     ResearchStoryShortRead,
     ResearchStoryLongRead,
     ResearchStoryCreate,
-    ResearchStoryUpdate
+    ResearchStoryUpdate,
+    ResearchStoryResponse
 )
 from app.services.research_story import ResearchStoryService
 from app.utils.exceptions import AuthorDetailsMissing
@@ -20,16 +21,15 @@ class ordering(str, Enum):
     ASC = 'ascending'
     DESC = 'descending'
 
-# GET /research_stories/{story_id}/transcript TODO
 
 @router.get(
-    "/research_stories",
+    "",
     description='Query the database based on the following filters, list of summarised story data is returned. If no filters are applied, random list of stories are returned',
     response_model=List[ResearchStoryShortRead]
 )
 async def get_stories_by_filters(
-    authors: Optional[List[str]] = Query(default=None, description='Only return list which have these authors'),
-    institutions: Optional[List[str]] = Query(default=None, description='Only return list which have these institutions'),
+    authors: Optional[List[int]] = Query(default=None, description="Only return list which have these authors id's"),
+    institutions: Optional[List[int]] = Query(default=None, description="Only return list which have these institutions id's"),
     tags: Optional[List[str]] = Query(default=None, description='Only return list which contain these tags'),
     like_count: Optional[ordering] = Query(default=None, description='Order list by like count'),
     comment_count: Optional[ordering] = Query(default=None, description='Order list by comment count' ),
@@ -42,7 +42,7 @@ async def get_stories_by_filters(
 
 
 @router.get(
-    "/research_stories/trending",
+    "/trending",
     description='Returns list of globally recommended stories',
     response_model=List[ResearchStoryShortRead]
 )
@@ -55,25 +55,22 @@ async def get_trending_stories(
 
 
 @router.get(
-    "/research_stories/recommendations/{user_id}",
+    "/recommendations",
     description='Provide the user_id of a valid account holder to recieve list of recommended stories for that user',
     response_model=List[ResearchStoryShortRead],
     dependencies=[Depends(is_consumer)]
 )
 async def get_recommended_stories(
-    user_id: int = Path(default=..., gt=0),
     page_size: int = Query(default=20, gt=0),
     page_num: int = Query(default=1, gt=0),
     jwt_derived_user_id: int = Depends(get_request_user_id),
     story_service: ResearchStoryService = Depends()
 ):
-    if jwt_derived_user_id != user_id:
-        return 'error'
-    return story_service.get_recommendation(user_id, page_size, page_num)
+    return story_service.get_recommendation(jwt_derived_user_id, page_size, page_num)
 
 
 @router.get(
-    "/research_stories/{story_id}",
+    "/{story_id}",
     description='Return all information regarding a given research story',
     response_model=ResearchStoryLongRead
 )
@@ -85,9 +82,9 @@ async def get_story_by_id(
 
 
 @router.post(
-    "/research_stories",
+    "",
     description='Create a new story in the database, only valid researchers can access this endpoint',
-    response_model=ResearchStoryLongRead,
+    response_model=ResearchStoryResponse,
     # dependencies=[Depends(is_researcher)]
 )
 async def post_story(
@@ -101,9 +98,9 @@ async def post_story(
 
 
 @router.put(
-    "/research_stories/{story_id}",
+    "/{story_id}",
     description='Update an existing story in the database, only valid researchers who are authors of the story can access this endpoint',
-    response_model=ResearchStoryLongRead,
+    response_model=ResearchStoryResponse,
     # dependencies=[Depends(is_researcher)] TODO
 )
 async def update_story_by_id(
@@ -116,7 +113,7 @@ async def update_story_by_id(
 
 
 @router.delete(
-    "/research_stories/{story_id}",
+    "/{story_id}",
     description='Delete an existing story in the database, only valid researchers who are authors of the story can access this endpoint',
     # dependencies=[Depends(is_researcher)] TODO
 )

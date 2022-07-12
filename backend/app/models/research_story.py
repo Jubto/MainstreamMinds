@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Optional
 from sqlmodel import Relationship, SQLModel, Field
 
@@ -23,11 +24,16 @@ class StoryTagLink(SQLModel, table=True):
 # ============================= field models =============================
 
 
-class ResearchStoryAuthor(SQLModel):
+class ResearchStoryAuthorInput(SQLModel):
     researcher_id: int = Field()
-    researcher_name: Optional[str] = Field()
     institution_id: int = Field()
-    institution_name: Optional[str] = Field()
+
+
+class ResearchStoryAuthorResponse(SQLModel):
+    researcher_id: int = Field()
+    researcher_name: str = Field()
+    institution_id: int = Field()
+    institution_name: str = Field()
 
 
 class ResearchStoryPaper(SQLModel):
@@ -43,13 +49,12 @@ class ResearchStoryLikes(SQLModel):
 
 
 class ResearchStorytags(SQLModel):
-    tag_id: int = Field()
-    name: Optional[str] = Field()
+    name: str = Field()
 
 
 # ============================= research story models / table =============================
 
-# TODO Considering moving transcript into its own table
+
 class ResearchStoryBase(SQLModel):
     title: str = Field()
     summary: str = Field()
@@ -59,11 +64,11 @@ class ResearchStoryBase(SQLModel):
     thumbnail: str = Field()
     video_link: str = Field()
     transcript: str = Field()
-    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False) TODO
 
 
 class ResearchStory(ResearchStoryBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     
     # researchers: List["Researcher"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)
     # institutions: List["Institution"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)
@@ -78,27 +83,28 @@ class ResearchStoryShortRead(SQLModel):
     id: int
     title: str = Field()
     summary: str = Field()
-    authors: List[ResearchStoryAuthor]
+    authors: List[ResearchStoryAuthorResponse]
     tags: List[ResearchStorytags]
     thumbnail: str = Field()
     video_link: str = Field()
     like_count: int = Field()
-    # publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False) TODO
+    publish_date: datetime = Field()
 
 
 class ResearchStoryLongRead(ResearchStoryBase):
     id: int
-    authors: List[ResearchStoryAuthor] = Field()
+    authors: List[ResearchStoryAuthorResponse] = Field()
     tags: List[ResearchStorytags] = Field()
     like_count: int = Field()
     like_list: List[ResearchStoryLikes] = Field()
     comment_count: int = Field()
+    publish_date: datetime = Field()
 
 
 class ResearchStoryCreate(SQLModel):
     title: str = Field()
     summary: str = Field()
-    authors: List[ResearchStoryAuthor] = Field()
+    authors: List[ResearchStoryAuthorInput] = Field()
     papers: List[ResearchStoryPaper] = Field()
     tags: List[ResearchStorytags] = Field()
     content_body: str = Field()
@@ -110,10 +116,25 @@ class ResearchStoryCreate(SQLModel):
 class ResearchStoryUpdate(SQLModel):
     title: Optional[str] = Field()
     summary: Optional[str] = Field()
-    authors: Optional[List[ResearchStoryAuthor]] = Field()
+    authors: Optional[List[ResearchStoryAuthorInput]] = Field()
     papers: Optional[List[ResearchStoryPaper]] = Field()
     tags: Optional[List[ResearchStorytags]] = Field()
     content_body: Optional[str] = Field()
     thumbnail: Optional[str] = Field()
     video_link: Optional[str] = Field()
     transcript: Optional[str] = Field()
+
+
+class ResearchStoryResponse(SQLModel):
+    id: int = Field()
+    title: Optional[str] = Field()
+    summary: Optional[str] = Field()
+    authors: Optional[List[ResearchStoryAuthorResponse]] = Field()
+    # papers: Optional[List[ResearchStoryPaper]] = Field() TODO postgres
+    papers: str = Field() # temp
+    tags: Optional[List[ResearchStorytags]] = Field()
+    content_body: Optional[str] = Field()
+    thumbnail: Optional[str] = Field()
+    video_link: Optional[str] = Field()
+    transcript: Optional[str] = Field()
+    publish_date: datetime = Field()

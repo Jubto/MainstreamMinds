@@ -44,7 +44,7 @@ class ResearchStoryRepository(BaseRepository[ResearchStory, ResearchStoryUpdate,
 
         # populate new story and m-to-m linked tables
         assign_members_from_dict(story, create_template)
-        story.tags = self._get_rows(Tag, create_story.tags, 'tag_id')
+        story.tags = self._get_rows(Tag, create_story.tags, 'name')
         # story_model.researchers = self._get_rows(Researcher, create_story.authors, 'researcher_id') #TODO wait for merge
         # story_model.institutions = self._get_rows(Institute, create_story.authors, 'institution_id') #TODO wait for merge
         self.session.add(story)
@@ -52,30 +52,25 @@ class ResearchStoryRepository(BaseRepository[ResearchStory, ResearchStoryUpdate,
         return story
 
     def update(self, story: ResearchStory, update_story: ResearchStoryUpdate) -> ResearchStory:
-        if update_story.title:
-            story.title = update_story.title
-        if update_story.summary:
-            story.summary = update_story.summary
-        # if update_story.authors:
+        update_template = update_story.dict(exclude_unset=True)
+        update_authors = update_template.pop("authors", None)
+        update_papers = update_template.pop("papers", None) # TEMP TODO postgres
+        update_tags = update_template.pop("tags", None)
+        assign_members_from_dict(story, update_template)
+
+        # if update_authors:
             # story.authors = self._get_rows(Tag, update_story.authors, 'researcher_id') TODO wait for merge
-        if update_story.papers:
-            story.papers = ','.join([paper['paper_title'] for paper in update_story.papers]) # TEMP SQlite cannot handle lists
-        if update_story.tags:
-            story.tags = self._get_rows(Tag, update_story.tags, 'tag_id')
-        if update_story.content_body:
-            story.content_body = update_story.content_body
-        if update_story.thumbnail:
-            story.thumbnail = update_story.thumbnail
-        if update_story.video_link:
-            story.video_link = update_story.video_link
-        if update_story.transcript:
-            story.transcript = update_story.transcript
+        if update_papers:
+            story.papers = ','.join([paper.paper_title for paper in update_story.papers]) # TEMP SQlite cannot handle lists
+        if update_tags:
+            story.tags = self._get_rows(Tag, update_story.tags, 'name')
+
         self.session.add(story)
         self.session.commit()
         return story
 
     def _get_rows(self, table: ModelT, items: list, key: str) -> List[ModelT]:
-        return [row for item in items if (row := self.session.exec(select(table).where(table.id == getattr(item, key))).first())]
+        return [row for item in items if (row := self.session.exec(select(table).where(table.name == getattr(item, key))).first())]
 
 
 def get_researchstory_repository(session: Session = Depends(get_session)) -> ResearchStoryRepository:
