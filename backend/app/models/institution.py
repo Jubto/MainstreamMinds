@@ -10,11 +10,15 @@ class InstitutionBase(SQLModel):
 
 
 class Institution(InstitutionBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(primary_key=True)
+    # Short description
+    # Year?
+    # Image?
+
     # Institution contact - User object?
 
-    researcher_links: List["Researcher"] = Relationship(back_populates="institution_links", link_model="InstitutionResearcherLink")
-    story_links: List["Story"] = Relationship(back_populates="institution_links ", link_model="InstitutionStoryLink")
+    researchers: List["Researcher"] = Relationship(back_populates="institutions", link_model="InstitutionResearcherLink")
+    stories: List["ResearchStory"] = Relationship(back_populates="institutions ", link_model="InstitutionStoryLink")
 
 
 class InstitutionRead(InstitutionBase):
@@ -26,5 +30,5 @@ class InstitutionResearcherLink(SQLModel, table=True):
 
 class InstitutionStoryLink(SQLModel, table=True):
     institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
-    story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
+    story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
 
