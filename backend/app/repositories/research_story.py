@@ -15,7 +15,8 @@ from app.utils.exceptions import NonExistentResearchStory
 class ResearchStoryRepository(BaseRepository[ResearchStory, ResearchStoryUpdate, ResearchStoryCreate]):
 
     def get_all(self, offset: int, limit: int) -> List[ResearchStory]:
-        return self.session.exec(select(ResearchStory)).all() # TEMP TODO filtering etc
+        # TEMP TODO filtering etc
+        return self.session.exec(select(ResearchStory)).all()
 
     def get_all_by_tag(self, offset: int, limit: int) -> List[ResearchStory]:
         pass
@@ -61,7 +62,8 @@ class ResearchStoryRepository(BaseRepository[ResearchStory, ResearchStoryUpdate,
         # if update_authors:
             # story.authors = self._get_rows(Tag, update_story.authors, 'researcher_id') TODO wait for merge
         if update_papers:
-            story.papers = ','.join([paper.paper_title for paper in update_story.papers]) # TEMP SQlite cannot handle lists
+            # TEMP SQlite cannot handle lists
+            story.papers = ','.join([paper.paper_title for paper in update_story.papers])
         if update_tags:
             story.tags = self._get_rows(Tag, update_story.tags, 'name')
 
@@ -70,7 +72,10 @@ class ResearchStoryRepository(BaseRepository[ResearchStory, ResearchStoryUpdate,
         return story
 
     def _get_rows(self, table: ModelT, items: list, key: str) -> List[ModelT]:
-        return [row for item in items if (row := self.session.exec(select(table).where(table.name == getattr(item, key))).first())]
+        return [
+            row for item in {getattr(item, key) for item in items}
+            if (row := self.session.exec(select(table).where(table.name == item)).first())
+        ]
 
 
 def get_researchstory_repository(session: Session = Depends(get_session)) -> ResearchStoryRepository:
