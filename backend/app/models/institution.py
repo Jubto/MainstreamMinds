@@ -11,9 +11,9 @@ class InstitutionBase(SQLModel):
 
 class Institution(InstitutionBase, table=True):
     id: Optional[int] = Field(primary_key=True)
-    # Short description
-    # Year?
-    # Image?
+    # Location
+    # Year_est
+    # Logo
 
     # Institution contact - User object?
 
