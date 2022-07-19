@@ -26,7 +26,7 @@ class Institution(InstitutionBase, table=True):
     # Institution contact - User object?
 
     # researchers: List["Researcher"] = Relationship(back_populates="institutions", link_model="InstitutionResearcherLink")
-    stories: List["ResearchStory"] = Relationship(back_populates="institutions", link_model=InstitutionStoryLink)
+    # stories: List["ResearchStory"] = Relationship(back_populates="institutions", link_model=InstitutionStoryLink)
 
 
 class InstitutionRead(InstitutionBase):
