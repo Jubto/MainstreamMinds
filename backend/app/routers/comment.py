@@ -2,6 +2,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
+from app.models.comment import CommentCreate, CommentRead
+
 router = APIRouter(tags=['comment'])
 
 # get /comment - get all lvl 0 comments of a research story
@@ -16,13 +18,13 @@ router = APIRouter(tags=['comment'])
 
 # need to implement pagination eventually...
 # also returns whether the current user (if logged in) has liked each comment or not. if logged out, return false
-@router.get("", response_model=None)
+@router.get("", response_model=List[CommentRead])
 async def get_all_comments(story_id: int):
     return None
 
 
 @router.post("", response_model=None)
-async def add_comment(comment: str):
+async def add_comment(comment: CommentCreate):
     return None
 
 
