@@ -6,7 +6,7 @@ from app.core.security import get_request_user_id, is_consumer
 from app.models.institution import InstitutionRead
 from app.services.institution import InstitutionService
 
-router = APIRouter(institutions=['institution'])
+router = APIRouter(tags=['institution'])
 
 
 @router.get("/get_institutions", response_model=List[InstitutionRead], dependencies=[Depends(is_consumer)])
