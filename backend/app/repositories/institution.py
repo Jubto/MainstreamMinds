@@ -5,12 +5,12 @@ from sqlmodel import select, Session
 
 from app.db import get_session
 from app.repositories.base import BaseRepository
-from app.models.institution import Institution, InstitutionRead
+from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
 # TODO: verify what the ResearchStory object looks like
 from app.models.research_story import ResearchStory
 
 
-class InstitutionRepository(BaseRepository[Institution, Institution, Institution]):
+class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):
 
     def get_institution(self, current_story_id: int) -> List[Institution]:
         pass
