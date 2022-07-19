@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.core.security import get_request_user, authenticate_user, create_token, is_admin, \
@@ -14,11 +14,38 @@ from app.utils.exceptions import InvalidUserCredentials
 router = APIRouter(tags=['user'])
 
 
-@router.get("", response_model=List[UserRead], name="users:get-all", dependencies=[Depends(is_consumer)])
+@router.get("", response_model=List[UserRead], dependencies=[Depends(is_consumer)])
 async def get_all_users(
         user_service: UserService = Depends(UserService),
 ):
     return user_service.get_all()
+
+
+@router.get("/{user_id}", dependencies=[Depends(is_consumer)], response_model=UserRead)
+async def get_user_by_id(
+        user_id: int = Path(default=..., gt=0),
+        user_service: UserService = Depends(UserService),
+):
+    # return institution_service.add_institution(current_story_id, institution)
+    return ""
+
+
+@router.patch("/{user_id}", dependencies=[Depends(is_consumer)], response_model=UserRead)
+async def update_user(
+        user_id: int = Path(default=..., gt=0),
+        user_service: UserService = Depends(UserService),
+):
+    # return institution_service.add_institution(current_story_id, institution)
+    return ""
+
+
+@router.delete("/{user_id}", dependencies=[Depends(is_consumer)])
+async def delete_user(
+        user_id: int = Path(default=..., gt=0),
+        user_service: UserService = Depends(UserService),
+):
+    # return institution_service.add_institution(current_story_id, institution)
+    return ""
 
 
 @router.post("/login", response_model=Token)
