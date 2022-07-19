@@ -6,6 +6,6 @@ from .comment import router as comment_router
 
 api_router = APIRouter()
 api_router.include_router(user_router, prefix='/users')
-api_router.include_router(tag_router, prefix='/tag')
+api_router.include_router(tag_router, prefix='/tags')
 api_router.include_router(story_router, prefix='/research_stories')
-api_router.include_router(comment_router, prefix='/comment')
+api_router.include_router(comment_router, prefix='/comments')
