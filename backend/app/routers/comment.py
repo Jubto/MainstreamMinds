@@ -4,6 +4,8 @@ from fastapi import APIRouter, Depends
 
 from app.models.comment import CommentCreate, CommentRead
 
+from app.core.security import is_consumer
+
 router = APIRouter(tags=['comment'])
 
 # get /comment - get all lvl 0 comments of a research story
@@ -23,7 +25,7 @@ async def get_all_comments(story_id: int):
     return None
 
 
-@router.post("", response_model=None)
+@router.post("", response_model=None, dependencies=[Depends(is_consumer)])
 async def add_comment(comment: CommentCreate):
     return None
 
@@ -34,6 +36,6 @@ async def get_comment_likes(comment_id: int):
 
 
 # maybe should be put method?
-@router.post("/like", response_model=None)
+@router.post("/like", response_model=None, dependencies=[Depends(is_consumer)])
 async def set_comment_like(comment_id: int, liked: bool):
     return None
