@@ -25,7 +25,7 @@ async def get_researchers_by_filter(
 
 
 @router.get(
-    "/{story_id}",
+    "/{researcher_id}",
     description='Returns details for the specified researcher',
     response_model=ResearcherRead
 )
