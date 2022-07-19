@@ -52,7 +52,7 @@ async def get_researcher_stories(
     response_model=ResearcherRead,
     dependencies=[Depends(is_researcher)]
 )
-async def post_story(
+async def upgrade_to_researcher(
     post_researcher: ResearcherCreate,
     jwt_derived_researcher_id: int = Depends(get_request_user_id),
 ):
@@ -60,12 +60,12 @@ async def post_story(
 
 
 @router.patch(
-    "/{story_id}",
+    "/{researcher_id}",
     description='Update details concerning researcher profile',
     response_model=ResearcherCreate,
     dependencies=[Depends(is_researcher)]
 )
-async def update_story_by_id(
+async def update_researcher_by_id(
     update_researcher: ResearcherUpdate,
     researcher_id: int = Path(default=..., gt=0),
     jwt_derived_researcher_id: int = Depends(get_request_user_id),

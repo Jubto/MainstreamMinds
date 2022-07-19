@@ -14,14 +14,20 @@ from app.utils.exceptions import InvalidUserCredentials
 router = APIRouter(tags=['user'])
 
 
-@router.get("", response_model=List[UserRead], dependencies=[Depends(is_consumer)])
+@router.get("",
+            description='Get a list of all user',
+            response_model=List[UserRead],
+            dependencies=[Depends(is_consumer)])
 async def get_all_users(
         user_service: UserService = Depends(UserService),
 ):
     return user_service.get_all()
 
 
-@router.get("/{user_id}", dependencies=[Depends(is_consumer)], response_model=UserRead)
+@router.get("/{user_id}",
+            description='Get a user by their id',
+            dependencies=[Depends(is_consumer)],
+            response_model=UserRead)
 async def get_user_by_id(
         user_id: int = Path(default=..., gt=0),
         user_service: UserService = Depends(UserService),
