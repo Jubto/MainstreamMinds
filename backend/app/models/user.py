@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship
-from app.models.tag import UserTagLink
+from app.models.tag import Tag, UserTagLink
 from app.models.research_story import StoryLikeLink
 
 
