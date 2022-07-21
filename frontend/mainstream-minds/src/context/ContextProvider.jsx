@@ -1,22 +1,20 @@
 import { useState, createContext } from 'react';
 
-export const StoreContext = createContext(null);
+export const GlobalContext = createContext(null);
 
 const ContextProvider = ({ children }) => {
-  const [jwt, setJwt] = useState(null);
   const [account, setAccount] = useState({});
   const [LogInModal, setLogInModal] = useState(false);
 
   const states = {
-    jwt: [jwt, setJwt],
     account: [account, setAccount],
     logInModal: [LogInModal, setLogInModal]
   };
 
   return (
-    <StoreContext.Provider value={states}>
+    <GlobalContext.Provider value={states}> 
       {children}
-    </StoreContext.Provider>
+    </GlobalContext.Provider>
   )
 };
 

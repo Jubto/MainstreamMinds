@@ -1,7 +1,8 @@
 import React from 'react';
-import ContextProvider from './utils/context';
+import ContextProvider from './context/ContextProvider';
+import AuthProvider from './context/AuthProvider';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 import AccountScreen from './screens/AccountScreen';
 import DiscoverScreen from './screens/DiscoverScreen';
 import LogInScreen from './screens/LogInScreen';
@@ -11,10 +12,18 @@ import ResearcherProfileScreen from './screens/ResearcherProfileScreen';
 import ResearcherRegScreen from './screens/ResearcherRegScreen';
 import SearchScreen from './screens/SearchScreen';
 import SignUpScreen from './screens/SignUpScreen';
+import Unauthorized from './screens/Unauthorized';
 import UploadStoryScreen from './screens/UploadStoryScreen';
 import AppBar from './components/layout/AppBar';
 import Footer from './components/layout/Footer';
 import LogInModal from './components/account/modals/LogInModal';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const ROLES = {
+  'admin': 0,
+  'researcher': 1,
+  'user': 2
+}
 
 // might not need
 const theme = createTheme({
@@ -27,30 +36,35 @@ const theme = createTheme({
   }
 })
 
-console.log('APP')
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
-    <ContextProvider>
-    <Router>
-      <AppBar />
-        <Routes>
-          <Route path='/' element={<DiscoverScreen/>}/>
-          <Route exact path='/search' element={<SearchScreen/>}/>
-          <Route exact path='/login' element={<LogInScreen/>}/>
-          <Route exact path='/sign-up' element={<SignUpScreen/>}/>
-          <Route exact path='/account' element={<AccountScreen/>}/>
-          <Route exact path='/researcher/registration' element={<ResearcherRegScreen/>}/>
-          <Route exact path='/researcher/:name' element={<ResearcherProfileScreen/>}/>
-          <Route exact path='/upload-story' element={<UploadStoryScreen/>}/>
-          <Route exact path='/preview-story' element={<PreviewStoryScreen/>}/>
-          <Route exact path='/research-story/:id' element={<ResearchStoryScreen/>}/>
-        </Routes>
-      <Footer />
-      <LogInModal/>
-    </Router>
-    </ContextProvider>
+      <AuthProvider>
+        <ContextProvider>
+          <Router>
+            <AppBar />
+            <Routes>
+              <Route path='/' element={<DiscoverScreen />} />
+              <Route path='/search' element={<SearchScreen />} />
+              <Route path='/login' element={<LogInScreen />} />
+              <Route path='/sign-up' element={<SignUpScreen />} />
+              <Route path='/researcher/registration' element={<ResearcherRegScreen />} />
+              <Route path='/researcher/:name' element={<ResearcherProfileScreen />} />
+              <Route path='/research-story/:id' element={<ResearchStoryScreen />} />
+              <Route path='/unauthorized' element={<Unauthorized />} />
+              <Route element={<ProtectedRoute allowedRole={[ROLES.user]} />}>
+                <Route path='/account' element={<AccountScreen />} />
+              </Route>
+              <Route element={<ProtectedRoute allowedRole={[ROLES.researcher]} />}>
+                <Route path='/upload-story' element={<UploadStoryScreen />} />
+                <Route path='/preview-story' element={<PreviewStoryScreen />} />
+              </Route>
+            </Routes>
+            <Footer />
+            <LogInModal />
+          </Router>
+        </ContextProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

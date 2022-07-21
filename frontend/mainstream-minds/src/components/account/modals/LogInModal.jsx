@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import { StoreContext } from '../../../utils/context';
+import useGlobal from '../../../hooks/useGlobal';
 import { Dialog } from "@mui/material"
 
 const LogInModal = () => {
-  const context = useContext(StoreContext);
+  const context = useGlobal();
   const [open, setOpen] = context.logInModal;
 
   const handleClose = () => {

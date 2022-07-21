@@ -63,7 +63,7 @@ class ResearchStoryBase(SQLModel):
     content_body: str = Field()
     thumbnail: str = Field()
     video_link: str = Field()
-    transcript: str = Field()
+    transcript: Optional[str] = Field()
 
 
 class ResearchStory(ResearchStoryBase, table=True):

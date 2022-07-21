@@ -1,8 +1,7 @@
-import { useContext } from 'react';
-import { StoreContext } from '../utils/context';
+import useGlobal from "../hooks/useGlobal";
 
 const SignUpScreen = () => {
-  const context = useContext(StoreContext);
+  const context = useGlobal();
   const [account, setAccount] = context.account;
 
   return (
