@@ -1,13 +1,15 @@
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import useGlobal from "../hooks/useGlobal";
 import msmLogin from "../api/msmLogin";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button, TextField, Typography } from "@mui/material";
 
 const LogInScreen = () => {
   const { setAuth } = useAuth();
   const context = useGlobal();
   const [, setAccount] = context.account;
+  const [errorMsg, setErrorMsg] = useState(null)
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +23,7 @@ const LogInScreen = () => {
 
     if ('no errors') {
       try {
+        setErrorMsg(null)
         const formParams = new URLSearchParams(); // backend requires form data, not json data
         formParams.append('username', email); // temp note: backend OAUTH form maps username to email
         formParams.append('password', password);
@@ -30,7 +33,9 @@ const LogInScreen = () => {
         navigate(from, { replace: true });
       }
       catch (err) {
-        console.error(err)
+        if (err.response?.status === 401) {
+          setErrorMsg(err.response.data.detail)
+        }
       }
     }
   }
@@ -58,6 +63,9 @@ const LogInScreen = () => {
       <Button variant='contained' type='submit' sx={{ mt: 2 }}>
         Log in
       </Button>
+      <Typography variant='subtitle1' sx={{color: 'error.main', mt:2, fontWeight: 1000}}>
+        {errorMsg}
+      </Typography>
     </Box>
   )
 }

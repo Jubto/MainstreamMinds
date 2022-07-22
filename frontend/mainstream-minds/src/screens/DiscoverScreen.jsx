@@ -55,7 +55,7 @@ const DiscoverScreen = () => {
       } else if (err.response?.status === 401) {
         setErrorMsg('Forbidden, try login')
       } else {
-        console.error(err)
+        setErrorMsg('Could not reach backend server')
       }
     }
   }
@@ -111,7 +111,7 @@ const DiscoverScreen = () => {
       <br />
       <Typography variant='subtitle1' sx={{ color: 'error.main', mt: 2, ml: 2 }}>
         {errorMsg}
-        {story && auth.accessToken
+        {Object.entries(story).length && auth.accessToken
           ? <div>
             <Typography variant='subtile2' sx={{color: 'success.main', fontWeight:1000}}>
               New database entry created
