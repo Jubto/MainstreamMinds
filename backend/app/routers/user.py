@@ -20,12 +20,10 @@ router = APIRouter(tags=['user'])
             response_model=List[UserRead],
             )
 async def get_all_users(
-        sort_by: SortByFields[User] = Depends(get_sort_by_fields(User)),
+        sort_by: SortByFields[User] = Depends(get_sort_by_fields(User, ['first_name', 'last_name'])),
         user_service: UserService = Depends(UserService),
 ):
-    sort_by_cols = sort_by.get_sort_fields()
-    print(sort_by_cols)
-    return user_service.get_all()
+    return user_service.get_all(sort_by)
 
 
 @router.get("/{user_id}",

@@ -6,6 +6,7 @@ from sqlmodel import Session
 
 from app.core.security import get_password_hash
 from app.db import get_session
+from app.models.base import SortByFields
 from app.models.user import UserRead, User, UserCreate
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import ModelFieldsMapping
@@ -25,5 +26,5 @@ class UserService:
     def create(self, user_create: UserCreate):
         self.repository.create(user_create, mappings=self.field_mappings)
 
-    def get_all(self) -> List[User]:
-        return self.repository.get_all()
+    def get_all(self, sort_by: SortByFields[User]) -> List[User]:
+        return self.repository.get_all(sort_by=sort_by)

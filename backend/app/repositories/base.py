@@ -1,8 +1,9 @@
-from typing import TypeVar, Generic, Any, Type, List
+from typing import TypeVar, Generic, Any, Type, List, Optional
 
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, select
 from app.db import get_session
+from app.models.base import SortByFields
 from app.utils.model import assign_members_from_dict, ModelFieldsMapping
 
 ModelT = TypeVar('ModelT', bound=SQLModel)
@@ -24,7 +25,9 @@ class BaseRepository(Generic[ModelT, UpdateModelT, CreateModelT]):
     def get(self, entity_id: Any) -> ModelT:
         return self.session.get(self.model, entity_id)
 
-    def get_all(self) -> List[ModelT]:
+    def get_all(self, sort_by: Optional[SortByFields[ModelT]] = None) -> List[ModelT]:
+        if sort_by:
+            return self.session.exec(sort_by.apply_sort_to_query(select(self.model))).all()
         return self.session.exec(select(self.model)).all()
 
     def create(self, create_model: CreateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
