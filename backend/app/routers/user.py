@@ -1,12 +1,13 @@
-from typing import List
+from typing import List, Any
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, Query
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.core.security import get_request_user, authenticate_user, create_token, is_admin, \
     is_researcher, is_consumer
+from app.models.base import SortByFields, get_sort_by_fields
 from app.models.security import Token, TokenData
-from app.models.user import UserRead, User, UserCreate
+from app.models.user import UserRead, User, UserCreate, UserGetQuery
 from app.repositories.user import UserRepository, get_user_repository
 from app.services.user import UserService
 from app.utils.exceptions import InvalidUserCredentials
@@ -17,10 +18,13 @@ router = APIRouter(tags=['user'])
 @router.get("",
             description='Get a list of all user',
             response_model=List[UserRead],
-            dependencies=[Depends(is_consumer)])
+            )
 async def get_all_users(
+        sort_by: SortByFields[User] = Depends(get_sort_by_fields(User)),
         user_service: UserService = Depends(UserService),
 ):
+    sort_by_cols = sort_by.get_sort_fields()
+    print(sort_by_cols)
     return user_service.get_all()
 
 
