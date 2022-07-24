@@ -9,6 +9,8 @@ from sqlalchemy.sql import Select
 from sqlmodel import SQLModel, Field
 from sqlmodel.sql.expression import SelectOfScalar
 
+from app.utils.model import validate_lookup_fields
+
 ModelT = TypeVar("ModelT", bound=SQLModel)
 
 
