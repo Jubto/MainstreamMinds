@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends
 from sqlalchemy import select
@@ -26,5 +26,5 @@ class UserService:
     def create(self, user_create: UserCreate):
         self.repository.create(user_create, mappings=self.field_mappings)
 
-    def get_all(self, sort_by: SortByFields[User]) -> List[User]:
+    def get_all(self, sort_by: Optional[SortByFields[User]]) -> List[User]:
         return self.repository.get_all(sort_by=sort_by)

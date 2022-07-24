@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Optional
 
 from fastapi import APIRouter, Depends, Path, Query
 from fastapi.security import OAuth2PasswordRequestForm
@@ -20,9 +20,11 @@ router = APIRouter(tags=['user'])
             response_model=List[UserRead],
             )
 async def get_all_users(
-        sort_by: SortByFields[User] = Depends(get_sort_by_fields(User, ['first_name', 'last_name'])),
+        sort_by: Optional[SortByFields[User]] = Depends(get_sort_by_fields(User, ['first_name', 'last_name'])),
+        filter_by: str = Query(...),
         user_service: UserService = Depends(UserService),
 ):
+    print(filter_by)
     return user_service.get_all(sort_by)
 
 

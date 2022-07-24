@@ -1,4 +1,7 @@
-from typing import Callable, Any
+from http.client import HTTPException
+from typing import Callable, Any, Type, List, TypeVar
+
+from sqlmodel import SQLModel
 
 
 class ModelFieldsMapping:
@@ -24,3 +27,19 @@ def assign_members_from_dict(class_instance: object, dict_to_assign: dict,
             field, value = field_mappings.map_field(field, value)
             print(field, value)
         setattr(class_instance, field, value)
+
+
+ModelT = TypeVar("ModelT", bound=SQLModel)
+
+
+def validate_lookup_fields(model: Type[ModelT], lookup_fields: List[str]):
+    for field in lookup_fields:
+        # TODO: Consider verifying types
+        if field not in model.__fields__:
+            raise HTTPException(status_code=422, detail=f"Unable to sort by field: {field}")
+    # TODO: Consider implementing relational lookups using the following
+    # for r in model.__mapper__.relationships:
+    #     print(type(r))
+    #     print(dir(r))
+    #     print(r.mapper.class_)
+    # print([str(a) for a in model.__mapper__.relationships])

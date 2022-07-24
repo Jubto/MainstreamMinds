@@ -1,19 +1,13 @@
 import typing
 from dataclasses import dataclass
 from enum import Enum
-from typing import Generic, TypeVar, List, Optional, Type
+from typing import Generic, TypeVar, List, Optional, Type, Any, Union
 
-import pydantic
-from fastapi import Query, Depends, HTTPException
-from pydantic import BaseModel, Json, ValidationError
-from pydantic.fields import ModelField
-from pydantic.generics import GenericModel
+from fastapi import Query, HTTPException
 from sqlalchemy import text
-from sqlalchemy.sql import expression, Select
+from sqlalchemy.sql import Select
 from sqlmodel import SQLModel, Field
 from sqlmodel.sql.expression import SelectOfScalar
-
-from app.models.researcher import Researcher
 
 ModelT = TypeVar("ModelT", bound=SQLModel)
 
@@ -89,25 +83,11 @@ def get_sort_by_fields(model_type: Type[ModelT], allowed_sort_fields: Optional[L
     if allowed_sort_fields:
         query_description += ' (Allowed sort fields: {})'.format(', '.join(allowed_sort_fields))
 
-    def _sort_by_query_func(sort_by: str = Query(..., description=query_description)) -> SortByFields[model_type]:
-        return SortByFields[model_type](sort_by, model_type)
+    def _sort_by_query_func(sort_by: Optional[str] = Query(description=query_description, default=None)) -> \
+            Optional[SortByFields[model_type]]:
+        if sort_by:
+            return SortByFields[model_type](sort_by, model_type)
+        return None
 
     return _sort_by_query_func
 
-
-def validate_lookup_fields(model: Type[ModelT], lookup_fields: List[str]):
-    for field in lookup_fields:
-        # TODO: Consider verifying types
-        if field not in model.__fields__:
-            raise HTTPException(status_code=422, detail=f"Unable to sort by field: {field}")
-    # print(model)
-    # print(type(model))
-    # print(dir(model))
-    # print(model.__fields__)
-    # print(model.__table__.columns)
-    # print(dir(model.__fields_set__))
-    # for r in model.__mapper__.relationships:
-    #     print(type(r))
-    #     print(dir(r))
-    #     print(r.mapper.class_)
-    # print([str(a) for a in model.__mapper__.relationships])
