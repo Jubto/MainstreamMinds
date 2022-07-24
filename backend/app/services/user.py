@@ -6,7 +6,8 @@ from sqlmodel import Session
 
 from app.core.security import get_password_hash
 from app.db import get_session
-from app.models.base import SortByFields
+from app.models.pagination import Page, Paginator
+from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
 from app.models.user import UserRead, User, UserCreate
 from app.repositories.user import UserRepository, get_user_repository
@@ -27,5 +28,6 @@ class UserService:
         self.repository.create(user_create, mappings=self.field_mappings)
 
     def get_all(self, sort_by: Optional[SortByFields[User]] = None,
-                filter_by: Optional[ModelFilter[User]] = None) -> List[User]:
-        return self.repository.get_all(sort_by=sort_by, filter_by=filter_by)
+                filter_by: Optional[ModelFilter[User]] = None,
+                paginator: Optional[Paginator] = None) -> Page[User]:
+        return self.repository.get_all(sort_by=sort_by, filter_by=filter_by, paginator=paginator)

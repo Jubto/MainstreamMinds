@@ -5,7 +5,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.core.security import get_request_user, authenticate_user, create_token, is_admin, \
     is_researcher, is_consumer
-from app.models.base import SortByFields, get_sort_by_fields
+from app.models.pagination import Page, Paginator, get_paginator
+from app.models.sorting import SortByFields, get_sort_by_fields
 from app.models.filter import FilterExpression, FieldFilter, FilterOperation, FilterCompound, FilterCompoundOperation, \
     ModelFilter
 from app.models.security import Token, TokenData
@@ -19,9 +20,10 @@ router = APIRouter(tags=['user'])
 
 @router.get("",
             description='Get a list of all user',
-            response_model=List[UserRead],
+            response_model=Page[UserRead],
             )
 async def get_all_users(
+        paginator: Paginator = Depends(get_paginator),
         sort_by: Optional[SortByFields[User]] = Depends(get_sort_by_fields(User, ['first_name', 'last_name'])),
         search: str = Query(description='String to filter results by', default=None),
         user_service: UserService = Depends(UserService),
@@ -32,7 +34,7 @@ async def get_all_users(
         last_name_filter = FieldFilter(field='last_name', operation=FilterOperation.ILIKE, value=search, model=User)
         compound = FilterCompound(filters=[first_name_filter, last_name_filter], operator=FilterCompoundOperation.OR)
         filter_by = ModelFilter(FilterExpression(compound), User)
-    return user_service.get_all(sort_by, filter_by)
+    return user_service.get_all(sort_by, filter_by, paginator)
 
 
 @router.get("/{user_id}",
