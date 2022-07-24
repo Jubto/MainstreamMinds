@@ -4,6 +4,7 @@ from fastapi import Depends
 from sqlmodel import Session, SQLModel, select
 from app.db import get_session
 from app.models.base import SortByFields
+from app.models.filter import ModelFilter
 from app.utils.model import assign_members_from_dict, ModelFieldsMapping
 
 ModelT = TypeVar('ModelT', bound=SQLModel)
@@ -25,10 +26,14 @@ class BaseRepository(Generic[ModelT, UpdateModelT, CreateModelT]):
     def get(self, entity_id: Any) -> ModelT:
         return self.session.get(self.model, entity_id)
 
-    def get_all(self, sort_by: Optional[SortByFields[ModelT]] = None) -> List[ModelT]:
+    def get_all(self, sort_by: Optional[SortByFields[ModelT]] = None,
+                filter_by: Optional[ModelFilter[ModelT]] = None) -> List[ModelT]:
+        query = select(self.model)
         if sort_by:
-            return self.session.exec(sort_by.apply_sort_to_query(select(self.model))).all()
-        return self.session.exec(select(self.model)).all()
+            query = sort_by.apply_sort_to_query(query)
+        if filter_by:
+            query = filter_by.apply_filter_to_query(query)
+        return self.session.exec(query).all()
 
     def create(self, create_model: CreateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
         entity = self.model()

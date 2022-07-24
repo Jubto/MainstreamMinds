@@ -49,9 +49,9 @@ class FieldFilter(Filter):
         model_field = getattr(self.model, self.field)
 
         if self.operation == FilterOperation.LIKE:
-            return col(model_field).like(self.value)
+            return col(model_field).like(f'%{self.value}%')
         elif self.operation == FilterOperation.ILIKE:
-            return col(model_field).ilike(self.value)
+            return col(model_field).ilike(f'%{self.value}%')
         elif self.operation == FilterOperation.EQ:
             return model_field == self.value
         elif self.operation == FilterOperation.NQ:
@@ -108,4 +108,4 @@ class ModelFilter(Generic[ModelT]):
         # validate_lookup_fields(self._model, [f.field for f in self._sort_fields])
 
     def apply_filter_to_query(self, query: Union[Select, SelectOfScalar]):
-        return query
+        return query.where(self._filter_expression.get_filter_criteria())
