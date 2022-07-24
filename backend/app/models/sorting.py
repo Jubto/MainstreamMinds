@@ -1,12 +1,12 @@
 import typing
 from dataclasses import dataclass
 from enum import Enum
-from typing import Generic, TypeVar, List, Optional, Type, Any, Union
+from typing import Generic, TypeVar, List, Optional, Type
 
 from fastapi import Query, HTTPException
 from sqlalchemy import text
 from sqlalchemy.sql import Select
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel
 from sqlmodel.sql.expression import SelectOfScalar
 
 from app.utils.model import validate_lookup_fields
@@ -92,4 +92,3 @@ def get_sort_by_fields(model_type: Type[ModelT], allowed_sort_fields: Optional[L
         return None
 
     return _sort_by_query_func
-

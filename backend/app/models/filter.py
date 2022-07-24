@@ -7,9 +7,6 @@ from sqlalchemy.sql import Select
 from sqlmodel import SQLModel
 from sqlmodel.sql.expression import SelectOfScalar, col
 
-from app.models.user import User
-from app.utils.model import validate_lookup_fields
-
 ModelT = TypeVar("ModelT", bound=SQLModel)
 
 
@@ -80,7 +77,6 @@ class FilterCompound(Filter):
             return or_(*children_criteria)
         elif self.operator == FilterCompoundOperation.OR:
             return and_(*children_criteria)
-
 
 
 @dataclass
