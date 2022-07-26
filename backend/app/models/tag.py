@@ -3,6 +3,7 @@ from typing import List, Optional
 from sqlmodel import SQLModel, Field, Relationship
 from app.models.research_story import StoryTagLink
 
+
 class UserTagLink(SQLModel, table=True):
     user_id: Optional[int] = Field(default=None, foreign_key="user.id", primary_key=True)
     tag_id: Optional[int] = Field(default=None, foreign_key="tag.id", primary_key=True)
@@ -19,6 +20,7 @@ class Tag(TagBase, table=True):
 
     user_links: List["User"] = Relationship(back_populates="tag_links", link_model=UserTagLink)
     story_tags: List["ResearchStory"] = Relationship(back_populates="tags", link_model=StoryTagLink)
+
 
 class TagRW(TagBase):
     pass  # user only provides tag name

@@ -3,6 +3,8 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from app.models.comment import CommentCreate, CommentRead
+from app.core.security import get_request_user_id, is_consumer
+from app.services.comment import CommentService
 
 router = APIRouter(tags=['comment'])
 
@@ -19,13 +21,15 @@ router = APIRouter(tags=['comment'])
 # need to implement pagination eventually...
 # also returns whether the current user (if logged in) has liked each comment or not. if logged out, return false
 @router.get("", response_model=List[CommentRead])
-async def get_all_comments(story_id: int):
-    return None
+async def get_all_comments(story_id: int, comment_service: CommentService = Depends(CommentService),):
+    return comment_service.get_story_comments(story_id)
 
 
-@router.post("", response_model=None)
-async def add_comment(comment: CommentCreate):
-    return None
+@router.post("", response_model=None, dependencies=[Depends(is_consumer)])
+async def add_comment(comment: CommentCreate,
+                      comment_service: CommentService = Depends(CommentService),
+                      current_user_id: int = Depends(get_request_user_id)):
+    return comment_service.add_comment(comment, current_user_id)
 
 
 @router.get("/like", response_model=None)
