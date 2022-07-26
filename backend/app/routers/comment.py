@@ -21,23 +21,49 @@ router = APIRouter(tags=['comment'])
 # need to implement pagination eventually...
 # also returns whether the current user (if logged in) has liked each comment or not. if logged out, return false
 @router.get("", response_model=List[CommentRead])
-async def get_all_comments(story_id: int, comment_service: CommentService = Depends(CommentService),):
+async def get_all_comments(
+        story_id: int,
+        comment_service: CommentService = Depends(CommentService)
+):
+    """
+    Given a research story id, returns a list of all comments under that story:
+    """
     return comment_service.get_story_comments(story_id)
 
 
-@router.post("", response_model=None, dependencies=[Depends(is_consumer)])
-async def add_comment(comment: CommentCreate,
-                      comment_service: CommentService = Depends(CommentService),
-                      current_user_id: int = Depends(get_request_user_id)):
+@router.post("", response_model=int, dependencies=[Depends(is_consumer)])
+async def add_comment(
+        comment: CommentCreate,
+        comment_service: CommentService = Depends(CommentService),
+        current_user_id: int = Depends(get_request_user_id)
+):
+    """
+    Returns (if successful) the id of the new comment
+    """
     return comment_service.add_comment(comment, current_user_id)
 
 
-@router.get("/like", response_model=None)
-async def get_comment_likes(comment_id: int):
-    return None
+@router.get("/like", response_model=bool, dependencies=[Depends(is_consumer)])
+async def get_comment_like(
+        comment_id: int,
+        comment_service: CommentService = Depends(CommentService),
+        current_user_id: int = Depends(get_request_user_id)):
+    return comment_service.get_comment_like(comment_id, current_user_id)
 
 
-# maybe should be put method?
-@router.post("/like", response_model=None)
-async def set_comment_like(comment_id: int, liked: bool):
-    return None
+@router.get("/likes", response_model=int)
+async def get_num_likes(
+        comment_id: int,
+        comment_service: CommentService = Depends(CommentService),
+):
+    return comment_service.get_num_likes(comment_id)
+
+
+@router.post("/like", response_model=None, dependencies=[Depends(is_consumer)])
+async def set_comment_like(
+        comment_id: int,
+        liked: bool,
+        comment_service: CommentService = Depends(CommentService),
+        current_user_id: int = Depends(get_request_user_id)
+):
+    comment_service.set_comment_like(current_user_id, comment_id, liked)

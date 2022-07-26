@@ -30,11 +30,9 @@ class Comment(CommentBase, table=True):
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     user_id: int = Field(foreign_key="user.id")  # note: not optional, enforces total participation
 
-
-    # no idea if this is correct, but in this way you *should* be able to get the parent or children of a comment
     # https://github.com/tiangolo/sqlmodel/issues/127
     children: List["Comment"] = Relationship(sa_relationship_kwargs=dict(
-        backref=backref("parent", remote_side="Comment.id")
+        backref=backref("parent", remote_side="Comment.id")  # this needs to be capitalised for some reason
     ))
 
     user_likes: List["User"] = Relationship(back_populates="comment_likes", link_model=UserCommentLikesLink)
