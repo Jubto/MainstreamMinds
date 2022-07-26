@@ -6,6 +6,7 @@ from sqlmodel import select, Session
 from app.db import get_session
 from app.models.comment import CommentCreate, Comment, CommentRead
 from app.repositories.user import UserRepository, get_user_repository
+from app.utils.model import assign_members_from_dict
 
 
 class CommentRepository:
@@ -15,9 +16,8 @@ class CommentRepository:
 
     def add_comment(self, new_comment: CommentCreate, current_user_id: int):
         to_add = Comment()
+        assign_members_from_dict(to_add, new_comment.dict(exclude_unset=True))
         to_add.user_id = current_user_id
-        to_add.body = new_comment.body
-        to_add.story_id = new_comment.story_id
         db_comment = Comment.from_orm(to_add)
         self.session.add(db_comment)
         self.session.commit()
