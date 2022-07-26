@@ -47,7 +47,11 @@ async def add_comment(
 async def get_comment_like(
         comment_id: int,
         comment_service: CommentService = Depends(CommentService),
-        current_user_id: int = Depends(get_request_user_id)):
+        current_user_id: int = Depends(get_request_user_id)
+):
+    """
+    Returns true/false on whether the current user has liked a comment
+    """
     return comment_service.get_comment_like(comment_id, current_user_id)
 
 
@@ -56,6 +60,9 @@ async def get_num_likes(
         comment_id: int,
         comment_service: CommentService = Depends(CommentService),
 ):
+    """
+    Returns the number of likes on a comment
+    """
     return comment_service.get_num_likes(comment_id)
 
 
@@ -66,4 +73,7 @@ async def set_comment_like(
         comment_service: CommentService = Depends(CommentService),
         current_user_id: int = Depends(get_request_user_id)
 ):
+    """
+    Sets a comment to either liked (true) or not liked (false) by the current user
+    """
     comment_service.set_comment_like(current_user_id, comment_id, liked)
