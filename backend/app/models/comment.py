@@ -7,7 +7,7 @@ from sqlmodel import SQLModel, Field, Relationship
 
 class CommentBase(SQLModel):
     body: str = Field()
-    # parent_id: Optional[int] = Field(default=None, foreign_key="comment.id")
+    parent_id: Optional[int] = Field(default=None, foreign_key="comment.id")
     story_id: int = Field(foreign_key="researchstory.id", index=True)  # indexed since we will join comments and stories often
 
 
@@ -33,9 +33,9 @@ class Comment(CommentBase, table=True):
 
     # no idea if this is correct, but in this way you *should* be able to get the parent or children of a comment
     # https://github.com/tiangolo/sqlmodel/issues/127
-    # children: List["Comment"] = Relationship(sa_relationship_kwargs=dict(
-    #     backref=backref("parent", remove_side="comment.id")
-    # ))
+    children: List["Comment"] = Relationship(sa_relationship_kwargs=dict(
+        backref=backref("parent", remote_side="Comment.id")
+    ))
 
     user_likes: List["User"] = Relationship(back_populates="comment_likes", link_model=UserCommentLikesLink)
 

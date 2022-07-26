@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.comment import CommentCreate, Comment, CommentRead
+from app.models.comment import CommentCreate, Comment
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import assign_members_from_dict
 
