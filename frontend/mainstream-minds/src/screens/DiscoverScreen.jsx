@@ -2,8 +2,9 @@ import { useState } from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
-import { Box, Button, List, ListItem, Typography, styled } from "@mui/material"
+import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
+import Card from "../components/layout/Card";
 
 const StoryField = styled('div')`
   background-color: #bfece6;
@@ -63,6 +64,7 @@ const DiscoverScreen = () => {
 
   return (
     <Page sx={{ ml: 10, mt: 10 }}>
+      <Card />
       <Typography variant='h5'>
         Temp routes
       </Typography>
