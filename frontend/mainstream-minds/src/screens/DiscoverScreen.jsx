@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
 import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
-import Card from "../components/layout/Card";
+import Card from "../components/layout/StoryCards/Card";
 
 const StoryField = styled('div')`
   background-color: #bfece6;
