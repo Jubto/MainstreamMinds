@@ -20,6 +20,7 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
 
     def get_institution_by_id(self, institution_id) -> Institution:
         return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
+        # TODO: Include error handling if non-existant id given
     
     # need to assess what info we want to pass in for an institution
     def update_institution(self, new_institution: InstitutionUpdate, institution_id: int):
@@ -38,6 +39,10 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         self.session.commit()
         return db_institution.id
     
+    def delete_institution(self, institution_id):
+        pass
+    # TODO
+    # Include error handling if non-existant id given
 
 
 def get_institution_repository(session: Session = Depends(get_session)) -> InstitutionRepository:
