@@ -1,9 +1,12 @@
 import enum
-from typing import Optional, List
+from typing import Optional, List, Any
 
+from fastapi import Query, Depends
+from pydantic import BaseModel
 from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship
-from app.models.tag import UserTagLink
+
+from app.models.tag import Tag, UserTagLink
 from app.models.research_story import StoryLikeLink
 
 
@@ -24,7 +27,7 @@ class User(UserBase, table=True):
     password_hash: str = Field()
     role: Role = Field(sa_column=Column(Enum(Role)), default=Role.CONSUMER)
 
-    story_likes: List["ResearchStory"] = Relationship(back_populates="likes", link_model=StoryLikeLink) 
+    story_likes: List["ResearchStory"] = Relationship(back_populates="likes", link_model=StoryLikeLink)
     tag_links: List["Tag"] = Relationship(back_populates="user_links", link_model=UserTagLink)
 
 
@@ -42,3 +45,7 @@ class UserUpdate(SQLModel):
 class UserRead(UserBase):
     id: int
     role: Role = Field(sa_column=Column(Enum(Role)))
+
+
+class UserGetQuery(BaseModel):
+    id: int

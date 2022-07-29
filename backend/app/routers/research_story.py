@@ -97,7 +97,7 @@ async def post_story(
     return story_service.create(create_story)
 
 
-@router.put(
+@router.patch(
     "/{story_id}",
     description='Update an existing story in the database, only valid researchers who are authors of the story can access this endpoint',
     response_model=ResearchStoryResponse,

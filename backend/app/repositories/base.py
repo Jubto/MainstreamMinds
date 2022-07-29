@@ -1,8 +1,12 @@
-from typing import TypeVar, Generic, Any, Type, List
+import math
+from typing import TypeVar, Generic, Any, Type, List, Optional
 
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, select
 from app.db import get_session
+from app.models.pagination import Page, Paginator
+from app.models.sorting import SortByFields
+from app.models.filter import ModelFilter
 from app.utils.model import assign_members_from_dict, ModelFieldsMapping
 
 ModelT = TypeVar('ModelT', bound=SQLModel)
@@ -24,8 +28,19 @@ class BaseRepository(Generic[ModelT, UpdateModelT, CreateModelT]):
     def get(self, entity_id: Any) -> ModelT:
         return self.session.get(self.model, entity_id)
 
-    def get_all(self) -> List[ModelT]:
-        return self.session.exec(select(self.model)).all()
+    def get_all(self, sort_by: Optional[SortByFields[ModelT]] = None,
+                filter_by: Optional[ModelFilter[ModelT]] = None,
+                paginator: Paginator = Paginator()) -> Page[ModelT]:
+        query = select(self.model)
+        if sort_by:
+            query = sort_by.apply_sort_to_query(query)
+        if filter_by:
+            query = filter_by.apply_filter_to_query(query)
+
+        # TODO: Avoid using len and .all() for count as is inefficient but haven't
+        #  found a good way to invoke sql count with sqlmodel
+        return Page[ModelT](items=self.session.exec(paginator.paginate(query)).all(),
+                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
 
     def create(self, create_model: CreateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
         entity = self.model()
