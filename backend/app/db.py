@@ -1,8 +1,15 @@
+import re
+
 from sqlmodel import create_engine, SQLModel, Session
 
 from app.settings import get_settings
 
-engine = create_engine(get_settings().DB_CONN, echo=True, connect_args={"check_same_thread": False})
+db_conn = get_settings().DB_CONN
+connect_args = {}
+if re.search(r'sqlite', db_conn, flags=re.IGNORECASE):
+    connect_args = {"check_same_thread": False}
+
+engine = create_engine(db_conn, echo=True, connect_args=connect_args)
 
 
 def create_db_and_tables():
