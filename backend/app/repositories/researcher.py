@@ -6,11 +6,10 @@ from sqlmodel import select, Session
 from app.db import get_session
 from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate
 from app.utils.model import assign_members_from_dict
+from app.models.research_story import ResearchStory
 
 
 class ResearcherRepository:
-    model = Researcher
-
     def __init__(self, session: Session):
         self.session = session
 
@@ -23,8 +22,11 @@ class ResearcherRepository:
         self.session.commit()
         return db_researcher.id
 
-    def get_researcher_by_id(self, researcher_id) -> Researcher:
+    def get_researcher_by_id(self, researcher_id: int) -> Researcher:
         return self.session.exec(select(Researcher).where(Researcher.id == researcher_id)).one()
+
+    def get_researcher_by_user_id(self, user_id: int) -> Researcher:
+        return self.session.exec(select(Researcher).where(Researcher.user_id == user_id)).one()
 
     def update_researcher(self, updated_details: ResearcherUpdate, current_user_id: int) -> Researcher:
         db_researcher = self.session.exec(select(Researcher).where(Researcher.user_id == current_user_id)).one()
@@ -32,6 +34,9 @@ class ResearcherRepository:
         self.session.add(db_researcher)
         self.session.commit()
         return db_researcher
+
+    def get_stories_by_researcher(self, researcher_id: int) -> List[ResearchStory]:
+        return self.session.exec(select(Researcher).where(Researcher.id == researcher_id)).one().stories
 
 
 def get_researcher_repository(session: Session = Depends(get_session)) -> ResearcherRepository:

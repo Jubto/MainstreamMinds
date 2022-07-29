@@ -38,14 +38,15 @@ async def get_researcher_by_id(
 
 
 @router.get(
-    "/{story_id}/stories",
-    description='Returns all stories assoicated with a researcher',
+    "/{researcher_id}/stories",
+    description='Returns all stories (in short read form) associated with a researcher',
     response_model=List[ResearchStoryShortRead]
 )
-async def get_researcher_stories(
+async def get_stories_by_researcher(
     researcher_id: int = Path(default=..., gt=0),
+    researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return None
+    return researcher_service.get_stories_by_researcher(researcher_id)
 
 
 @router.post(

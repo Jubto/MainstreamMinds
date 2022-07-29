@@ -20,6 +20,7 @@ class Tag(TagBase, table=True):
     user_links: List["User"] = Relationship(back_populates="tag_links", link_model=UserTagLink)
     story_tags: List["ResearchStory"] = Relationship(back_populates="tags", link_model=StoryTagLink)
 
+
 class TagRW(TagBase):
     pass  # user only provides tag name
 
@@ -31,3 +32,5 @@ class TagCreate(TagBase):
 # class StoryTagLink(SQLModel, table=True):
 #     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
 #     tag_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
+
+TagRW.update_forward_refs()
