@@ -26,5 +26,5 @@ class InstitutionService:
     def create_institution(self, new_institution: InstitutionCreate) -> int:
         return self.repository.create_institution(new_institution)
 
-    # def get_researcher_by_id(self, researcher_id: int) -> Researcher:
-    #     return self.repository.get_researcher_by_id(researcher_id)
+    def get_institution_by_id(self, institution_id: int) -> Institution:
+        return self.repository.get_institution_by_id(institution_id)

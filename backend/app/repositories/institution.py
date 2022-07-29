@@ -13,13 +13,16 @@ from app.utils.model import assign_members_from_dict
 
 class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):
 
-    def get_institution(self, current_story_id: int) -> List[Institution]:
+    def get_institutions(self) -> List[Institution]:
         pass
         # TODO
         # return self.session.exec(select(ResearchStory).where(ResearchStory.id == current_story_id)).one().institution_links
 
+    def get_institution_by_id(self, institution_id) -> Institution:
+        return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
+    
     # need to assess what info we want to pass in for an institution
-    def add_institution(self, current_story_id: int, institution: str):
+    def update_institution(self, new_institution: InstitutionUpdate, institution_id: int):
         pass
         # TODO
         # story = self.session.exec(select(ResearchStory).where(ResearchStory.id == current_story_id)).one()
@@ -34,6 +37,7 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         self.session.add(db_institution)
         self.session.commit()
         return db_institution.id
+    
 
 
 def get_institution_repository(session: Session = Depends(get_session)) -> InstitutionRepository:

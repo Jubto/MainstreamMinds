@@ -22,9 +22,8 @@ async def get_institution_by_id(
         institution_id: int = Path(default=..., gt=0),
         institution_service: InstitutionService = Depends(InstitutionService),
 ):
-    # return institution_service.add_institution(current_story_id, institution)
-    return ""
-
+    return institution_service.get_institution_by_id(institution_id)
+        
 
 @router.patch("/{institution_id}", dependencies=[Depends(is_consumer)], response_model=InstitutionRead)
 async def update_institution(
