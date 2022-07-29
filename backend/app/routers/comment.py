@@ -3,6 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from app.models.comment import CommentCreate, CommentRead
+from app.models.pagination import Page, Paginator, get_paginator
 from app.core.security import get_request_user_id, is_consumer
 from app.services.comment import CommentService
 
@@ -10,27 +11,17 @@ from app.core.security import is_consumer
 
 router = APIRouter(tags=['comment'])
 
-# get /comment - get all lvl 0 comments of a research story
-# post /comment - add a lvl 0 comment to a research story
-# get /comment/likes - get the number of likes on a comment
-# post /comment/like - send true/false to like/unlike a comment
 
-# extra:
-# get /comment/reply - get all replies of a comment (1 level down)
-# post /comment/reply - reply to a comment
-
-
-# need to implement pagination eventually...
-# also returns whether the current user (if logged in) has liked each comment or not. if logged out, return false
-@router.get("", response_model=List[CommentRead])
-async def get_all_comments(
+@router.get("", response_model=Page[CommentRead])
+async def get_story_comments(
         story_id: int,
-        comment_service: CommentService = Depends(CommentService)
+        comment_service: CommentService = Depends(CommentService),
+        paginator: Paginator = Depends(get_paginator)
 ):
     """
     Given a research story id, returns a list of all comments under that story:
     """
-    return comment_service.get_story_comments(story_id)
+    return comment_service.get_story_comments(story_id, paginator)
 
 
 @router.post("", response_model=int, dependencies=[Depends(is_consumer)])
@@ -40,7 +31,7 @@ async def add_comment(
         current_user_id: int = Depends(get_request_user_id)
 ):
     """
-    Returns (if successful) the id of the new comment
+    Posts a comment under a research and if successful the id of the new comment
     """
     return comment_service.add_comment(comment, current_user_id)
 
