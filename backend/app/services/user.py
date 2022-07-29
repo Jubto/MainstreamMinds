@@ -9,7 +9,7 @@ from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
-from app.models.user import UserRead, User, UserCreate
+from app.models.user import Role, User, UserCreate
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import ModelFieldsMapping
 
@@ -31,3 +31,6 @@ class UserService:
                 filter_by: Optional[ModelFilter[User]] = None,
                 paginator: Optional[Paginator] = None) -> Page[User]:
         return self.repository.get_all(sort_by=sort_by, filter_by=filter_by, paginator=paginator)
+
+    def get_db_role(self, user_id: int) -> Role:
+        return self.repository.get_db_role(user_id)

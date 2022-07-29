@@ -2,20 +2,12 @@ import enum
 from typing import Optional
 from datetime import datetime
 
-from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship
 from app.models.institution import Institution
 
 
-class Role(int, enum.Enum):
-    ADMIN = 0
-    RESEARCHER = 1
-    CONSUMER = 2
-
-
 class ResearcherBase(SQLModel):
-    bio: str = Field()
-    mobile: str = Field()
+    bio: Optional[str] = Field()
     institution_id: Optional[int] = Field(foreign_key="institution.id")
 
 
@@ -33,9 +25,8 @@ class ResearcherCreate(ResearcherBase):
 
 class ResearcherUpdate(SQLModel):
     bio: Optional[str] = Field()
-    mobile: Optional[str] = Field()
-    institution_id: Optional[int]
+    institution_id: Optional[int] = Field(foreign_key="institution.id")
 
 
-class ResearcherRead(Researcher):
+class ResearcherRead(ResearcherBase):
     pass

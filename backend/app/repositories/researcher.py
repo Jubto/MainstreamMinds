@@ -4,9 +4,7 @@ from fastapi import Depends
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.user import User, UserUpdate, UserCreate
-from app.models.researcher import Researcher, ResearcherCreate, Researcher
-from app.repositories.base import BaseRepository
+from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate
 from app.utils.model import assign_members_from_dict
 
 
@@ -27,6 +25,13 @@ class ResearcherRepository:
 
     def get_researcher_by_id(self, researcher_id) -> Researcher:
         return self.session.exec(select(Researcher).where(Researcher.id == researcher_id)).one()
+
+    def update_researcher(self, updated_details: ResearcherUpdate, current_user_id: int) -> Researcher:
+        db_researcher = self.session.exec(select(Researcher).where(Researcher.user_id == current_user_id)).one()
+        assign_members_from_dict(db_researcher, updated_details.dict(exclude_unset=True))
+        self.session.add(db_researcher)
+        self.session.commit()
+        return db_researcher
 
 
 def get_researcher_repository(session: Session = Depends(get_session)) -> ResearcherRepository:

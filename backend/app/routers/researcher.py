@@ -27,7 +27,7 @@ async def get_researchers_by_filter(
 
 @router.get(
     "/{researcher_id}",
-    description='Returns details for the specified researcher',
+    description='Returns details for a researcher given their id',
     response_model=ResearcherRead
 )
 async def get_researcher_by_id(
@@ -63,16 +63,14 @@ async def upgrade_to_researcher(
 
 
 @router.patch(
-    "/{researcher_id}",
-    description='Update details concerning researcher profile',
-    response_model=ResearcherCreate,
+    "",
+    description='Update the details of the current researcher',
+    response_model=ResearcherRead,
     dependencies=[Depends(is_researcher)]
 )
-async def update_researcher_by_id(
-    update_researcher: ResearcherUpdate,
-    researcher_id: int = Path(default=..., gt=0),
-    jwt_derived_researcher_id: int = Depends(get_request_user_id),
+async def update_researcher(
+    updated_details: ResearcherUpdate,
+    current_user_id: int = Depends(get_request_user_id),
+    researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return None
-
-
+    return researcher_service.update_researcher(updated_details, current_user_id)
