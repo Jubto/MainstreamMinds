@@ -8,7 +8,7 @@ from sqlmodel import SQLModel, Field, Relationship
 class CommentBase(SQLModel):
     body: str = Field()
     parent_id: Optional[int] = Field(default=None, foreign_key="comment.id")
-    story_id: int = Field(foreign_key="researchstory.id", index=True)  # indexed since we will join comments and stories often
+    story_id: int = Field(foreign_key="researchstory.id", index=True)  # indexed since we join on this often
 
 
 class CommentCreate(CommentBase):
