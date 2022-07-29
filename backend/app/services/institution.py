@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import Depends
 
-from app.models.institution import Institution, InstitutionRead
+from app.models.institution import Institution, InstitutionRead, InstitutionCreate
 from app.repositories.institution import InstitutionRepository, get_institution_repository
 
 
@@ -15,9 +15,16 @@ class InstitutionService:
 
     # def get_institutions(self, current_story_id: int) -> List[Institution]:
     #     return self.repository.get_institution_repository(current_story_id)
+    
+    #field_mappings: ModelFieldsMapping
 
-    # def add_preference_tag(self, current_story_id: int, tag: str):
-    #     self.repository.add_institution_(current_story_id, tag)
+    def __init__(self,
+                 institution_repository: InstitutionRepository = Depends(get_institution_repository)
+                ):
+        self.repository = institution_repository
 
-    # def create_tag(self, tag: TagRW):
-        # self.repository.create_tag(tag)
+    def create_institution(self, new_institution: InstitutionCreate) -> int:
+        return self.repository.create_institution(new_institution)
+
+    # def get_researcher_by_id(self, researcher_id: int) -> Researcher:
+    #     return self.repository.get_researcher_by_id(researcher_id)

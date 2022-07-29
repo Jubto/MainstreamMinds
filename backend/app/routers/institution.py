@@ -36,13 +36,12 @@ async def update_institution(
     return ""
 
 
-@router.post("/", dependencies=[Depends(is_consumer)], response_model=InstitutionRead)
+@router.post("/", dependencies=[Depends(is_consumer)], response_model=int)
 async def create_institution(
         institution: InstitutionCreate,
         institution_service: InstitutionService = Depends(InstitutionService),
 ):
-    # return institution_service.create_institution(institution)
-    return ""
+    return institution_service.create_institution(institution)
 
 
 @router.delete("/{institution_id}", dependencies=[Depends(is_researcher)])

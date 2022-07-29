@@ -22,11 +22,7 @@ class InstitutionBase(SQLModel):
 
 
 class Institution(InstitutionBase, table=True):
-    id: Optional[int] = Field(primary_key=True)
-    # Location
-    # Year_est
-    # Logo
-
+    id: Optional[int] = Field(default=None, primary_key=True)
     # Institution contact - User object?
 
     researchers: List["Researcher"] = Relationship(back_populates="institution")
@@ -37,11 +33,8 @@ class InstitutionRead(InstitutionBase):
     pass
 
 
-class InstitutionUpdate(SQLModel):
-    name: Optional[str] = Field()
-    location: Optional[str] = Field()
-    year_established: Optional[int] = Field()
-    logo: Optional[str] = Field()
+class InstitutionUpdate(InstitutionBase):
+    pass
 
 
 class InstitutionCreate(InstitutionBase):
