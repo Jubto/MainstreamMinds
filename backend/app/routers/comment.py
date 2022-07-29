@@ -6,6 +6,8 @@ from app.models.comment import CommentCreate, CommentRead
 from app.core.security import get_request_user_id, is_consumer
 from app.services.comment import CommentService
 
+from app.core.security import is_consumer
+
 router = APIRouter(tags=['comment'])
 
 # get /comment - get all lvl 0 comments of a research story
