@@ -9,6 +9,7 @@ class InstitutionResearcherLink(SQLModel, table=True):
     institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
     researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id")
 
+
 class InstitutionStoryLink(SQLModel, table=True):
     institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
