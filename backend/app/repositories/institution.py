@@ -31,7 +31,7 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         # TODO
         # story = self.session.exec(select(ResearchStory).where(ResearchStory.id == current_story_id)).one()
         # db_institution = self.session.exec(select(Institution).where(Institution.name == institution)).one()
-        # story.tag_links.append(db_institution)
+        # story.preference_tags.append(db_institution)
         # self.session.commit()
 
     def create_institution(self, new_institution: InstitutionCreate) -> int:

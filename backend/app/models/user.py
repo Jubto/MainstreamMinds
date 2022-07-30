@@ -29,7 +29,7 @@ class User(UserBase, table=True):
     role: Role = Field(sa_column=Column(Enum(Role)), default=Role.CONSUMER)
 
     story_likes: List["ResearchStory"] = Relationship(back_populates="likes", link_model=StoryLikeLink)
-    tag_links: List["Tag"] = Relationship(back_populates="user_links", link_model=UserTagLink)
+    preference_tags: List["Tag"] = Relationship(back_populates="user_preferences", link_model=UserTagLink)
     comment_likes: List["Comment"] = Relationship(back_populates="user_likes", link_model=UserCommentLikesLink)
 
 

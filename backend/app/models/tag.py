@@ -18,7 +18,7 @@ class TagBase(SQLModel):
 class Tag(TagBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)  # primary key as int for fast joins with user/story
 
-    user_links: List["User"] = Relationship(back_populates="tag_links", link_model=UserTagLink)
+    user_preferences: List["User"] = Relationship(back_populates="preference_tags", link_model=UserTagLink)
     story_tags: List["ResearchStory"] = Relationship(back_populates="tags", link_model=StoryTagLink)
 
 
