@@ -25,10 +25,9 @@ class ResearcherCreate(ResearcherBase):
     pass
 
 
-class ResearcherUpdate(SQLModel):
-    bio: Optional[str] = Field()
-    institution_id: Optional[int] = Field(foreign_key="institution.id")
+class ResearcherUpdate(ResearcherBase):
+    pass
 
 
 class ResearcherRead(ResearcherBase):
-    pass
+    id: int
