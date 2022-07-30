@@ -25,7 +25,7 @@ async def get_institution_by_id(
     return institution_service.get_institution_by_id(institution_id)
         
 
-@router.patch("/{institution_id}", dependencies=[Depends(is_consumer)], response_model=InstitutionRead)
+@router.patch("/{institution_id}", dependencies=[Depends(is_consumer)], response_model=int)
 async def update_institution(
         institution: InstitutionUpdate,
         institution_id: int = Path(default=..., gt=0),

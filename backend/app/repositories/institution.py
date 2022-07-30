@@ -28,11 +28,11 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
     # need to assess what info we want to pass in for an institution
     def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int):
         try:
-            db_researcher = self.session.exec(select(Institution).where(Institution.user_id == institution_id)).one()
-            assign_members_from_dict(db_researcher, updated_institution.dict(exclude_unset=True))
-            self.session.add(db_researcher)
+            db_institution = self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
+            assign_members_from_dict(db_institution, updated_institution.dict(exclude_unset=True))
+            self.session.add(db_institution)
             self.session.commit()
-            return db_researcher
+            return db_institution.id
         except NoResultFound:
             raise NonExistentEntry('Researcher_id', institution_id)
 
