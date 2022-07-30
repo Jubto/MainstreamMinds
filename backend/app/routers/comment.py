@@ -59,7 +59,7 @@ async def get_num_likes(
     return comment_service.get_num_likes(comment_id)
 
 
-@router.post("/like", response_model=None, dependencies=[Depends(is_consumer)])
+@router.put("/like", response_model=None, dependencies=[Depends(is_consumer)])
 async def set_comment_like(
         comment_id: int,
         liked: bool,

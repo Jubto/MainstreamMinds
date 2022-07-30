@@ -12,8 +12,6 @@ class CommentService:
     def __init__(self, comment_repository: CommentRepository = Depends(get_comment_repository)):
         self.repository = comment_repository
 
-    # it IS possible to send incorrect story_ids or parent_ids and still be successful
-    # database doesn't throw exception in these cases... so need to manually handle I think
     def add_comment(self, new_comment: CommentCreate, current_user_id: int):
         return self.repository.add_comment(new_comment, current_user_id)
 
