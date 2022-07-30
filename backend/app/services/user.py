@@ -31,6 +31,3 @@ class UserService:
                 filter_by: Optional[ModelFilter[User]] = None,
                 paginator: Optional[Paginator] = None) -> Page[User]:
         return self.repository.get_all(sort_by=sort_by, filter_by=filter_by, paginator=paginator)
-
-    def get_db_role(self, user_id: int) -> Role:
-        return self.repository.get_db_role(user_id)

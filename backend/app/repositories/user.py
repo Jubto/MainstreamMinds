@@ -24,10 +24,6 @@ class UserRepository(BaseRepository[User, UserUpdate, UserCreate]):
         self.session.add(user)
         self.session.commit()
 
-    def get_db_role(self, user_id) -> Role:
-        user = self.get(user_id)
-        return user.role
-
     def get_by_id(self, user_id) -> User:
         return self.session.exec(select(User).where(User.id == user_id)).one()
 

@@ -18,14 +18,6 @@ from app.utils.exceptions import InvalidUserCredentials
 router = APIRouter(tags=['user'])
 
 
-@router.get("/role", response_model=Role)
-async def get_db_role(
-    user_service: UserService = Depends(UserService),
-    current_user_id: int = Depends(get_request_user_id)
-):
-    return user_service.get_db_role(current_user_id)
-
-
 @router.get("",
             description='Get a list of all user',
             response_model=Page[UserRead],

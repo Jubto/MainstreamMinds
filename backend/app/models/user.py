@@ -45,6 +45,7 @@ class UserUpdate(SQLModel):
 
 class UserRead(UserBase):
     id: int
+    role: Role = Field(sa_column=Column(Enum(Role)))
 
 
 class UserGetQuery(BaseModel):
