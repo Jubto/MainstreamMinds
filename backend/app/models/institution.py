@@ -25,8 +25,8 @@ class Institution(InstitutionBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     # Institution contact - User object?
 
-    researchers: List["Researcher"] = Relationship(back_populates="institution")
-    # stories: List["ResearchStory"] = Relationship(back_populates="institutions", link_model=InstitutionStoryLink)
+    researchers: List["Researcher"] = Relationship(back_populates="institution", link_model=InstitutionResearcherLink)
+    stories: List["ResearchStory"] = Relationship(back_populates="institutions", link_model=InstitutionStoryLink)
 
 
 class InstitutionRead(InstitutionBase):

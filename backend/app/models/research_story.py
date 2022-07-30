@@ -2,13 +2,11 @@ from datetime import datetime
 from typing import List, Optional
 from sqlmodel import Relationship, SQLModel, Field
 
+from app.models.researcher import StoryAuthorLink
+from app.models.institution import InstitutionStoryLink
+
 
 # ============================= Research story LINK tables =============================
-
-class StoryAuthorLink(SQLModel, table=True):
-    story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
-    researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id")
-    # institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id") TODO
 
 
 class StoryLikeLink(SQLModel, table=True):
@@ -26,8 +24,7 @@ class StoryTagLink(SQLModel, table=True):
 class ResearchStoryBase(SQLModel):
     title: str = Field()
     summary: str = Field()
-    # papers: List[ResearchStoryPaper] = Field() Sqlite cannot handle Lists TODO
-    papers: str = Field()  # temp
+    papers: str = Field()
     thumbnail: str = Field()
     video_link: str = Field()
     transcript: Optional[str] = Field()
@@ -39,7 +36,7 @@ class ResearchStory(ResearchStoryBase, table=True):
     content_body: str = Field()
 
     researchers: List["Researcher"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)
-    # institutions: List["Institution"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)
+    institutions: List["Institution"] = Relationship(back_populates="stories", link_model=InstitutionStoryLink)
     likes: List["User"] = Relationship(back_populates="story_likes", link_model=StoryLikeLink)
     tags: List["Tag"] = Relationship(back_populates="story_tags", link_model=StoryTagLink)
 
@@ -47,12 +44,14 @@ class ResearchStory(ResearchStoryBase, table=True):
 class ResearchStoryShortRead(ResearchStoryBase):
     id: int
     researchers: List["ResearcherRead"]
+    institutions: List["InstitutionRead"]
     tags: List["TagRW"]
     publish_date: datetime = Field()
 
 
 class ResearchStoryCreate(ResearchStoryBase):
     authors: List[int] = Field()
+    institutions: List[int] = Field()
     tags: List[int] = Field()
     content_body: str = Field()
 

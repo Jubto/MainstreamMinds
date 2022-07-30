@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import Depends
 from sqlmodel import select, Session
+from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
 from app.repositories.base import BaseRepository
@@ -9,7 +10,7 @@ from app.models.institution import Institution, InstitutionRead, InstitutionCrea
 # TODO: verify what the ResearchStory object looks like
 from app.models.research_story import ResearchStory
 from app.utils.model import assign_members_from_dict
-
+from app.utils.exceptions import NonExistentEntry
 
 class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):
 
@@ -19,8 +20,10 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         # return self.session.exec(select(ResearchStory).where(ResearchStory.id == current_story_id)).one().institution_links
 
     def get_institution_by_id(self, institution_id) -> Institution:
-        return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
-        # TODO: Include error handling if non-existant id given
+        try:
+            return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
+        except NoResultFound:
+            raise NonExistentEntry('Institution_id', institution_id)
     
     # need to assess what info we want to pass in for an institution
     def update_institution(self, new_institution: InstitutionUpdate, institution_id: int):

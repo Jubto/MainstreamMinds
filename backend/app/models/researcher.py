@@ -3,8 +3,14 @@ from typing import Optional, List
 from datetime import datetime
 
 from sqlmodel import SQLModel, Field, Relationship
-from app.models.institution import Institution
-from app.models.research_story import StoryAuthorLink, ResearchStory
+from app.models.institution import Institution, InstitutionResearcherLink
+# from app.models.user import UserBase
+# from app.models.research_story import ResearchStory
+
+
+class StoryAuthorLink(SQLModel, table=True):
+    story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
+    researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id")
 
 
 class ResearcherBase(SQLModel):
@@ -17,8 +23,8 @@ class Researcher(ResearcherBase, table=True):
     date_verified: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     user_id: int = Field(index=True, nullable=False, foreign_key="user.id", sa_column_kwargs={'unique': True})
 
-    institution: Optional[Institution] = Relationship(back_populates="researchers")
-    stories: List[ResearchStory] = Relationship(back_populates="researchers", link_model=StoryAuthorLink)
+    institution: Optional["Institution"] = Relationship(back_populates="researchers", link_model=InstitutionResearcherLink )
+    stories: List["ResearchStory"] = Relationship(back_populates="researchers", link_model=StoryAuthorLink)
 
 
 class ResearcherCreate(ResearcherBase):
@@ -31,4 +37,4 @@ class ResearcherUpdate(SQLModel):
 
 
 class ResearcherRead(ResearcherBase):
-    pass
+    user_id: int

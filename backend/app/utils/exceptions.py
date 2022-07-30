@@ -34,7 +34,7 @@ class AuthorDetailsMissing(HTTPException):
                                                               detail="The researcher_id of the request is not present in the authors field", )
 
 
-class NonExistentResearchStory(HTTPException):
-    def __init__(self):
-        super(NonExistentResearchStory, self).__init__(status_code=status.HTTP_404_NOT_FOUND,
-                                                              detail="No research story with the provided story_id exists in the database.", )
+class NonExistentEntry(HTTPException):
+    def __init__(self, field, item):
+        super(NonExistentEntry, self).__init__(status_code=status.HTTP_404_NOT_FOUND,
+                                                              detail= f"No data entries found for: Field '{field}' data '{item}'", )

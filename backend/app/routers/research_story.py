@@ -59,7 +59,7 @@ async def get_story_by_id(
     "",
     description='Create a new story in the database, only valid researchers can access this endpoint',
     dependencies=[Depends(is_researcher)],
-    response_model=ResearchStory
+    response_model=ResearchStoryLongRead
 )
 async def post_story(
     create_story: ResearchStoryCreate,
@@ -71,7 +71,7 @@ async def post_story(
 @router.patch(
     "/{story_id}",
     description='Update an existing story in the database, only valid researchers who are authors of the story can access this endpoint',
-    response_model=ResearchStory,
+    response_model=ResearchStoryLongRead,
     dependencies=[Depends(is_researcher)]
 )
 async def update_story_by_id(
