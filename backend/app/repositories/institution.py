@@ -15,9 +15,8 @@ from app.utils.exceptions import NonExistentEntry
 class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):
 
     def get_institutions(self) -> List[Institution]:
-        pass
-        # TODO
-        # return self.session.exec(select(ResearchStory).where(ResearchStory.id == current_story_id)).one().institution_links
+        # TODO: pagination
+        return self.session.exec(select(Institution)).all()
 
     def get_institution_by_id(self, institution_id) -> Institution:
         try:
@@ -45,9 +44,10 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         return db_institution.id
     
     def delete_institution(self, institution_id):
-        pass
-    # TODO
-    # Include error handling if non-existant id given
+        try:
+            self.session.delete(self.get(institution_id))
+        except NoResultFound:
+            raise NonExistentEntry('Institution_id', institution_id)
 
 
 def get_institution_repository(session: Session = Depends(get_session)) -> InstitutionRepository:
