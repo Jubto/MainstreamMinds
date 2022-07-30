@@ -26,13 +26,15 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
             raise NonExistentEntry('Institution_id', institution_id)
     
     # need to assess what info we want to pass in for an institution
-    def update_institution(self, new_institution: InstitutionUpdate, institution_id: int):
-        pass
-        # TODO
-        # story = self.session.exec(select(ResearchStory).where(ResearchStory.id == current_story_id)).one()
-        # db_institution = self.session.exec(select(Institution).where(Institution.name == institution)).one()
-        # story.preference_tags.append(db_institution)
-        # self.session.commit()
+    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int):
+        try:
+            db_researcher = self.session.exec(select(Institution).where(Institution.user_id == institution_id)).one()
+            assign_members_from_dict(db_researcher, updated_institution.dict(exclude_unset=True))
+            self.session.add(db_researcher)
+            self.session.commit()
+            return db_researcher
+        except NoResultFound:
+            raise NonExistentEntry('Researcher_id', institution_id)
 
     def create_institution(self, new_institution: InstitutionCreate) -> int:
         to_add = Institution()

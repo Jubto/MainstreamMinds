@@ -31,8 +31,7 @@ async def update_institution(
         institution_id: int = Path(default=..., gt=0),
         institution_service: InstitutionService = Depends(InstitutionService),
 ):
-    # return institution_service.add_institution(current_story_id, institution)
-    return ""
+    return institution_service.update_institution(institution, institution_id)
 
 
 @router.post("/", dependencies=[Depends(is_consumer)], response_model=int)
