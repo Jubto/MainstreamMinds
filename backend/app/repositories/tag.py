@@ -17,7 +17,6 @@ class TagRepository:
     # instead of querying the User table every time, could we use functions from UserRepository?
     def get_preference_tags(self, current_user_id: int) -> List[Tag]:
         return self.user_repository.get(current_user_id).tag_links
-        #return self.session.exec(select(User).where(User.id == current_user_id)).one().tag_links
 
     # wasn't able to get it working if the user passes in a TagRW instead of str
     # would be even better if we could also have add_preference_tags with List[TagRW]

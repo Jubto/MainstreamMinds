@@ -17,6 +17,9 @@ class UserRepository(BaseRepository[User, UserUpdate, UserCreate]):
     def get_by_email(self, email: str) -> User:
         return self.session.exec(select(User).where(User.email == email)).first()
 
+    def get_by_id(self, user_id) -> User:
+        return self.session.exec(select(User).where(User.id == user_id)).one()
+
 
 def get_user_repository(session: Session = Depends(get_session)) -> UserRepository:
     return UserRepository(session)
