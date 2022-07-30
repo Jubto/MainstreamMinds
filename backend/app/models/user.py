@@ -1,7 +1,6 @@
 import enum
-from typing import Optional, List, Any
+from typing import Optional, List
 
-from fastapi import Query, Depends
 from pydantic import BaseModel
 from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship

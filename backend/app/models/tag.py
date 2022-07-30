@@ -28,10 +28,3 @@ class TagRW(TagBase):
 
 class TagCreate(TagBase):
     pass  # as above
-
-
-# class StoryTagLink(SQLModel, table=True):
-#     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="story.id")
-#     tag_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
-
-TagRW.update_forward_refs()

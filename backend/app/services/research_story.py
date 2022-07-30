@@ -53,3 +53,12 @@ class ResearchStoryService:
             raise AuthorDetailsMissing
         self.repository.delete(story_id)
         return story.id
+
+    def set_story_like(self, current_user_id: int, story_id: int, liked: bool):
+        self.repository.set_story_like(current_user_id, story_id, liked)
+
+    def get_story_like(self, current_user_id: int, story_id: int) -> bool:
+        return self.repository.get_story_like(current_user_id, story_id)
+
+    def get_num_likes(self, story_id: int) -> int:
+        return self.repository.get_num_likes(story_id)

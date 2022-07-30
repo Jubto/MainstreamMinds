@@ -46,6 +46,41 @@ async def get_stories_by_filters(
     return story_service.get_all(paginator)
 
 
+@router.get("/likes", response_model=int)
+async def get_num_likes(
+        story_id: int,
+        story_service: ResearchStoryService = Depends(ResearchStoryService),
+):
+    """
+    Returns the number of likes on a comment
+    """
+    return story_service.get_num_likes(story_id)
+
+
+@router.get("/like", response_model=bool, dependencies=[Depends(is_consumer)])
+async def get_story_like(
+        story_id: int,
+        story_service: ResearchStoryService = Depends(ResearchStoryService),
+        current_user_id: int = Depends(get_request_user_id)
+):
+    """
+    Returns true/false on whether the current user has liked a comment
+    """
+    return story_service.get_story_like(story_id, current_user_id)
+
+
+@router.put("/like", response_model=None, dependencies=[Depends(is_consumer)])
+async def set_story_like(
+        story_id: int,
+        liked: bool,
+        story_service: ResearchStoryService = Depends(ResearchStoryService),
+        current_user_id: int = Depends(get_request_user_id)
+):
+    """
+    Sets a story to either liked (true) or not liked (false) by the current user
+    """
+    story_service.set_story_like(current_user_id, story_id, liked)
+
 @router.get(
     "/trending",
     response_model=List[ResearchStoryShortRead]
