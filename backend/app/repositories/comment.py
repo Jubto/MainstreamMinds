@@ -4,7 +4,6 @@ import math
 from fastapi import Depends
 from sqlmodel import select, Session
 
-
 from app.db import get_session
 from app.models.comment import CommentCreate, Comment
 from app.models.pagination import Page, Paginator
@@ -31,8 +30,7 @@ class CommentRepository:
         query = select(Comment).where(Comment.story_id == story_id)
         return Page[Comment](items=self.session.exec(paginator.paginate(query)).all(),
                              page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
-        #return self.session.exec(select(Comment).where(Comment.story_id == story_id)).all()
-
+        # return self.session.exec(select(Comment).where(Comment.story_id == story_id)).all()
 
     def set_comment_like(self, current_user_id: int, comment_id: int, liked: bool):
         comment = self.session.exec(select(Comment).where(Comment.id == comment_id)).one()
@@ -42,6 +40,7 @@ class CommentRepository:
             comment.user_likes.append(current_user)
         elif not liked and current_user in comment.user_likes:
             comment.user_likes.remove(current_user)
+        self.session.add(comment)
         self.session.commit()
 
     def get_comment_like(self, current_user_id: int, comment_id: int) -> bool:
