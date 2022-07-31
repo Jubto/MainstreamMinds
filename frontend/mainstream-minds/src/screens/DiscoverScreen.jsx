@@ -4,8 +4,6 @@ import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
 import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
-/* import ScrollStories from "../components/layout/StoryCards/ScrollStories" */
-import Card from "../components/layout/StoryCards/Card"
 import ScrollStories from "../components/layout/StoryCards/ScrollStories"
 
 const StoryField = styled('div')`
@@ -66,8 +64,8 @@ const DiscoverScreen = () => {
 
   return (
     <Page sx={{ ml: 10, mt: 10 }}>
-      <ScrollStories />
-      <ScrollStories extension="/trending"/>
+      <ScrollStories carouselTitle="All"/>
+      <ScrollStories extension="/trending" carouselTitle="Trending"/>
       <Typography variant='h5'>
         Temp routes
       </Typography>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import useMsmApi from "../../../hooks/useMsmApi";
 import { CardCarousel, CarouselContainer } from "./CardStyles"
 import Card from "../../layout/StoryCards/Card";
-import { Button } from '@mui/material/';
+import { Typography, Button } from '@mui/material/';
 
 const ScrollStories = (props) => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
@@ -10,6 +10,7 @@ const ScrollStories = (props) => {
 	const [story, setStory] = useState({})
   
   const extension = props.extension || ''
+  const title = props.carouselTitle
 
   const getStories = async () => {
     try {
@@ -35,6 +36,9 @@ const ScrollStories = (props) => {
   
   return (
     <CarouselContainer>
+      <Typography gutterBottom variant="h5" component="div">
+				<b>{title}</b>
+      </Typography>
       <CardCarousel>
         {story && Object.entries(story).map(([key, value], idx) => (
           <Card 

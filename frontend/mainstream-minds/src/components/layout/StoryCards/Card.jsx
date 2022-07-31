@@ -5,6 +5,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Typography, Button } from '@mui/material/';
+import { StyledCard } from "./CardStyles";
+import Tags from "../Tags"
 
 
 const Card = (props) => {
@@ -15,7 +17,8 @@ const Card = (props) => {
 	// Pass story info in and render
 	const title = props.title
 	const author = props.author
-	const tags = "props.tags here"
+	const tags = props.tags
+
 	const testGetStory = async () => {
     // Testing jwt Bearer API call
     try {
@@ -36,7 +39,7 @@ const Card = (props) => {
   }
 
     return (
-			<MuiCard sx={{ maxWidth: 320, minWidth: 312, border: "none", boxShadow: "none", marginRight: 8 }}>
+			<StyledCard>
 				<CardMedia
 					component="img"
 					height="140"
@@ -52,9 +55,9 @@ const Card = (props) => {
 					</Typography>
 				</CardContent>
 				<CardActions>
-					tags
+					<Tags tags={tags}/>
 				</CardActions>
-			</MuiCard>
+			</StyledCard>
     );
   }
   
