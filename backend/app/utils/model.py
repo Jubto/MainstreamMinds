@@ -25,7 +25,7 @@ def assign_members_from_dict(class_instance: object, dict_to_assign: dict,
     for field, value in dict_to_assign.items():
         if field_mappings:
             field, value = field_mappings.map_field(field, value)
-            print(field, value)
+            # print(field, value)
         setattr(class_instance, field, value)
 
 

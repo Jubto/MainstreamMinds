@@ -40,7 +40,7 @@ class BaseRepository(Generic[ModelT, UpdateModelT, CreateModelT]):
         # TODO: Avoid using len and .all() for count as is inefficient but haven't
         #  found a good way to invoke sql count with sqlmodel
         return Page[ModelT](items=self.session.exec(paginator.paginate(query)).all(),
-                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
+                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_size))
 
     def create(self, create_model: CreateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
         entity = self.model()

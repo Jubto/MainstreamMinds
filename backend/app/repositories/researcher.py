@@ -32,6 +32,9 @@ class ResearcherRepository:
         except NoResultFound:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
+    def get_all(self) -> List[Researcher]:
+        return self.session.exec(select(Researcher)).all()
+
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:
         try:
             return self.session.exec(select(Researcher).where(Researcher.id == researcher_id)).one()
@@ -59,6 +62,7 @@ class ResearcherRepository:
             return self.session.exec(select(Researcher).where(Researcher.id == researcher_id)).one().stories
         except NoResultFound:
             raise NonExistentEntry('Researcher_id', researcher_id)
+
 
 def get_researcher_repository(session: Session = Depends(get_session)) -> ResearcherRepository:
     return ResearcherRepository(session)
