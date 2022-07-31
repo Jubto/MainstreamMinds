@@ -6,6 +6,7 @@ import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
 /* import ScrollStories from "../components/layout/StoryCards/ScrollStories" */
 import Card from "../components/layout/StoryCards/Card"
+import ScrollStories from "../components/layout/StoryCards/ScrollStories"
 
 const StoryField = styled('div')`
   background-color: #bfece6;
@@ -65,7 +66,8 @@ const DiscoverScreen = () => {
 
   return (
     <Page sx={{ ml: 10, mt: 10 }}>
-      <Card title="t" author="a"/>
+      <ScrollStories />
+      <ScrollStories extension="/trending"/>
       <Typography variant='h5'>
         Temp routes
       </Typography>

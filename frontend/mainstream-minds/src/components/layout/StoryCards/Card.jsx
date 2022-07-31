@@ -36,7 +36,7 @@ const Card = (props) => {
   }
 
     return (
-			<MuiCard sx={{ maxWidth: 320, minWidth: 312, border: "none", boxShadow: "none" }}>
+			<MuiCard sx={{ maxWidth: 320, minWidth: 312, border: "none", boxShadow: "none", marginRight: 8 }}>
 				<CardMedia
 					component="img"
 					height="140"
