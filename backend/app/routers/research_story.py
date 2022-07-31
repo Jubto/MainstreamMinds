@@ -66,7 +66,7 @@ async def get_story_like(
     """
     Returns true/false on whether the current user has liked a comment
     """
-    return story_service.get_story_like(story_id, current_user_id)
+    return story_service.get_story_like(current_user_id, story_id)
 
 
 @router.put("/like", response_model=None, dependencies=[Depends(is_consumer)])
@@ -170,4 +170,4 @@ async def delete_story_by_id(
     Delete an existing story in the database, only valid researchers who are authors of the story can access
     this endpoint
     """
-    return story_service.delete(story_id, current_user_id)
+    return story_service.delete(current_user_id, story_id)
