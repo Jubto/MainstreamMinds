@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
 import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
-import Card from "../components/layout/StoryCards/Card";
+/* import ScrollStories from "../components/layout/StoryCards/ScrollStories" */
+import Card from "../components/layout/StoryCards/Card"
 
 const StoryField = styled('div')`
   background-color: #bfece6;
@@ -64,7 +65,7 @@ const DiscoverScreen = () => {
 
   return (
     <Page sx={{ ml: 10, mt: 10 }}>
-      <Card />
+      <Card title="t" author="a"/>
       <Typography variant='h5'>
         Temp routes
       </Typography>

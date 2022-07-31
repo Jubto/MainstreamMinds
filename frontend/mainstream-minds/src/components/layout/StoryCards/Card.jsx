@@ -13,15 +13,15 @@ const Card = (props) => {
 	const [story, setStory] = useState({})
 	
 	// Pass story info in and render
-	const title = "props.title here"
-	const author = "props.link to verified researcher - component"
+	const title = props.title
+	const author = props.author
 	const tags = "props.tags here"
 	const testGetStory = async () => {
     // Testing jwt Bearer API call
     try {
       const resStory = await msmAPI.get('/research_stories')
       setStory(resStory.data)
-			console.log(story)
+			console.log(story, typeof story)
       setErrorMsg(null)
     }
     catch (err) {
@@ -36,7 +36,7 @@ const Card = (props) => {
   }
 
     return (
-			<MuiCard sx={{ maxWidth: 320, border: "none", boxShadow: "none" }}>
+			<MuiCard sx={{ maxWidth: 320, minWidth: 312, border: "none", boxShadow: "none" }}>
 				<CardMedia
 					component="img"
 					height="140"
@@ -48,13 +48,11 @@ const Card = (props) => {
 						{title}
 					</Typography>
 					<Typography variant="body2" color="text.secondary">
-						he{/* {story.map()} */}
+						{author}
 					</Typography>
 				</CardContent>
 				<CardActions>
-					<Button variant='contained' onClick={testGetStory} sx={{ mr: 5 }}>
-						Press to post story
-					</Button>
+					tags
 				</CardActions>
 			</MuiCard>
     );
