@@ -1,10 +1,15 @@
+import re
+
 from sqlmodel import create_engine, SQLModel, Session
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
+from app.settings import get_settings
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
+db_conn = get_settings().DB_CONN
+connect_args = {}
+if re.search(r'sqlite', db_conn, flags=re.IGNORECASE):
+    connect_args = {"check_same_thread": False}
+
+engine = create_engine(db_conn, echo=True, connect_args=connect_args)
 
 
 def create_db_and_tables():
