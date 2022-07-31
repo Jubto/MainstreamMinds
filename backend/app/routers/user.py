@@ -61,7 +61,7 @@ async def get_user_by_id(
         user_service: UserService = Depends(UserService),
 ):
     """
-    Get user details by their id'
+    Get user details by their id
     """
     return user_service.get(user_id)
 
