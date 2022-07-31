@@ -28,6 +28,12 @@ class EmailAlreadyExistsHttpException(HTTPException):
                                                detail="Email already belongs to a registered user", )
 
 
+class AlreadyResearcher(HTTPException):
+    def __init__(self):
+        super(AlreadyResearcher, self).__init__(status_code=status.HTTP_409_CONFLICT,
+                                               detail="User already has the researcher role", )
+
+
 class AuthorDetailsMissing(HTTPException):
     def __init__(self):
         super(AuthorDetailsMissing, self).__init__(status_code=status.HTTP_400_BAD_REQUEST,
