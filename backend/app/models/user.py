@@ -36,10 +36,7 @@ class UserCreate(UserBase):
     password: str = Field()
 
 
-class UserUpdate(SQLModel):
-    first_name: Optional[str] = Field()
-    last_name: Optional[str] = Field()
-    email: Optional[str] = Field()
+class UserUpdate(UserBase):
     password: Optional[str] = Field()
 
 

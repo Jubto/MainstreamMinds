@@ -13,16 +13,18 @@ from app.services.researcher import ResearcherService
 
 router = APIRouter(tags=['researcher'])
 
+
 @router.get(
     "",
-    description='Queries the database returning a list of researchers acording to any filters applied.',
     response_model=List[ResearcherRead]
 )
-async def get_researchers_by_filter(
-    name: Optional[str] = Query(default=None, description="Only return list of researchers with this name"),
-    tags: Optional[List[str]] = Query(default=None, description='Only return a list of researchers associated with this tag'),
+async def get_all_researchers(
+    researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return None
+    """
+    Gets all researchers from the database
+    """
+    return researcher_service.get_all()
 
 
 @router.get(
