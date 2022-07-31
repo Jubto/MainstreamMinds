@@ -23,7 +23,7 @@ class Tag(TagBase, table=True):
 
 
 class TagRW(TagBase):
-    pass  # user only provides tag name
+    id: Optional[int]
 
 
 class TagCreate(TagBase):

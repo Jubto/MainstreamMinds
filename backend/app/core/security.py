@@ -114,7 +114,7 @@ def does_request_user_have_permission(
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         role: Role = payload.get("role")
-        if not role or not can_role_access(min_role_required, role):
+        if role is None or not can_role_access(min_role_required, role):
             raise MissingPermissionsHttpException()
 
     except JWTError:

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends
 
@@ -21,3 +21,9 @@ class TagService:
 
     def create_tag(self, tag: TagRW):
         self.repository.create_tag(tag)
+
+    def get_tags(self) -> List[Tag]:
+        return self.repository.get_tags()
+
+    def get_tag_by_name(self, name: str) -> Optional[Tag]:
+        return self.repository.get_tag_by_name(name)

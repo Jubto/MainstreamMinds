@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends
 from sqlmodel import select, Session
@@ -10,7 +10,7 @@ from app.repositories.user import UserRepository, get_user_repository
 
 
 class TagRepository:
-    def __init__(self, session: Session, user_repository: UserRepository = Depends(get_user_repository)):
+    def __init__(self, session: Session, user_repository: UserRepository):
         self.session = session
         self.user_repository = user_repository  # injection into class fields rather than dependency in get_preference_tags
 
@@ -34,6 +34,13 @@ class TagRepository:
     def get_tag_by_id(self, tag_id: int) -> Tag:
         return self.session.exec(select(Tag).where(Tag.id == tag_id)).one()
 
+    def get_tags(self):
+        return self.session.exec(select(Tag)).all()
 
-def get_tag_repository(session: Session = Depends(get_session)) -> TagRepository:
-    return TagRepository(session)
+    def get_tag_by_name(self, name: str) -> Optional[Tag]:
+        return self.session.exec(select(Tag).where(Tag.name == name)).first()
+
+
+def get_tag_repository(session: Session = Depends(get_session),
+                       user_repository: UserRepository = Depends(get_user_repository)) -> TagRepository:
+    return TagRepository(session, user_repository)
