@@ -18,7 +18,7 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         # TODO: pagination
         return self.session.exec(select(Institution)).all()
 
-    def get_institution_by_id(self, institution_id) -> Institution:
+    def get_institution_by_id(self, institution_id: int) -> Institution:
         try:
             return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
         except NoResultFound:
@@ -43,9 +43,10 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         self.session.commit()
         return db_institution.id
     
-    def delete_institution(self, institution_id):
+    def delete_institution(self, institution_id: int):
         try:
             self.session.delete(self.get(institution_id))
+            self.session.commit()
         except NoResultFound:
             raise NonExistentEntry('Institution_id', institution_id)
 
