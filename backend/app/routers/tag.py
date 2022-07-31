@@ -38,12 +38,12 @@ async def create_tag(
 
 
 @router.get('/', response_model=List[TagRW])
-async def get_tags(tag_service: TagService = Depends(TagService)):
+async def get_all_tags(tag_service: TagService = Depends(TagService)):
     return tag_service.get_tags()
 
 
 @router.get('/{tag_name}', response_model=TagRW, responses={404: {"model": Message404}})
-async def get_tag_by_slug(
+async def get_tag_by_name(
         tag_name: str = Path(default=...),
         tag_service: TagService = Depends(TagService)
 ):
