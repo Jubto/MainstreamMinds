@@ -65,7 +65,10 @@ class ResearchStoryRepository():
         self.session.commit()
 
     def set_story_like(self, current_user_id: int, story_id: int, liked: bool):
-        story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        try:
+            story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        except NoResultFound:
+            raise NonExistentEntry('ResearchStory_id', story_id)
         # should be using user_repository here, but it doesn't work for some reason
         current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
         if liked and current_user not in story.likes:
@@ -76,13 +79,19 @@ class ResearchStoryRepository():
         self.session.commit()
 
     def get_story_like(self, current_user_id: int, story_id: int) -> bool:
-        story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        try:
+            story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        except NoResultFound:
+            raise NonExistentEntry('ResearchStory_id', story_id)
         # should be using user_repository here, but it doesn't work for some reason
         current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
         return current_user in story.likes
 
     def get_num_likes(self, story_id: int) -> int:
-        story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        try:
+            story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        except NoResultFound:
+            raise NonExistentEntry('ResearchStory_id', story_id)
         return len(story.likes)
 
 
