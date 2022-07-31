@@ -1,4 +1,4 @@
-## Poetry
+## Poetry - Installation
 
 Poetry documentation: `https://python-poetry.org/docs/`
 
@@ -22,6 +22,14 @@ To install the required packages run `poetry install` in the root folder of the 
 where the `pyproject.toml` file is.
 
 To add dependencies use `poetry add <dependency-name>`.
+
+## Setting up
+The server requires a file `.env.local` in the backend root folder in order to determine which
+database type to use (sqlite - flatfile, or PostgreSQL - server) and how to connect to it. The 
+`DB_CONN` variable in this file determines the database connection string.
+
+If you just want to run the server locally, copy the sample env file with `cp .env.sample .env.local`
+and then uncomment the 2nd line with the sqlite connection string.
 
 ## Running the project
 

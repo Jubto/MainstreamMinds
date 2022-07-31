@@ -9,7 +9,7 @@ from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
-from app.models.user import UserRead, User, UserCreate
+from app.models.user import Role, User, UserCreate
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import ModelFieldsMapping
 

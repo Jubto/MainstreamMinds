@@ -6,77 +6,85 @@ from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
 from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate
-from app.models.tag import Tag
-from app.repositories.base import BaseRepository, ModelT
+from app.models.user import User
+from app.repositories.tag import get_tag_repository
+from app.repositories.researcher import get_researcher_repository
+from app.repositories.institution import get_institution_repository
 from app.utils.model import assign_members_from_dict
-from app.utils.exceptions import NonExistentResearchStory
+from app.utils.exceptions import NonExistentEntry
+from app.models.pagination import Page, Paginator
 
 
-class ResearchStoryRepository(BaseRepository[ResearchStory, ResearchStoryUpdate, ResearchStoryCreate]):
-
-    def get_all(self, offset: int, limit: int) -> List[ResearchStory]:
-        # TEMP TODO filtering etc
-        return self.session.exec(select(ResearchStory)).all()
-
-    def get_all_by_tag(self, offset: int, limit: int) -> List[ResearchStory]:
-        pass
-
-    def get_all_by_author(self, offset: int, limit: int) -> List[ResearchStory]:
-        pass
-
-    def get_all_by_institution(self, offset: int, limit: int) -> List[ResearchStory]:
-        pass
+class ResearchStoryRepository():
+    def __init__(self, session: Session):
+        self.session = session
+        self.researcher_repository = get_researcher_repository(session)
+        self.institution_repository = get_institution_repository(session)
+        self.tag_repository = get_tag_repository(session)
 
     def get(self, story_id: int) -> ResearchStory:
         try:
             return self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
         except NoResultFound:
-            raise NonExistentResearchStory
+            raise NonExistentEntry('ResearchStory_id', story_id)
+
+    def get_all(self, paginator: Paginator) -> List[ResearchStory]:
+        # pagination not working - doesn't return the researchers in each story for some reason
+        # query = select(ResearchStory)
+        # return Page[ResearchStory](items=self.session.exec(paginator.paginate(query)).all(),
+        #                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
+        return self.session.exec(select(ResearchStory)).all()
 
     def create(self, create_story: ResearchStoryCreate) -> ResearchStory:
         story = ResearchStory()
-        create_template: dict = create_story.dict()
-        create_template.pop("authors")
-        create_template.pop("tags")
-
-        # TODO TEMP: SQLite cannot handle lists, so convert to string for now in order to store in db
-        papers = create_template.pop("papers") 
-        create_template["papers"] = ','.join([paper['paper_title'] for paper in papers])
-
-        # populate new story and m-to-m linked tables
-        assign_members_from_dict(story, create_template)
-        story.tags = self._get_rows(Tag, create_story.tags, 'name')
-        # story_model.researchers = self._get_rows(Researcher, create_story.authors, 'researcher_id') #TODO wait for merge
-        # story_model.institutions = self._get_rows(Institute, create_story.authors, 'institution_id') #TODO wait for merge
+        assign_members_from_dict(story, create_story.dict(exclude_unset=True,
+                                                          exclude={"authors", "institutions", "tags"}))
+        story.researchers = [self.researcher_repository.get_researcher_by_id(r_id)
+                             for r_id in create_story.authors]
+        story.institutions = [self.institution_repository.get_institution_by_id(i_id)
+                              for i_id in create_story.institutions]
+        story.tags = [self.tag_repository.get_tag_by_id(t_id) for t_id in create_story.tags]
         self.session.add(story)
         self.session.commit()
         return story
 
     def update(self, story: ResearchStory, update_story: ResearchStoryUpdate) -> ResearchStory:
-        update_template = update_story.dict(exclude_unset=True)
-        update_authors = update_template.pop("authors", None)
-        update_papers = update_template.pop("papers", None) # TEMP TODO postgres
-        update_tags = update_template.pop("tags", None)
-        assign_members_from_dict(story, update_template)
-
-        # if update_authors:
-            # story.authors = self._get_rows(Tag, update_story.authors, 'researcher_id') TODO wait for merge
-        if update_papers:
-            # TEMP SQlite cannot handle lists
-            story.papers = ','.join([paper.paper_title for paper in update_story.papers])
-        if update_tags:
-            story.tags = self._get_rows(Tag, update_story.tags, 'name')
-
+        assign_members_from_dict(story, update_story.dict(exclude_unset=True,
+                                                          exclude={"authors", "institutions", "tags"}))
+        story.researchers = [self.researcher_repository.get_researcher_by_id(r_id)
+                             for r_id in update_story.authors]
+        story.institutions = [self.institution_repository.get_institution_by_id(i_id)
+                              for i_id in update_story.institutions]
+        story.tags = [self.tag_repository.get_tag_by_id(t_id) for t_id in update_story.tags]
         self.session.add(story)
         self.session.commit()
         return story
 
-    def _get_rows(self, table: ModelT, items: list, key: str) -> List[ModelT]:
-        return [
-            row for item in {getattr(item, key) for item in items}
-            if (row := self.session.exec(select(table).where(table.name == item)).first())
-        ]
+    def delete(self, story_id: int):
+        self.session.delete(self.get(story_id))
+        self.session.commit()
+
+    def set_story_like(self, current_user_id: int, story_id: int, liked: bool):
+        story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        # should be using user_repository here, but it doesn't work for some reason
+        current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
+        if liked and current_user not in story.likes:
+            story.likes.append(current_user)
+        elif not liked and current_user in story.likes:
+            story.likes.remove(current_user)
+        self.session.add(story)
+        self.session.commit()
+
+    def get_story_like(self, current_user_id: int, story_id: int) -> bool:
+        story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        # should be using user_repository here, but it doesn't work for some reason
+        current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
+        return current_user in story.likes
+
+    def get_num_likes(self, story_id: int) -> int:
+        story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
+        return len(story.likes)
 
 
 def get_researchstory_repository(session: Session = Depends(get_session)) -> ResearchStoryRepository:
-    return ResearchStoryRepository(ResearchStory, session)
+    return ResearchStoryRepository(session)
