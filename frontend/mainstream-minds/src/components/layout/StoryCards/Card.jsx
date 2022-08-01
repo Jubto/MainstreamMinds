@@ -20,6 +20,7 @@ const Card = (props) => {
 	const tags = props.tags
 	const researcherId = props.researcher
 	const storyId = props.storyId
+	const thumbnail = props.thumbnail
 
 	const getLiked = async () => {
 		try {
@@ -56,8 +57,7 @@ const Card = (props) => {
 			<CardMedia
 				component="img"
 				height="140"
-				image="https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
-				alt="cat"
+				image={thumbnail}
 			/>
 			<CardContent>
 				<CardTitle>

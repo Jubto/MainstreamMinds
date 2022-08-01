@@ -16,7 +16,7 @@ const ScrollStories = (props) => {
     try {
       const resStory = await msmAPI.get(`/research_stories${extension}`)
       setStory(resStory.data)
-			//console.log(story, typeof story)
+			console.log(story, typeof story)
       setErrorMsg(null)
     }
     catch (err) {
@@ -48,6 +48,7 @@ const ScrollStories = (props) => {
             researcherId={value.researchers[0]}
             storyId={value.id}
             showLikes={props.showLikes}
+            thumbnail={value.thumbnail}
           />
         )) : <p>No stories to show</p>
         }
