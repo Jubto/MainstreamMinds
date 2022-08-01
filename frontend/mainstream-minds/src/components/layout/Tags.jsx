@@ -28,15 +28,17 @@ const Tags = (props) => {
   }
 
   return (
-    <Stack direction="row" spacing={1}>
-      {tags && tags.length!==0 && tags.map(([key, value], idx) => (
+    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'auto'}}>
+      {tags && tags.length!==0 && tags.map((value) => (
           <Chip 
-            label="Clickable"
+            key={value.name}
+            label={value.name}
             onClick={handleClick} 
-            sx={{ bgcolor: 'green', color: 'white'}}
+            sx={{ bgcolor: randomColour(), color: 'white'}}
             size="small"
           />
-        ))}
+        ))
+      }
       <Chip 
         label="Placeholder" 
         onClick={handleClick}

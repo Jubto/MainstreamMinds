@@ -46,6 +46,7 @@ const DiscoverScreen = () => {
         content_body: "Vestibulum gravida dapibus risus, quis lacinia eros mattis viverra.",
         thumbnail: "string",
         video_link: "string",
+        transcript: "string"
       }
       const resStory = await msmAPI.post('/research_stories', story)
       setStory(resStory.data)
@@ -64,8 +65,11 @@ const DiscoverScreen = () => {
 
   return (
     <Page sx={{ ml: 10, mt: 10 }}>
-      <ScrollStories carouselTitle="All"/>
-      <ScrollStories extension="/trending" carouselTitle="Trending"/>
+      <ScrollStories carouselTitle="Watch Later" showLikes={!!auth.accessToken}/>
+      <ScrollStories carouselTitle="Recommended" showLikes={!!auth.accessToken}/>
+      {/* Scroll Stories for interests */}
+      <ScrollStories carouselTitle="Implement Interests" showLikes={!!auth.accessToken}/>
+      <ScrollStories carouselTitle="Trending" showLikes={!!auth.accessToken}/>
       <Typography variant='h5'>
         Temp routes
       </Typography>

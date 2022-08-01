@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import useMsmApi from "../../../hooks/useMsmApi";
-import { CardCarousel, CarouselContainer } from "./CardStyles"
+import { CardCarousel, CarouselTitle, CarouselContainer } from "./CardStyles"
 import Card from "../../layout/StoryCards/Card";
 import { Typography, Button } from '@mui/material/';
 
@@ -16,7 +16,7 @@ const ScrollStories = (props) => {
     try {
       const resStory = await msmAPI.get(`/research_stories${extension}`)
       setStory(resStory.data)
-			console.log(story, typeof story)
+			//console.log(story, typeof story)
       setErrorMsg(null)
     }
     catch (err) {
@@ -33,22 +33,24 @@ const ScrollStories = (props) => {
   useEffect(() => {
     getStories()
   }, [])
-  
+
   return (
     <CarouselContainer>
-      <Typography gutterBottom variant="h5" component="div">
-				<b>{title}</b>
-      </Typography>
+      <CarouselTitle>
+        {title}
+      </CarouselTitle>
       <CardCarousel>
-        {story && Object.entries(story).map(([key, value], idx) => (
+        {(story && story.length) ? Object.entries(story).map(([key, value], idx) => (
           <Card 
             key={idx} 
             title={value.title} 
-            author={value.authors[0].researcher_name}
             tags={value.tags}
+            researcherId={value.researchers[0]}
+            storyId={value.id}
+            showLikes={props.showLikes}
           />
-        ))}
-        <Card />
+        )) : <p>No stories to show</p>
+        }
       </CardCarousel>
     </CarouselContainer>
   );
