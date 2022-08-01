@@ -30,7 +30,7 @@ class ResearchStoryService:
         self.researcher_repository = researcher_repository
         self.field_mappings = ModelFieldsMapping()
 
-    def get_all(self, paginator: Paginator) -> List[ResearchStory]:
+    def get_all(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
         return self.repository.get_all(paginator)
 
     def get(self, story_id: int) -> ResearchStory:
