@@ -3,6 +3,7 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, Path, Query
 
 from app.core.security import get_request_user_id, is_researcher, is_consumer
+from app.models.pagination import Page, Paginator, get_paginator
 from app.models.researcher import (
     ResearcherRead,
     ResearcherUpdate,
@@ -19,7 +20,7 @@ router = APIRouter(tags=['researcher'])
     response_model=List[ResearcherRead]
 )
 async def get_all_researchers(
-    researcher_service: ResearcherService = Depends(ResearcherService)
+        researcher_service: ResearcherService = Depends(ResearcherService)
 ):
     """
     Gets all researchers from the database
@@ -33,8 +34,8 @@ async def get_all_researchers(
     response_model=ResearcherRead
 )
 async def get_researcher_by_id(
-    researcher_id: int = Path(default=..., gt=0),
-    researcher_service: ResearcherService = Depends(ResearcherService)
+        researcher_id: int = Path(default=..., gt=0),
+        researcher_service: ResearcherService = Depends(ResearcherService)
 ):
     return researcher_service.get_researcher_by_id(researcher_id)
 
@@ -42,13 +43,14 @@ async def get_researcher_by_id(
 @router.get(
     "/{researcher_id}/stories",
     description='Returns all stories (in short read form) associated with a researcher',
-    response_model=List[ResearchStoryShortRead]
+    response_model=Page[ResearchStoryShortRead]
 )
 async def get_stories_by_researcher(
-    researcher_id: int = Path(default=..., gt=0),
-    researcher_service: ResearcherService = Depends(ResearcherService)
+        researcher_id: int = Path(default=..., gt=0),
+        paginator: Paginator = Depends(get_paginator),
+        researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return researcher_service.get_stories_by_researcher(researcher_id)
+    return researcher_service.get_stories_by_researcher(researcher_id, paginator)
 
 
 @router.post(
@@ -58,9 +60,9 @@ async def get_stories_by_researcher(
     dependencies=[Depends(is_consumer)]
 )
 async def upgrade_to_researcher(
-    new_researcher: ResearcherCreate,
-    current_user_id: int = Depends(get_request_user_id),
-    researcher_service: ResearcherService = Depends(ResearcherService)
+        new_researcher: ResearcherCreate,
+        current_user_id: int = Depends(get_request_user_id),
+        researcher_service: ResearcherService = Depends(ResearcherService)
 ):
     return researcher_service.upgrade(new_researcher, current_user_id)
 
@@ -72,8 +74,8 @@ async def upgrade_to_researcher(
     dependencies=[Depends(is_researcher)]
 )
 async def update_researcher(
-    updated_details: ResearcherUpdate,
-    current_user_id: int = Depends(get_request_user_id),
-    researcher_service: ResearcherService = Depends(ResearcherService)
+        updated_details: ResearcherUpdate,
+        current_user_id: int = Depends(get_request_user_id),
+        researcher_service: ResearcherService = Depends(ResearcherService)
 ):
     return researcher_service.update_researcher(updated_details, current_user_id)
