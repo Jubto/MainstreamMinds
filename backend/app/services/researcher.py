@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from fastapi import Depends
 
-from app.models.pagination import Paginator
+from app.models.pagination import Paginator, Page
 from app.models.user import Role
 from app.models.researcher import ResearcherCreate, ResearcherUpdate, Researcher
 from app.repositories.researcher import ResearcherRepository, get_researcher_repository
@@ -32,5 +32,5 @@ class ResearcherService:
     def update_researcher(self, updated_details: ResearcherUpdate, current_user_id: int) -> Researcher:
         return self.repository.update_researcher(updated_details, current_user_id)
 
-    def get_stories_by_researcher(self, researcher_id: int, paginator: Paginator) -> List[ResearchStory]:
+    def get_stories_by_researcher(self, researcher_id: int, paginator: Paginator) -> Page[ResearchStoryShortRead]:
         return self.repository.get_stories_by_researcher(researcher_id, paginator)
