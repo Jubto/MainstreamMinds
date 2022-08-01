@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import useMsmApi from "../../../hooks/useMsmApi";
 import { CardCarousel, CarouselTitle, CarouselContainer } from "./CardStyles"
 import Card from "../../layout/StoryCards/Card";
-import { Typography, Button } from '@mui/material/';
 
 const ScrollStories = (props) => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls

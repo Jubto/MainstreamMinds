@@ -1,29 +1,29 @@
-import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { randomColour } from '../styles/colours';
 
-const Tags = (props) => {
+const SearchStack = (props) => {
   const tags = props.tags;
-  const tagSize = props.tagSize || ""
   const handleClick = () => {
     console.info('You clicked the Chip.');
   };
 
+  const handleDelete = () => {
+    console.info('You clicked the delete icon.');
+  };
+
   return (
-    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'auto'}}>
+    <Stack direction="row" spacing={1} sx={{width: '40vw', overflow: 'auto'}}>
       {tags && tags.length!==0 && tags.map((value) => (
           <Chip 
             key={value.name}
             label={value.name}
             onClick={handleClick} 
-            sx={{ bgcolor: randomColour(), color: 'white'}}
-            size={tagSize}
+            /* activate on click onDelete={handleDelete} */
           />
         ))
       }
     </Stack>
-  );
+  )
 }
 
-export default Tags;
+export default SearchStack;

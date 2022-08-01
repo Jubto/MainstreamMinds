@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
@@ -64,7 +64,7 @@ const DiscoverScreen = () => {
   }
 
   return (
-    <Page sx={{ ml: 10, mt: 10 }}>
+    <Page>
       <ScrollStories carouselTitle="Watch Later" showLikes={!!auth.accessToken}/>
       <ScrollStories carouselTitle="Recommended" showLikes={!!auth.accessToken}/>
       {/* Scroll Stories for interests */}
