@@ -46,7 +46,7 @@ class ResearchStoryService:
             raise AuthorDetailsMissing
         return self.repository.update(story, update_story)
 
-    def delete(self, story_id: int, current_user_id: int) -> int:
+    def delete(self, current_user_id: int, story_id: int) -> int:
         researcher = self.researcher_repository.get_researcher_by_user_id(current_user_id)
         story = self.repository.get(story_id)
         if not [author for author in story.researchers if author.id == researcher.id]:

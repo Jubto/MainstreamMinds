@@ -22,6 +22,9 @@ class ResearcherService:
         self.user_repository.update_role(current_user_id, Role.RESEARCHER)
         return researcher_id
 
+    def get_all(self) -> List[Researcher]:
+        return self.repository.get_all()
+
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:
         return self.repository.get_researcher_by_id(researcher_id)
 

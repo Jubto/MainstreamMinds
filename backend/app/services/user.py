@@ -9,7 +9,7 @@ from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
-from app.models.user import Role, User, UserCreate
+from app.models.user import Role, User, UserCreate, UserUpdate
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import ModelFieldsMapping
 
@@ -26,6 +26,15 @@ class UserService:
 
     def create(self, user_create: UserCreate):
         self.repository.create(user_create, mappings=self.field_mappings)
+
+    def update(self, current_user_id: int, user_update: UserUpdate):
+        return self.repository.update(current_user_id, user_update, mappings=self.field_mappings)
+
+    def delete(self, current_user_id: int):
+        self.repository.delete(current_user_id)
+
+    def get(self, user_id: int):
+        return self.repository.get(user_id)
 
     def get_all(self, sort_by: Optional[SortByFields[User]] = None,
                 filter_by: Optional[ModelFilter[User]] = None,

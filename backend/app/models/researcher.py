@@ -36,4 +36,5 @@ class ResearcherUpdate(ResearcherBase):
 
 
 class ResearcherRead(ResearcherBase):
+    id: int
     user_id: int
