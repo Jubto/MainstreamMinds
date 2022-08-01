@@ -3,7 +3,7 @@ from typing import List
 from fastapi import Depends
 
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
-from app.models.pagination import Paginator
+from app.models.pagination import Paginator, Page
 from app.repositories.institution import InstitutionRepository, get_institution_repository
 
 
@@ -13,7 +13,7 @@ class InstitutionService:
                 ):
         self.repository = institution_repository
 
-    def get_institutions(self, paginator: Paginator) -> List[Institution]:
+    def get_institutions(self, paginator: Paginator) -> Page[InstitutionRead]:
         return self.repository.get_institutions(paginator)
 
     def get_institution_by_id(self, institution_id: int) -> Institution:

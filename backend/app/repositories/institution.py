@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import Depends
 from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
@@ -8,8 +6,6 @@ from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.repositories.base import BaseRepository
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
-# TODO: verify what the ResearchStory object looks like
-from app.models.research_story import ResearchStory
 from app.utils.model import assign_members_from_dict
 from app.utils.exceptions import NonExistentEntry
 
