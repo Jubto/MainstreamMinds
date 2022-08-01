@@ -86,7 +86,7 @@ async def set_story_like(
 
 @router.get(
     "/trending",
-    response_model=List[ResearchStoryShortRead]
+    response_model=Page[ResearchStoryShortRead]
 )
 async def get_trending_stories(
         paginator: Paginator = Depends(get_paginator),
@@ -100,7 +100,7 @@ async def get_trending_stories(
 
 @router.get(
     "/recommendations",
-    response_model=List[ResearchStoryShortRead],
+    response_model=Page[ResearchStoryShortRead],
     dependencies=[Depends(is_consumer)]
 )
 async def get_recommended_stories(

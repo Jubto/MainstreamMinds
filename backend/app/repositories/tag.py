@@ -1,9 +1,11 @@
+import math
 from typing import List, Optional
 
 from fastapi import Depends
 from sqlmodel import select, Session
 
 from app.db import get_session
+from app.models.pagination import Page, Paginator
 from app.models.tag import Tag, TagRW
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
@@ -34,8 +36,10 @@ class TagRepository:
     def get_tag_by_id(self, tag_id: int) -> Tag:
         return self.session.exec(select(Tag).where(Tag.id == tag_id)).one()
 
-    def get_tags(self):
-        return self.session.exec(select(Tag)).all()
+    def get_tags(self, paginator: Paginator) -> Page[TagRW]:
+        query = select(Tag)
+        return Page[TagRW](items=self.session.exec(paginator.paginate(query)).all(),
+                           page_count=paginator.get_page_count(self.session, query))
 
     def get_tag_by_name(self, name: str) -> Optional[Tag]:
         return self.session.exec(select(Tag).where(Tag.name == name)).first()
