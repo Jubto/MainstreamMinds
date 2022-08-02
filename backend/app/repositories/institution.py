@@ -46,7 +46,7 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         try:
             self.session.delete(self.get(institution_id))
             self.session.commit()
-        except NoResultFound:
+        except:
             raise NonExistentEntry('Institution_id', institution_id)
 
 

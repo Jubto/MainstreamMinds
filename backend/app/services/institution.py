@@ -25,5 +25,5 @@ class InstitutionService:
     def create_institution(self, new_institution: InstitutionCreate) -> int:
         return self.repository.create_institution(new_institution)
 
-    def delete_institution(self, institution_id: int) -> int:
-        self.repository.delete_institution(institution_id)
+    def delete_institution(self, institution_id: int):
+        return self.repository.delete_institution(institution_id)
