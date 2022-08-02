@@ -1,4 +1,5 @@
 from typing import List
+from app.models.researcher import Researcher
 
 from fastapi import APIRouter, Depends, Path
 
@@ -6,6 +7,8 @@ from app.core.security import get_request_user_id, is_consumer, is_researcher
 from app.models.institution import InstitutionRead, InstitutionCreate, InstitutionUpdate
 from app.models.pagination import Page, Paginator, get_paginator
 from app.services.institution import InstitutionService
+from app.models.researcher import Researcher
+
 
 router = APIRouter(tags=['institution'])
 
@@ -77,7 +80,7 @@ async def delete_institution(
 @router.get(
     "/{institution_id}/researchers",
     description='Returns all researchers associated with an institution given the institution id',
-    response_model=Page[InstitutionRead]
+    response_model=Page[Researcher]
 )
 async def get_institution_researchers(
         paginator: Paginator = Depends(get_paginator),

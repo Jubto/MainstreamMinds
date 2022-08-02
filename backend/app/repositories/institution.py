@@ -1,3 +1,4 @@
+from app.models.researcher import Researcher
 from fastapi import Depends
 from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
@@ -6,6 +7,7 @@ from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.repositories.base import BaseRepository
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
+from app.models.researcher import Researcher
 from app.utils.model import assign_members_from_dict
 from app.utils.exceptions import NonExistentEntry
 
@@ -49,6 +51,10 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         except:
             raise NonExistentEntry('Institution_id', institution_id)
 
+    def get_institution_researchers(self, paginator: Paginator, institution_id: int) -> Page[Researcher]:
+        query = select(Researcher).where(Researcher.institution_id == institution_id)
+        return Page[Researcher](items=self.session.exec(paginator.paginate(query)).all(),
+                                     page_count=paginator.get_page_count(self.session, query))
 
 def get_institution_repository(session: Session = Depends(get_session)) -> InstitutionRepository:
     return InstitutionRepository(Institution, session)
