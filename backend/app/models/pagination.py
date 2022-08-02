@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 from typing import List, Union, Generic, TypeVar
 
@@ -22,6 +23,9 @@ class Paginator:
 
     def paginate(self, query: Union[Select, SelectOfScalar]) -> Union[Select, SelectOfScalar]:
         return query.limit(self.page_size).offset(self.page * self.page_size)
+
+    def get_page_count(self, session, base_query: Union[Select, SelectOfScalar]) -> int:
+        return math.ceil(len(session.exec(base_query).all()) / self.page_size)
 
 
 def get_paginator(page: int = Query(default=0, description='The page to get using pagination (0 indexed)'),

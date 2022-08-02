@@ -2,8 +2,9 @@ import { useState } from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
-import { Box, Button, List, ListItem, Typography, styled } from "@mui/material"
+import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
+import ScrollStories from "../components/layout/StoryCards/ScrollStories"
 
 const StoryField = styled('div')`
   background-color: #bfece6;
@@ -45,6 +46,7 @@ const DiscoverScreen = () => {
         content_body: "Vestibulum gravida dapibus risus, quis lacinia eros mattis viverra.",
         thumbnail: "string",
         video_link: "string",
+        transcript: "string"
       }
       const resStory = await msmAPI.post('/research_stories', story)
       setStory(resStory.data)
@@ -62,7 +64,12 @@ const DiscoverScreen = () => {
   }
 
   return (
-    <Page sx={{ ml: 10, mt: 10 }}>
+    <Page>
+      <ScrollStories carouselTitle="Watch Later" showLikes={!!auth.accessToken}/>
+      <ScrollStories carouselTitle="Recommended" showLikes={!!auth.accessToken}/>
+      {/* Scroll Stories for interests */}
+      <ScrollStories carouselTitle="Implement Interests" showLikes={!!auth.accessToken}/>
+      <ScrollStories carouselTitle="Trending" showLikes={!!auth.accessToken}/>
       <Typography variant='h5'>
         Temp routes
       </Typography>

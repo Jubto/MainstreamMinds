@@ -16,7 +16,6 @@ from app.models.research_story import (
 )
 from app.services.research_story import ResearchStoryService
 
-
 router = APIRouter(tags=['story'])
 
 
@@ -27,17 +26,20 @@ class ordering(str, Enum):
 
 @router.get(
     "",
-    response_model=List[ResearchStoryShortRead]
+    response_model=Page[ResearchStoryShortRead]
 )
 async def get_stories_by_filters(
-    authors: Optional[List[int]] = Query(default=None, description="Only return list which have these authors id's"),
-    institutions: Optional[List[int]] = Query(default=None, description="Only return list which have these institutions id's"),
-    tags: Optional[List[str]] = Query(default=None, description='Only return list which contain these tags'),
-    like_count: Optional[ordering] = Query(default=None, description='Order list by like count'),
-    comment_count: Optional[ordering] = Query(default=None, description='Order list by comment count' ),
-    search: Optional[str] = Query(default=None, description='Generic search against story title, summary, content, transcript'),
-    paginator: Paginator = Depends(get_paginator),
-    story_service: ResearchStoryService = Depends()
+        authors: Optional[List[int]] = Query(default=None,
+                                             description="Only return list which have these authors id's"),
+        institutions: Optional[List[int]] = Query(default=None,
+                                                  description="Only return list which have these institutions id's"),
+        tags: Optional[List[str]] = Query(default=None, description='Only return list which contain these tags'),
+        like_count: Optional[ordering] = Query(default=None, description='Order list by like count'),
+        comment_count: Optional[ordering] = Query(default=None, description='Order list by comment count'),
+        search: Optional[str] = Query(default=None,
+                                      description='Generic search against story title, summary, content, transcript'),
+        paginator: Paginator = Depends(get_paginator),
+        story_service: ResearchStoryService = Depends()
 ):
     """
     Query the database based on the following filters, list of summarised story data is returned.
@@ -81,13 +83,14 @@ async def set_story_like(
     """
     story_service.set_story_like(current_user_id, story_id, liked)
 
+
 @router.get(
     "/trending",
-    response_model=List[ResearchStoryShortRead]
+    response_model=Page[ResearchStoryShortRead]
 )
 async def get_trending_stories(
-    paginator: Paginator = Depends(get_paginator),
-    story_service: ResearchStoryService = Depends()
+        paginator: Paginator = Depends(get_paginator),
+        story_service: ResearchStoryService = Depends()
 ):
     """
     Returns list of globally recommended stories
@@ -97,7 +100,7 @@ async def get_trending_stories(
 
 @router.get(
     "/recommendations",
-    response_model=List[ResearchStoryShortRead],
+    response_model=Page[ResearchStoryShortRead],
     dependencies=[Depends(is_consumer)]
 )
 async def get_recommended_stories(
@@ -115,8 +118,8 @@ async def get_recommended_stories(
     response_model=ResearchStoryLongRead
 )
 async def get_story_by_id(
-    story_id: int = Path(default=..., gt=0),
-    story_service: ResearchStoryService = Depends()
+        story_id: int = Path(default=..., gt=0),
+        story_service: ResearchStoryService = Depends()
 ):
     """
     Return all information regarding a given research story'
@@ -130,8 +133,8 @@ async def get_story_by_id(
     response_model=ResearchStoryLongRead
 )
 async def post_story(
-    create_story: ResearchStoryCreate,
-    story_service: ResearchStoryService = Depends()
+        create_story: ResearchStoryCreate,
+        story_service: ResearchStoryService = Depends()
 ):
     """
     Create a new story in the database, only valid researchers can access this endpoint
@@ -145,10 +148,10 @@ async def post_story(
     dependencies=[Depends(is_researcher)]
 )
 async def update_story_by_id(
-    update_story: ResearchStoryUpdate,
-    story_id: int = Path(default=..., gt=0),
-    jwt_derived_researcher_id: int = Depends(get_request_user_id),
-    story_service: ResearchStoryService = Depends(ResearchStoryService)
+        update_story: ResearchStoryUpdate,
+        story_id: int = Path(default=..., gt=0),
+        jwt_derived_researcher_id: int = Depends(get_request_user_id),
+        story_service: ResearchStoryService = Depends(ResearchStoryService)
 ):
     """
     Update an existing story in the database, only valid researchers who
@@ -162,9 +165,9 @@ async def update_story_by_id(
     dependencies=[Depends(is_researcher)]
 )
 async def delete_story_by_id(
-    story_id: int = Path(default=..., gt=0),
-    current_user_id: int = Depends(get_request_user_id),
-    story_service: ResearchStoryService = Depends(ResearchStoryService)
+        story_id: int = Path(default=..., gt=0),
+        current_user_id: int = Depends(get_request_user_id),
+        story_service: ResearchStoryService = Depends(ResearchStoryService)
 ):
     """
     Delete an existing story in the database, only valid researchers who are authors of the story can access

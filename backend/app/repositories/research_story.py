@@ -1,11 +1,9 @@
-from typing import List
-
 from fastapi import Depends
 from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
-from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate
+from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate, ResearchStoryShortRead
 from app.models.user import User
 from app.repositories.tag import get_tag_repository
 from app.repositories.researcher import get_researcher_repository
@@ -15,7 +13,7 @@ from app.utils.exceptions import NonExistentEntry
 from app.models.pagination import Page, Paginator
 
 
-class ResearchStoryRepository():
+class ResearchStoryRepository:
     def __init__(self, session: Session):
         self.session = session
         self.researcher_repository = get_researcher_repository(session)
@@ -28,12 +26,10 @@ class ResearchStoryRepository():
         except NoResultFound:
             raise NonExistentEntry('ResearchStory_id', story_id)
 
-    def get_all(self, paginator: Paginator) -> List[ResearchStory]:
-        # pagination not working - doesn't return the researchers in each story for some reason
-        # query = select(ResearchStory)
-        # return Page[ResearchStory](items=self.session.exec(paginator.paginate(query)).all(),
-        #                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
-        return self.session.exec(select(ResearchStory)).all()
+    def get_all(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        query = select(ResearchStory)
+        return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                            page_count=paginator.get_page_count(self.session, query))
 
     def create(self, create_story: ResearchStoryCreate) -> ResearchStory:
         story = ResearchStory()

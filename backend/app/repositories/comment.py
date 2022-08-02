@@ -29,8 +29,7 @@ class CommentRepository:
     def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[Comment]:
         query = select(Comment).where(Comment.story_id == story_id)
         return Page[Comment](items=self.session.exec(paginator.paginate(query)).all(),
-                             page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
-        # return self.session.exec(select(Comment).where(Comment.story_id == story_id)).all()
+                             page_count=paginator.get_page_count(self.session, query))
 
     def set_comment_like(self, current_user_id: int, comment_id: int, liked: bool):
         comment = self.session.exec(select(Comment).where(Comment.id == comment_id)).one()

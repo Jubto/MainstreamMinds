@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from app.core.security import get_request_user_id, is_consumer
 from app.models.exception import Message404
+from app.models.pagination import Page, Paginator, get_paginator
 from app.models.tag import TagRW
 from app.services.tag import TagService
 
@@ -37,9 +38,11 @@ async def create_tag(
     return tag_service.create_tag(tag)
 
 
-@router.get('/', response_model=List[TagRW])
-async def get_all_tags(tag_service: TagService = Depends(TagService)):
-    return tag_service.get_tags()
+@router.get('/', response_model=Page[TagRW])
+async def get_all_tags(
+        paginator: Paginator = Depends(get_paginator),
+        tag_service: TagService = Depends(TagService)):
+    return tag_service.get_tags(paginator)
 
 
 @router.get('/{tag_name}', response_model=TagRW, responses={404: {"model": Message404}})

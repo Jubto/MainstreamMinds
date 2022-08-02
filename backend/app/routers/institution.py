@@ -4,16 +4,18 @@ from fastapi import APIRouter, Depends, Path
 
 from app.core.security import get_request_user_id, is_consumer, is_researcher
 from app.models.institution import InstitutionRead, InstitutionCreate, InstitutionUpdate
+from app.models.pagination import Page, Paginator, get_paginator
 from app.services.institution import InstitutionService
 
 router = APIRouter(tags=['institution'])
 
 
-@router.get("/", response_model=List[InstitutionRead], dependencies=[Depends(is_consumer)])
+@router.get("/", response_model=Page[InstitutionRead], dependencies=[Depends(is_consumer)])
 async def get_institutions(
+        paginator: Paginator = Depends(get_paginator),
         institution_service: InstitutionService = Depends(InstitutionService),
 ):
-    return institution_service.get_institutions()
+    return institution_service.get_institutions(paginator)
 
 
 @router.get("/{institution_id}", dependencies=[Depends(is_consumer)], response_model=InstitutionRead)
@@ -22,7 +24,7 @@ async def get_institution_by_id(
         institution_service: InstitutionService = Depends(InstitutionService),
 ):
     return institution_service.get_institution_by_id(institution_id)
-        
+
 
 @router.patch("/{institution_id}", dependencies=[Depends(is_consumer)], response_model=int)
 async def update_institution(
