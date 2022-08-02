@@ -2,12 +2,14 @@ from typing import Optional, List
 
 from fastapi import APIRouter, Depends, Path, Query
 
-from app.core.security import get_request_user_id, is_researcher, is_consumer
+from app.core.security import get_request_user_id, is_researcher, is_consumer, create_token
+from app.models.security import TokenData
 from app.models.pagination import Page, Paginator, get_paginator
 from app.models.researcher import (
     ResearcherRead,
     ResearcherUpdate,
-    ResearcherCreate
+    ResearcherCreate,
+    ResearcherCreated
 )
 from app.models.research_story import ResearchStoryShortRead
 from app.services.researcher import ResearcherService
@@ -56,7 +58,7 @@ async def get_stories_by_researcher(
 @router.post(
     "",
     description='This will permanently upgrade an existing user to hold researcher privileges',
-    response_model=int,
+    response_model=ResearcherCreated,
     dependencies=[Depends(is_consumer)]
 )
 async def upgrade_to_researcher(
@@ -64,7 +66,9 @@ async def upgrade_to_researcher(
         current_user_id: int = Depends(get_request_user_id),
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return researcher_service.upgrade(new_researcher, current_user_id)
+    researcher_id = researcher_service.upgrade(new_researcher, current_user_id)
+    token = create_token(data=TokenData(sub=str(current_user_id), role=1))
+    return {"researcher_id": researcher_id, "access_token": token, "token_type": "bearer"}
 
 
 @router.patch(

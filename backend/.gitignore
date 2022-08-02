@@ -92,5 +92,6 @@ venv.bak/
 
 # db
 *.db
+database.sql
 
 .env.local
