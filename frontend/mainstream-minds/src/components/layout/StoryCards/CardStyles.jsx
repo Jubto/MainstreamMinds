@@ -1,4 +1,4 @@
-import { styled, CardContent as MuiCardContent } from "@mui/material"
+import { styled } from "@mui/material"
 import { default as MuiCard } from '@mui/material/Card';
 
 export const CardCarousel = styled('div')`
@@ -6,6 +6,9 @@ export const CardCarousel = styled('div')`
   flex-direction: row;
   overflow: scroll;
   width: 100%;
+  > * { 
+    margin: 0 40px 0 0;
+  }
 `
 
 export const CarouselContainer = styled('div')`
@@ -14,11 +17,10 @@ export const CarouselContainer = styled('div')`
 `
 
 export const StyledCard = styled(MuiCard)`
-  max-width: 320px;
+  max-width: 260px;
   min-width: 260px;
   border: none; 
   box-shadow: none; 
-  margin-right: 40px;
 `
 
 export const CarouselTitle = styled('h2')`

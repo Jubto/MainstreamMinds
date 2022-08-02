@@ -1,13 +1,27 @@
 import { Box } from "@mui/material";
 
 const Page = (props) => {
-  
-    return (
-      <Box sx={{ ml: 10, mt: 10 }}>
+  const marginTop = props.mt || 60
+  const padding = props.padding || ''
+
+  return (
+    <Box sx={{ 
+      ml: 10, 
+      mt: {marginTop}, 
+      mr: 10, 
+      padding: `${padding}`,
+      minWidth: '680px' 
+      }}>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}>
         {props.children}
       </Box>
-    )
-  }
-  
-  export default Page;
+    </Box>
+  )
+}
+
+export default Page;
 

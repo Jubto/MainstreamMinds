@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react"
 import useMsmApi from "../../../hooks/useMsmApi";
-import { default as MuiCard } from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardMedia from '@mui/material/CardMedia';
-import { Typography, Button } from '@mui/material/';
+import { Typography } from '@mui/material/';
 import { CardTitle, StyledCard, CardContent } from "./CardStyles";
 import Tags from "../Tags"
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -68,7 +66,7 @@ const Card = (props) => {
 				</Typography>
 			</CardContent>
 			<div>
-				<Tags tags={tags}/>
+				<Tags tags={tags} tagSize="small"/>
 			</div>
 		</StyledCard>
 	);
