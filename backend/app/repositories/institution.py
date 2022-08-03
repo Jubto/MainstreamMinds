@@ -1,4 +1,3 @@
-from app.models.researcher import Researcher
 from fastapi import Depends
 from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound

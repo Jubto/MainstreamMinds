@@ -1,5 +1,4 @@
 from typing import List
-from app.models.researcher import Researcher
 
 from fastapi import APIRouter, Depends, Path
 
