@@ -54,7 +54,7 @@ async def update_institution(
     "/", 
     description='Creates an institution given the appropriate information',
     response_model=int,
-    dependencies=[Depends(is_consumer)]
+    dependencies=[Depends(is_researcher)]
 )
 async def create_institution(
         institution: InstitutionCreate,
