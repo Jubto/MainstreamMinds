@@ -19,14 +19,12 @@ router = APIRouter(tags=['researcher'])
 
 @router.get(
     "",
+    description='Return all researchers from the database',
     response_model=List[ResearcherRead]
 )
 async def get_all_researchers(
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    """
-    Gets all researchers from the database
-    """
     return researcher_service.get_all()
 
 

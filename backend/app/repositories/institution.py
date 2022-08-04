@@ -6,6 +6,7 @@ from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.repositories.base import BaseRepository
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
+from app.models.researcher import Researcher
 from app.utils.model import assign_members_from_dict
 from app.utils.exceptions import NonExistentEntry
 
@@ -17,14 +18,13 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         return Page[InstitutionRead](items=self.session.exec(paginator.paginate(query)).all(),
                                      page_count=paginator.get_page_count(self.session, query))
 
-    def get_institution_by_id(self, institution_id) -> Institution:
+    def get_institution_by_id(self, institution_id: int) -> Institution:
         try:
             return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
         except NoResultFound:
             raise NonExistentEntry('Institution_id', institution_id)
 
-    # need to assess what info we want to pass in for an institution
-    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int):
+    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int) -> int:
         try:
             db_institution = self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
             assign_members_from_dict(db_institution, updated_institution.dict(exclude_unset=True))
@@ -41,13 +41,18 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         self.session.add(db_institution)
         self.session.commit()
         return db_institution.id
-
-    def delete_institution(self, institution_id):
+    
+    def delete_institution(self, institution_id: int):
         try:
             self.session.delete(self.get(institution_id))
-        except NoResultFound:
+            self.session.commit()
+        except:
             raise NonExistentEntry('Institution_id', institution_id)
 
+    def get_institution_researchers(self, paginator: Paginator, institution_id: int) -> Page[Researcher]:
+        query = select(Researcher).where(Researcher.institution_id == institution_id)
+        return Page[Researcher](items=self.session.exec(paginator.paginate(query)).all(),
+                                     page_count=paginator.get_page_count(self.session, query))
 
 def get_institution_repository(session: Session = Depends(get_session)) -> InstitutionRepository:
     return InstitutionRepository(Institution, session)

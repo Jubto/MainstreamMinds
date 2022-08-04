@@ -19,7 +19,7 @@ class ResearcherRepository:
 
     def add_researcher(self, new_researcher: ResearcherCreate, current_user_id: int) -> int:
         try:
-            if hasattr(new_researcher, 'institution_id'):
+            if new_researcher.institution_id is not None:
                 self.session.exec(select(Institution).where(Institution.id == new_researcher.institution_id)).one()
             to_add = Researcher()
             assign_members_from_dict(to_add, new_researcher.dict(exclude_unset=True))
