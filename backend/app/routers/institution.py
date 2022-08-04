@@ -16,7 +16,6 @@ router = APIRouter(tags=['institution'])
     "/", 
     description='Returns all institutions in the database',
     response_model=Page[InstitutionRead], 
-    dependencies=[Depends(is_consumer)]
 )
 async def get_institutions(
         paginator: Paginator = Depends(get_paginator),
@@ -40,9 +39,9 @@ async def get_institution_by_id(
 
 @router.patch(
     "/{institution_id}", 
-    description='Returns details for an institution given its id',
+    description='Updates the details of an institution given its id and updated information',
     response_model=int,
-    dependencies=[Depends(is_consumer)] 
+    dependencies=[Depends(is_researcher)] 
 )
 async def update_institution(
         institution: InstitutionUpdate,
@@ -54,7 +53,7 @@ async def update_institution(
 
 @router.post(
     "/", 
-    description='Updates an institution given its id and updated information',
+    description='Creates an institution given the appropriate information',
     response_model=int,
     dependencies=[Depends(is_consumer)]
 )
@@ -68,7 +67,7 @@ async def create_institution(
 @router.delete(
     "/{institution_id}", 
     description='Deletes an institution given its id',
-    dependencies=[Depends(is_consumer)]
+    dependencies=[Depends(is_researcher)]
 )
 async def delete_institution(
         institution_id: int = Path(default=..., gt=0),

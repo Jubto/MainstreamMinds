@@ -24,8 +24,7 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         except NoResultFound:
             raise NonExistentEntry('Institution_id', institution_id)
 
-    # need to assess what info we want to pass in for an institution
-    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int):
+    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int) -> int:
         try:
             db_institution = self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
             assign_members_from_dict(db_institution, updated_institution.dict(exclude_unset=True))
