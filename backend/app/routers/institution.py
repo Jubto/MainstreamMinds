@@ -28,7 +28,6 @@ async def get_institutions(
     "/{institution_id}", 
     description='Returns details for an institution given its id',
     response_model=InstitutionRead,
-    dependencies=[Depends(is_consumer)] 
 )
 async def get_institution_by_id(
         institution_id: int = Path(default=..., gt=0),
