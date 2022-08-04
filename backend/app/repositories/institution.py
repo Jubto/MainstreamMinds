@@ -7,8 +7,10 @@ from app.models.pagination import Page, Paginator
 from app.repositories.base import BaseRepository
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
 from app.models.researcher import Researcher
+from app.models.research_story import ResearchStoryShortRead, ResearchStory
 from app.utils.model import assign_members_from_dict
 from app.utils.exceptions import NonExistentEntry
+
 
 
 class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):
@@ -50,9 +52,20 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
             raise NonExistentEntry('Institution_id', institution_id)
 
     def get_institution_researchers(self, paginator: Paginator, institution_id: int) -> Page[Researcher]:
-        query = select(Researcher).where(Researcher.institution_id == institution_id)
-        return Page[Researcher](items=self.session.exec(paginator.paginate(query)).all(),
+        try:
+            query = select(Researcher).where(Researcher.institution_id == institution_id)
+            return Page[Researcher](items=self.session.exec(paginator.paginate(query)).all(),
                                      page_count=paginator.get_page_count(self.session, query))
+        except:
+            raise NonExistentEntry('Institution_id', institution_id)
+    
+    def get_institution_stories(self, paginator: Paginator, institution_id: int) -> Page[ResearchStoryShortRead]:
+        try:
+            query = select(ResearchStory).where(ResearchStory.institutions.any(Institution.id == institution_id))
+            return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                        page_count=paginator.get_page_count(self.session, query))
+        except:
+            raise NonExistentEntry('Institution_id', institution_id)
 
 def get_institution_repository(session: Session = Depends(get_session)) -> InstitutionRepository:
     return InstitutionRepository(Institution, session)

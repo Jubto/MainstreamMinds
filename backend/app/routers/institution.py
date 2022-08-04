@@ -1,4 +1,5 @@
 from typing import List
+from app.models.research_story import ResearchStory
 
 from fastapi import APIRouter, Depends, Path
 
@@ -7,6 +8,7 @@ from app.models.institution import InstitutionRead, InstitutionCreate, Instituti
 from app.models.pagination import Page, Paginator, get_paginator
 from app.services.institution import InstitutionService
 from app.models.researcher import Researcher
+from app.models.research_story import ResearchStoryShortRead
 
 
 router = APIRouter(tags=['institution'])
@@ -85,3 +87,15 @@ async def get_institution_researchers(
         institution_service: InstitutionService = Depends(InstitutionService)
 ):
     return institution_service.get_institution_researchers(paginator, institution_id)
+
+@router.get(
+    "/{institution_id}/research_stories",
+    description='Returns all research stories associated with an institution given the institution id',
+    response_model=Page[ResearchStoryShortRead]
+)
+async def get_institution_stories(
+        paginator: Paginator = Depends(get_paginator),
+        institution_id: int = Path(default=..., gt=0),
+        institution_service: InstitutionService = Depends(InstitutionService)
+):
+    return institution_service.get_institution_stories(paginator, institution_id)
