@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Path, HTTPException
 from pydantic import BaseModel
 
-from app.core.security import get_request_user_id, is_consumer
+from app.core.security import get_request_user_id, is_consumer, is_researcher
 from app.models.exception import Message404
 from app.models.pagination import Page, Paginator, get_paginator
 from app.models.tag import TagRW
@@ -29,8 +29,7 @@ async def add_preference_tags(
     return tag_service.add_preference_tag(current_user_id, tag)
 
 
-# we want to exclude for admins only
-@router.post("/", dependencies=[Depends(is_consumer)])
+@router.post("/", dependencies=[Depends(is_researcher)])
 async def create_tag(
         tag: TagRW,
         tag_service: TagService = Depends(TagService),
