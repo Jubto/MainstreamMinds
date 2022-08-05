@@ -1,6 +1,6 @@
-from typing import Optional, List
+from typing import List
 
-from fastapi import APIRouter, Depends, Path, Query
+from fastapi import APIRouter, Depends, Path
 
 from app.core.security import get_request_user_id, is_researcher, is_consumer, create_token
 from app.models.exception import Message404

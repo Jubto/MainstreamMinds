@@ -1,7 +1,6 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, Path, HTTPException
-from pydantic import BaseModel
 
 from app.core.security import get_request_user_id, is_consumer
 from app.models.exception import Message404

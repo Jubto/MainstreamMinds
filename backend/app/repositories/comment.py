@@ -1,6 +1,3 @@
-from typing import List
-import math
-
 from fastapi import Depends
 from sqlmodel import select, Session
 
