@@ -1,6 +1,7 @@
 import { styled } from "@mui/material"
 import { default as MuiCard } from '@mui/material/Card';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { grey } from "@mui/material/colors";
 
 export const cardSize = 260
@@ -55,11 +56,15 @@ export const NextIcon = styled(ExpandCircleDownIcon)`
 `
 export const BackIcon = styled(ExpandCircleDownIcon)`
   color: ${grey[300]};
-  transform: rotate(80deg);
+  transform: rotate(90deg);
   font-size: 44px;  
 `
 
 export const Subtitle = styled('p')`
   margin: 0 0 0 60px;
   color: ${grey[700]};
+`
+
+export const AddInterestBtn = styled(AddCircleOutlineIcon)`
+  color: ${grey[300]};
 `
