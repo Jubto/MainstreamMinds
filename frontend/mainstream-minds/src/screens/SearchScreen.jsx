@@ -18,7 +18,7 @@ const SearchScreen = () => {
   const getAllStories = async () => {
     try {
       const resStory = await msmAPI.get(`/research_stories`)
-      setStory(resStory.data)
+      setStory(resStory.data.items)
       console.log(resStory.data)
       setErrorMsg(null)
     }
@@ -62,7 +62,7 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getAllStories()
-    console.log(window.innerWidth)
+    console.log(story)
   }, [])
 
 
