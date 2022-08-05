@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+
+    frontend:
+        build:
+            context: ./fronted/mainstream-minds
+            dockerfile: Dockerfile
+       ports:
+           - 80:80
+       environment:
+           - REACT_APP_BACKEND_URL=http://backend:8080
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        ports:
+            - 8080:8080
+        depends:
+            db
+       environment:
+           - DB_CONN=postgresql://postgres:some_password@db:5432/comp9323
+
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: some_password
