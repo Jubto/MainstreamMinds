@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react"
-import useMsmApi from "../../../hooks/useMsmApi";
+import { useRef } from "react"
 import useResize from "../../../hooks/useResize"
 import { CardCarouselStyle, Scroll, NextIcon, cardSize, BackIcon, Subtitle } from "./CardStyles"
 import Card from "../../layout/StoryCards/Card";
@@ -22,7 +21,6 @@ const ScrollStories = (props) => {
       </IconButton>}
       <CardCarouselStyle ref={componentRef}>
         {(story && story.length) ? Object.entries(story).map(([key, value], idx) => {
-          //console.log(key,value,idx, this); 
           return (
             <Card 
               key={idx} 
