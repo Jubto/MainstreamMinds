@@ -4,8 +4,7 @@ import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
 import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
-import ScrollStories from "../components/layout/StoryCards/ScrollStories"
-
+import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 const StoryField = styled('div')`
   background-color: #bfece6;
 `
@@ -65,11 +64,10 @@ const DiscoverScreen = () => {
 
   return (
     <Page>
-      <ScrollStories carouselTitle="Watch Later" showLikes={!!auth.accessToken}/>
-      <ScrollStories carouselTitle="Recommended" showLikes={!!auth.accessToken}/>
-      {/* Scroll Stories for interests */}
-      <ScrollStories carouselTitle="Implement Interests" showLikes={!!auth.accessToken}/>
-      <ScrollStories carouselTitle="Trending" showLikes={!!auth.accessToken}/>
+      <CardCarousel carouselTitle="Liked Stories"/>
+      <CardCarousel carouselTitle="Recommended" extension="recommendations"/>
+      <CardCarousel carouselTitle="Trending" extension="trending"/>
+      
       <Typography variant='h5'>
         Temp routes
       </Typography>
