@@ -7,8 +7,7 @@ import re
 from app.settings import Settings
 
 # https://uibakery.io/regex-library/email-regex-python
-email_regex_pattern: str = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[" \
-                           r"a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$ "
+email_regex_pattern: str = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
 email_regex: re = re.compile(email_regex_pattern)
 
 # Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
@@ -60,6 +59,7 @@ def password_validator(value):
 
 
 def email_validator(value):
+    print(value)
     if email_regex.match(value):
         return value
     raise ValueError('Provided email is invalid')

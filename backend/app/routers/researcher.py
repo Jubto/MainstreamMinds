@@ -3,6 +3,7 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, Path, Query
 
 from app.core.security import get_request_user_id, is_researcher, is_consumer, create_token
+from app.models.exception import Message404
 from app.models.security import TokenData
 from app.models.pagination import Page, Paginator, get_paginator
 from app.models.researcher import (
@@ -57,7 +58,9 @@ async def get_stories_by_researcher(
     "",
     description='This will permanently upgrade an existing user to hold researcher privileges',
     response_model=ResearcherCreated,
-    dependencies=[Depends(is_consumer)]
+    dependencies=[Depends(is_consumer)],
+    responses={
+        404: {"model": Message404, 'description': 'Returned if institution specified by institution_id does not exist'}}
 )
 async def upgrade_to_researcher(
         new_researcher: ResearcherCreate,
