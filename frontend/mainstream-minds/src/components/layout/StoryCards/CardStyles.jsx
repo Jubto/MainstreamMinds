@@ -56,7 +56,7 @@ export const NextIcon = styled(ExpandCircleDownIcon)`
 `
 export const BackIcon = styled(ExpandCircleDownIcon)`
   color: ${grey[300]};
-  transform: rotate(80deg);
+  transform: rotate(90deg);
   font-size: 44px;  
 `
 
