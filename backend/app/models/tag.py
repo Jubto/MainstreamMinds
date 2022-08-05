@@ -22,9 +22,9 @@ class Tag(TagBase, table=True):
     story_tags: List["ResearchStory"] = Relationship(back_populates="tags", link_model=StoryTagLink)
 
 
-class TagRW(TagBase):
-    id: Optional[int]
-
-
 class TagCreate(TagBase):
-    pass  # as above
+    pass
+
+
+class TagRead(TagBase):
+    id: Optional[int]
