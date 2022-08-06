@@ -1,9 +1,12 @@
 # Mainstream Minds
 
+To access an already deployed instance of this web application go to `https://comp9323.ehsys.net`.
+
 ## Deployment/Running Instructions
 
 To deploy/run the application there are two main ways. The first uses
-docker and the second without it which requires setting up each component individual.
+docker and the second without it, which requires setting up each component individually.
+
 Read the instructions for each method below.
 
 ### Deployment with Docker
@@ -19,7 +22,7 @@ used on MacOS and Linux operating systems out of the box but may require additio
 on Windows. If this has not been setup yet on Windows check out the following Microsoft documentation
 <https://docs.microsoft.com/en-us/virtualization/windowscontainers/quick-start/quick-start-windows-10-linux>.
 
-After `docker` and `docker-compose` have both been setup and are running you can now run the application.
+After `docker` and `docker-compose` have both been setup and working, you can now run the application.
 
 In the root of the repository is the `docker-compose.yaml` file which defines all the services which make
 up the application. To run the application open a terminal window in the root of the repository and run
