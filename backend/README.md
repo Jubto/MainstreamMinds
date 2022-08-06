@@ -31,6 +31,31 @@ database type to use (sqlite - flatfile, or PostgreSQL - server) and how to conn
 If you just want to run the server locally, copy the sample env file with `cp .env.sample .env.local`
 and then uncomment the 2nd line with the sqlite connection string.
 
+### Redis
+Install Redis using the [docs](https://redis.io/docs/getting-started/installation/) and then run:
+```shell
+redis-server --daemonize yes
+```
+This will run the redis server with the in-built default [config](https://redis.io/docs/manual/config/).
+The Redis server needs to be running whenever the backend server is running. You can check it is running with:
+```shell
+redis-cli ping
+```
+Shutdown the Redis server with:
+```shell
+redis-cli shutdown
+```
+Clear Redis (ie clear trending cache) with
+```shell
+redis-cli
+> FLUSHDB
+```
+
+
+By default, the backend will connect to a default configured redis database (running on 
+localhost, port `6379`). If you want to change this, the url and port can be specified 
+in the `REDIS_CONN` environment variable. See the example in `.env.sample`.
+
 ## Running the project
 
 To run the backend use the following `uvicorn app.main:app --reload` which runs
