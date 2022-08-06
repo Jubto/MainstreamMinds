@@ -75,9 +75,10 @@ class FilterCompound(Filter):
 
     def get_filter_criteria(self) -> Any:
         children_criteria = [f.get_filter_criteria() for f in self.filters]
-        if self.operator == FilterCompoundOperation.AND:
+
+        if self.operator.value == FilterCompoundOperation.AND.value:
             return and_(*children_criteria)
-        elif self.operator == FilterCompoundOperation.OR:
+        elif self.operator.value == FilterCompoundOperation.OR.value:
             return or_(*children_criteria)
 
 
@@ -102,8 +103,7 @@ class ModelFilter(Generic[ModelT]):
         self._model = model
         self._filter_expression = filter_expression
         self._allowed_sort_fields = _allowed_filter_fields
-        # TODO: Validate lookup fields
-        # validate_lookup_fields(self._model, [f.field for f in self._sort_fields])
 
     def apply_filter_to_query(self, query: Union[Select, SelectOfScalar]):
+        print(self._filter_expression.get_filter_criteria())
         return query.where(self._filter_expression.get_filter_criteria())

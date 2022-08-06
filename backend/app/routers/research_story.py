@@ -54,6 +54,8 @@ async def get_stories_by_filters(
         text_filters = [FieldFilter(field='title', operation=FilterOperation.ILIKE, value=search, model=ResearchStory),
                         FieldFilter(field='summary', operation=FilterOperation.ILIKE, value=search,
                                     model=ResearchStory),
+                        FieldFilter(field='content_body', operation=FilterOperation.ILIKE, value=search,
+                                    model=ResearchStory),
                         FieldFilter(field='transcript', operation=FilterOperation.ILIKE, value=search,
                                     model=ResearchStory)]
         filters.append(FilterCompound(filters=text_filters, operator=FilterCompoundOperation.OR))
