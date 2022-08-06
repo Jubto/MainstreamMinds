@@ -31,6 +31,9 @@ class ResearchStoryService:
     def get(self, story_id: int) -> ResearchStory:
         return self.repository.get(story_id)
 
+    def get_liked(self, current_user_id: int, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        return self.repository.get_liked(current_user_id, paginator)
+
     def get_recommended(self, current_user_id: int, n: int) -> List[ResearchStory]:
         return self.repository.get_recommended(current_user_id, n)
 

@@ -114,6 +114,22 @@ async def get_recommended(
 
 
 @router.get(
+    "/liked",
+    dependencies=[Depends(is_consumer)],
+    response_model=Page[ResearchStoryShortRead]
+)
+async def get_liked_stories(
+        paginator: Paginator = Depends(get_paginator),
+        current_user_id: int = Depends(get_request_user_id),
+        story_service: ResearchStoryService = Depends()
+):
+    """
+    Returns a list of the users liked stories
+    """
+    return story_service.get_liked(current_user_id, paginator)
+
+
+@router.get(
     "/{story_id}",
     response_model=ResearchStoryLongRead
 )
