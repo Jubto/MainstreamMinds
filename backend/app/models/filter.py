@@ -105,5 +105,4 @@ class ModelFilter(Generic[ModelT]):
         self._allowed_sort_fields = _allowed_filter_fields
 
     def apply_filter_to_query(self, query: Union[Select, SelectOfScalar]):
-        print(self._filter_expression.get_filter_criteria())
         return query.where(self._filter_expression.get_filter_criteria())
