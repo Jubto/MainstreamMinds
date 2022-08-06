@@ -14,6 +14,7 @@ from app.models.researcher import (
     ResearcherCreated, Researcher
 )
 from app.models.research_story import ResearchStoryShortRead
+from app.models.tag import Tag
 from app.models.user import User
 from app.services.researcher import ResearcherService
 
@@ -40,11 +41,11 @@ async def get_all_researchers(
         filters.append(first_name_filter)
         filters.append(last_name_filter)
 
-    # if tag_ids:
-    #     tag_ids = [int(tag_id) for tag_id in tag_ids.split(',')]
-    #     tag_filter = FieldFilter(field='preference_tags', operation=FilterOperation.ILIKE, value=search,
-    #                              model=User)
-    #     filters.append(tag_filter)
+    if tag_ids:
+        tag_ids = [int(tag_id) for tag_id in tag_ids.split(',')]
+        tag_filter = FieldFilter(field='id', operation=FilterOperation.IN, value=tag_ids,
+                                 model=Tag)
+        filters.append(tag_filter)
 
     if filters:
         compound = FilterCompound(filters=filters, operator=FilterCompoundOperation.OR)

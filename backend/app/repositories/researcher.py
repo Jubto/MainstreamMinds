@@ -37,10 +37,11 @@ class ResearcherRepository:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
     def get_all(self, filter_by: Optional[ModelFilter[Researcher]]) -> List[Researcher]:
-        query = select(Researcher)
-        # if filter_by:
-        #     query = filter_by.apply_filter_to_query(select(Researcher))
-        query = query.where(User.preference_tags.any(id=1))
+        query = select(Researcher).join(Researcher.user).join(User.preference_tags, isouter=True)
+        if filter_by:
+            query = filter_by.apply_filter_to_query(query)
+        # col(User.preference_tags).any_(Tag.id == 1)
+        # query = query.where(col(Tag.id).in_([1]))
         return self.session.exec(query).all()
 
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:

@@ -19,6 +19,7 @@ class FilterOperation(Enum):
     GTE = 'gte'
     LT = 'lt'
     LTE = 'lte'
+    IN = 'in'
 
 
 @dataclass
@@ -48,6 +49,8 @@ class FieldFilter(Filter):
             return col(model_field).like(f'%{self.value}%')
         elif self.operation == FilterOperation.ILIKE:
             return col(model_field).ilike(f'%{self.value}%')
+        elif self.operation == FilterOperation.IN:
+            return col(model_field).in_(self.value)
         elif self.operation == FilterOperation.EQ:
             return model_field == self.value
         elif self.operation == FilterOperation.NQ:
