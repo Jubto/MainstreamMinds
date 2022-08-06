@@ -1,5 +1,5 @@
 import math
-from typing import List
+from typing import List, Optional
 import random
 
 from fastapi import Depends
@@ -7,6 +7,7 @@ from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
+from app.models.filter import ModelFilter
 from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate, ResearchStoryShortRead, \
     StoryTagLink, StoryLikeLink
 from app.models.user import User
@@ -33,8 +34,12 @@ class ResearchStoryRepository:
         except NoResultFound:
             raise NonExistentEntry('ResearchStory_id', story_id)
 
-    def get_all(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
-        query = select(ResearchStory)
+    def get_all(self, paginator: Paginator, filter_by: Optional[ModelFilter[ResearchStory]]) -> Page[
+        ResearchStoryShortRead]:
+        query = select(ResearchStory).join(ResearchStory.institutions).join(ResearchStory.researchers).join(
+            ResearchStory.tags, isouter=True).distinct()
+        if filter_by:
+            query = filter_by.apply_filter_to_query(query)
         return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
                                             page_count=paginator.get_page_count(self.session, query))
 

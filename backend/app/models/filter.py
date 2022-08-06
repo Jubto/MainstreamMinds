@@ -76,9 +76,9 @@ class FilterCompound(Filter):
     def get_filter_criteria(self) -> Any:
         children_criteria = [f.get_filter_criteria() for f in self.filters]
         if self.operator == FilterCompoundOperation.AND:
-            return or_(*children_criteria)
-        elif self.operator == FilterCompoundOperation.OR:
             return and_(*children_criteria)
+        elif self.operator == FilterCompoundOperation.OR:
+            return or_(*children_criteria)
 
 
 @dataclass
