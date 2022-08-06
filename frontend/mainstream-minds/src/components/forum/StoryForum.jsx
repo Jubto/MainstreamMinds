@@ -14,7 +14,7 @@ const StoryForum = ({ storyID, researcher }) => {
       .then((res) => {
         let commentTrees = {}
         res.data.items.forEach((comment) => {
-          if (comment.parent_id === 0) {
+          if (comment.parent_id === 0 || comment.parent_id == null) {
             commentTrees[comment.id] = [comment]
           }
           else {
