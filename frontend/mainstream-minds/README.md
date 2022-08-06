@@ -1,12 +1,12 @@
 # Frontend Deployment/Running Instructions
 
-To run/deploy the frontend first create and configure the file `.env.local` in this directory.
-To do this copy the contents of `.env.sample` file in this directory to `.env.local`. 
+To run/deploy the frontend first create and configure the file `.env.local` in this directory next
+to this `README.md` file. To do this copy the contents of `.env.sample` file to `.env.local`. 
 
 This file contains environment variables which are used within the frontend.
 
 Next you can change and configure the variables within this file. By default unless you have changed
-the port number on the backend or the backend is not hosted where it can be accessed by the loopback
+the port number on the backend or the backend is not hosted where it can be accessed by the loopback address
 (127.0.0.1) you will not need to change the value copied from `.env.sample`.
 
 After this is done you are ready to run the application. You can either use `npm start` to run
