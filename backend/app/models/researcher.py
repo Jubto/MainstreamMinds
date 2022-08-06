@@ -20,7 +20,7 @@ class ResearcherBase(SQLModel):
 
 class Researcher(ResearcherBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    date_verified: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    date_verified: datetime = Field(default_factory=datetime.now, nullable=False)
     user_id: int = Field(index=True, nullable=False, foreign_key="user.id", sa_column_kwargs={'unique': True})
 
     institution: Optional["Institution"] = Relationship(back_populates="researchers", link_model=InstitutionResearcherLink )

@@ -2,6 +2,7 @@ import { AppBar as MuiAppBar } from "@mui/material"
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import ToolTip from '@mui/material/Tooltip';
 import { Link, useLocation } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
 import LoginIcon from '@mui/icons-material/Login';
@@ -15,6 +16,7 @@ const AppBar = () => {
   const { auth, setAuth } = useAuth();
 
   const guest = (
+    <ToolTip title="login" enterDelay={10}>
     <IconButton
       size="large"
       edge="start"
@@ -25,13 +27,15 @@ const AppBar = () => {
       to={'/login'}
       state={{ from: location }}
       >
-        <LoginIcon/>
+          <LoginIcon/>
     </IconButton>
+    </ToolTip>
   );
 
   const loggedIn = (
     <>
       <Button color="inherit" component={Link} to={'/account'} state={{ from: location }} style={{ marginRight: 32 }}>PROFILE</Button>
+      <ToolTip title="logout" enterDelay={10}>
       <IconButton
         size="large"
         edge="start"
@@ -40,8 +44,9 @@ const AppBar = () => {
         sx={{ mr: 2 }}
         onClick={() => setAuth({})}
         >
-          <LogoutIcon/>
+            <LogoutIcon/>
       </IconButton>
+      </ToolTip>
     </>
   );
 

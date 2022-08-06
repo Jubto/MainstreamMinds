@@ -1,31 +1,39 @@
 import { useState, useEffect } from "react"
-import msmAPI from "../../api/msmAPI"
+import useMsmApi from "../../hooks/useMsmApi"
 import CommentField from "./CommentField"
 import StoryCommentTree from "./StoryCommentTree"
 import { ForumContainer } from "./forum.styled"
+import { Typography } from "@mui/material"
 
 const StoryForum = ({ storyID, researcher }) => {
+  const msmAPI = useMsmApi()
   const [comments, setComments] = useState({})
 
   useEffect(() => {
-    msmAPI.get(`/comments/${storyID}`)
+    msmAPI.get('/comments', { params: {story_id: storyID} })
       .then((res) => {
-        let tree = {}
+        let commentTrees = {}
         res.data.items.forEach((comment) => {
           if (comment.parent_id === 0) {
-            tree[comment.id] = [comment]
+            commentTrees[comment.id] = [comment]
           }
           else {
-            tree[comment.parent_id].push(comment)
+            commentTrees[comment.parent_id].push(comment)
           }
         })
-        setComments(tree)
+        setComments(commentTrees)
       })
       .catch((err) => console.error(err))
   }, [])
 
   return (
     <ForumContainer>
+      <Typography variant='h6'>
+        {Object.entries(comments).length
+        ? `${Object.entries(comments).length} Comments`
+        : 'No comments yet!'
+        }
+      </Typography>
       <CommentField parentID={0} storyID={storyID} setComments={setComments} />
       {Object.entries(comments).map(([commentID, comments]) => (
         <StoryCommentTree

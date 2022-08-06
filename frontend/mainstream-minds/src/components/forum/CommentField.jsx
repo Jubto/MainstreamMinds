@@ -1,63 +1,68 @@
 import { useState, useRef } from "react"
-import msmAPI from "../../api/msmAPI"
+import useMsmApi from "../../hooks/useMsmApi"
 import { FlexBox } from "../styles/util.styled"
 import { CommentFieldContainer } from "./forum.styled"
 import { Avatar, Button, TextField, Tooltip, Typography } from "@mui/material"
 
 
-const CommentField = ({ parentID, storyID, setComments, comments = [] }) => {
-  const [commentOpen, setCommentOpen] = useState(false)
+const CommentField = ({ parentID, storyID, setComments, setWriteReply }) => {
+  const msmAPI = useMsmApi()
+  const [commentButtons, setCommentButtons] = useState(false)
   const commentRef = useRef('')
+
+  const handleCancelButton = () => {
+    if (parentID) {
+      setWriteReply(false) // For reply comment fields
+    }
+    setCommentButtons(false)
+  }
 
   const submit = () => {
     console.log(commentRef.current?.value)
-    const comment = {
+    const body = {
       body: commentRef.current?.value,
       parent_id: parentID,
       story_id: storyID
     }
-    comments.push(comment)
     commentRef.current.value = ''
-    msmAPI.post('comments', comment)
+    msmAPI.post('/comments', body)
       .then((res) => {
+        const comment = res.data
         if (parentID) {
+          // responding to a comment
           setComments((prevState) => {
-            let temp = prevState
-            temp[parentID] = comments
-            return temp
+            let comments = prevState[parentID]
+            comments.push(comment)
+            return {...prevState, [parentID]: comments}
           })
+          setWriteReply(false) // close textfield
         }
         else {
+          // Posting new root comment
           const commentID = res.data
-          setComments((prevState) => {
-            let temp = prevState
-            temp[commentID] = comments
-            return temp
-          })
+          setComments(prevState => ({...prevState, [commentID]: [res.data]})) 
         }
       })
       .catch((err) => console.error(err))
   }
 
   return (
-    <CommentFieldContainer>
-      <Avatar />
-      <Avatar>
-        {'h'.toUpperCase()}
-      </Avatar>
+    <CommentFieldContainer reply={parentID ? 1 : 0}>
+      <Avatar sx={{width: parentID ? 34 : 'inital', height: parentID ? 34 : 'inital'}} />
       <FlexBox direction='column' grow={1}>
         <TextField
           id='commentField'
           inputRef={commentRef}
           multiline
+          autoFocus
           variant="standard"
           placeholder={parentID ? 'Add a reply...' : 'Type your comment here'}
-          onClick={() => setCommentOpen(true)}
+          onClick={() => setCommentButtons(true)}
           sx={{ width: '100%', pb: 1, flex: 1 }}
         />
-        {commentOpen
+        {commentButtons || parentID
           ? <FlexBox justify='flex-end'>
-            <Button onClick={() => setCommentOpen(false)} sx={{ mr: 1 }}>
+            <Button onClick={handleCancelButton} sx={{ mr: 1 }}>
               Cancel
             </Button>
             <Button

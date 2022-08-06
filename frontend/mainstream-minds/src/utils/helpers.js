@@ -17,8 +17,7 @@ export const fileToDataUrl = (file) => {
 
 // modified from https://stackoverflow.com/a/3177838/13102935
 export const timeSince = (date) => {
-  var timeDif = Math.floor((new Date() - date) / 1000); // in seconds
-
+  var timeDif = Math.floor((new Date() - new Date(date)) / 1000); // in seconds
   if (timeDif >= 31536000) {
     return Math.floor(timeDif / 31536000) + " years ago";
   }
@@ -33,6 +32,9 @@ export const timeSince = (date) => {
   }
   if (timeDif > 60) {
     return Math.floor(timeDif / 60) + " minutes ago";
+  }
+  if (timeDif <= 0) {
+    return "Just now";
   }
   return Math.floor(timeDif) + " seconds ago";
 }

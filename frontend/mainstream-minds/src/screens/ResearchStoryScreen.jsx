@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react"
-import msmAPI from "../api/msmAPI"
+import useMsmApi from "../hooks/useMsmApi"
 import { useParams } from "react-router-dom"
 import Page from "../components/layout/Page"
 import StoryForum from "../components/forum/StoryForum"
 
 const ResearchStoryScreen = () => {
+  const msmAPI = useMsmApi()
   const { id } = useParams()
-  const {researcher, setResearcher} = useState({})
-  const {story, setStory} = useState({})
+  const [researcher, setResearcher] = useState({})
+  const [story, setStory] = useState({})
 
   useEffect(() => {
     console.log(`story is: ${id}`)

@@ -1,4 +1,5 @@
-import datetime
+# import datetime, timezone
+from datetime import datetime, timezone
 
 from typing import List, Optional
 from sqlalchemy.orm import backref
@@ -18,7 +19,7 @@ class CommentCreate(CommentBase):
 class CommentRead(CommentBase):
     id: int
     user: Optional["UserRead"]
-    timestamp: datetime.datetime
+    timestamp: datetime
 
 
 class UserCommentLikesLink(SQLModel, table=True):
@@ -28,7 +29,9 @@ class UserCommentLikesLink(SQLModel, table=True):
 
 class Comment(CommentBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    timestamp: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
+    # timestamp: datetime = Field(default_factory=datetime.utcnow) # original
+    # timestamp: datetime = Field(default_factory=lambda : datetime.now(timezone.utc)) # not sure why this one still has incorrect UTC
+    timestamp: datetime = Field(default_factory=datetime.now)
     user_id: int = Field(foreign_key="user.id")  # note: not optional, enforces total participation
     user: Optional["User"] = Relationship()
 
