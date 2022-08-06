@@ -45,7 +45,7 @@ class ResearchStoryShortRead(ResearchStoryBase):
     id: int
     researchers: List["ResearcherRead"]
     institutions: List["InstitutionRead"]
-    tags: List["TagRW"]
+    tags: List["TagRead"]
     publish_date: datetime = Field()
 
 
