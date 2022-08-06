@@ -1,6 +1,22 @@
-# Getting Started with Create React App
+# Frontend Deployment/Running Instructions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To run/deploy the frontend first create and configure the file `.env.local` in this directory.
+To do this copy the contents of `.env.sample` file in this directory to `.env.local`. 
+
+This file contains environment variables which are used within the frontend.
+
+Next you can change and configure the variables within this file. By default unless you have changed
+the port number on the backend or the backend is not hosted where it can be accessed by the loopback
+(127.0.0.1) you will not need to change the value copied from `.env.sample`.
+
+After this is done you are ready to run the application. You can either use `npm start` to run
+the frontend in a development mode or you can use `npm build` to build a production ready build
+of the frontend. For the production build you would then need to configure a webserver (such as Nginx) 
+to serve the generated files.
+
+For more details regarding `npm start` and `npm build` look below at the included README documentation
+provided by [Create React App](https://github.com/facebook/create-react-app).
+
 
 ## Available Scripts
 
