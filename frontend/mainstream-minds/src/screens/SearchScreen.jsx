@@ -9,17 +9,22 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResearcherCarousel, ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
 import { useLocation } from "react-router-dom"
+import searchTags from "../components/SearchComponents/searchTags"
+import { extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
-  const location = useLocation()
   const { auth, setAuth } = useAuth()
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
+  const location = useLocation()
+  const path = location.pathname.split('?')
 
-  const getAllStories = async () => {
+  const getStories = async () => {
     try {
-      const resStory = await msmAPI.get(`/research_stories`)
+      console.log(`/research_stories${location.search}`)
+      const resStory = await msmAPI.get(`/research_stories${location.search}`)
+      console.log(resStory)
       setStory(resStory.data.items)
       console.log(resStory.data)
       setErrorMsg(null)
@@ -35,36 +40,11 @@ const SearchScreen = () => {
     }
   }
 
-  const showTags = [
-    {
-      name: "science"
-    },
-    {
-      name: "psychology"
-    },
-    {
-      name: "agriculture"
-    },
-    {
-      name: "computers"
-    },
-    {
-      name: "global issues"
-    },
-    {
-      name: "law"
-    },
-    {
-      name: "journalism"
-    },
-    {
-      name: "robotics"
-    },
-  ]
-
   useEffect(() => {
-    getAllStories()
-    console.log(location.pathname)
+    const q = extractQuery(location.search)
+    getTags(q)
+    getStories(location.search)
+    console.log(location, location.search.split('&'), location.search.slice(1))
   }, [])
 
 
@@ -79,7 +59,7 @@ const SearchScreen = () => {
             fullWidth
             sx={{maxWidth: 720, marginRight: '8px'}}
           />
-          <SearchStack tags={showTags} />
+          <SearchStack tags={searchTags} />
           <Button variant="outlined" startIcon={<FilterAltIcon />} sx={{height:'40px', minWidth: '92px', marginLeft: '8px'}}>
             Filter
           </Button>
