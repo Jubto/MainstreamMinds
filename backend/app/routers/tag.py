@@ -20,7 +20,7 @@ async def get_preference_tags(
     return tag_service.get_preference_tags(current_user_id)
 
 
-@router.patch("/preference_tags", dependencies=[Depends(is_consumer)])
+@router.patch("/preference_tags", dependencies=[Depends(is_consumer)], responses={404: {"model": HTTPExceptionResponse}})
 async def add_preference_tags(
         tag: str,
         tag_service: TagService = Depends(TagService),

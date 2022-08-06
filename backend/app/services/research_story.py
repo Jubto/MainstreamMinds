@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends
 
+from app.models.filter import ModelFilter
 from app.models.research_story import (
     ResearchStory,
     ResearchStoryShortRead, ResearchStoryCreate, ResearchStoryUpdate,
@@ -25,11 +26,15 @@ class ResearchStoryService:
         self.researcher_repository = researcher_repository
         self.field_mappings = ModelFieldsMapping()
 
-    def get_all(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
-        return self.repository.get_all(paginator)
+    def get_all(self, paginator: Paginator, filter_by: Optional[ModelFilter[ResearchStory]]) -> Page[
+        ResearchStoryShortRead]:
+        return self.repository.get_all(paginator, filter_by)
 
     def get(self, story_id: int) -> ResearchStory:
         return self.repository.get(story_id)
+
+    def get_liked(self, current_user_id: int, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        return self.repository.get_liked(current_user_id, paginator)
 
     def get_recommended(self, current_user_id: int, n: int) -> List[ResearchStory]:
         return self.repository.get_recommended(current_user_id, n)
