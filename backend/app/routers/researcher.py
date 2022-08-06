@@ -26,16 +26,28 @@ router = APIRouter(tags=['researcher'])
     response_model=List[ResearcherRead]
 )
 async def get_all_researchers(
+        tag_ids: str = Query(default=None, description='A comma seperated list of strings of tag ids', example='1,2,3'),
         search: str = Query(default=None, description='Filter researchers by first and last name'),
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
     filter_by: Optional[ModelFilter[Researcher]] = None
+    filters = []
     if search:
         first_name_filter = FieldFilter(field='first_name', operation=FilterOperation.ILIKE, value=search,
                                         model=User)
         last_name_filter = FieldFilter(field='last_name', operation=FilterOperation.ILIKE, value=search,
                                        model=User)
-        compound = FilterCompound(filters=[first_name_filter, last_name_filter], operator=FilterCompoundOperation.OR)
+        filters.append(first_name_filter)
+        filters.append(last_name_filter)
+
+    # if tag_ids:
+    #     tag_ids = [int(tag_id) for tag_id in tag_ids.split(',')]
+    #     tag_filter = FieldFilter(field='preference_tags', operation=FilterOperation.ILIKE, value=search,
+    #                              model=User)
+    #     filters.append(tag_filter)
+
+    if filters:
+        compound = FilterCompound(filters=filters, operator=FilterCompoundOperation.OR)
         filter_by = ModelFilter(FilterExpression(compound), User)
 
     return researcher_service.get_all(filter_by)

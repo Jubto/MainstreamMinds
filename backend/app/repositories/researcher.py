@@ -9,6 +9,7 @@ from app.models.filter import ModelFilter
 from app.models.institution import Institution
 from app.models.pagination import Paginator, Page
 from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate
+from app.models.tag import Tag
 from app.models.user import User
 from app.utils.model import assign_members_from_dict
 from app.models.research_story import ResearchStory, ResearchStoryShortRead
@@ -36,7 +37,11 @@ class ResearcherRepository:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
     def get_all(self, filter_by: Optional[ModelFilter[Researcher]]) -> List[Researcher]:
-        return self.session.exec(filter_by.apply_filter_to_query(select(Researcher))).all()
+        query = select(Researcher)
+        # if filter_by:
+        #     query = filter_by.apply_filter_to_query(select(Researcher))
+        query = query.where(User.preference_tags.any(id=1))
+        return self.session.exec(query).all()
 
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:
         try:

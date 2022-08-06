@@ -7,7 +7,8 @@ from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
-from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate, ResearchStoryShortRead, StoryTagLink
+from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate, ResearchStoryShortRead, \
+    StoryTagLink
 from app.models.user import User
 from app.models.tag import Tag, UserTagLink
 from app.repositories.tag import get_tag_repository
@@ -56,7 +57,7 @@ class ResearchStoryRepository:
         # could even move all the trending_cache.py stuff here...
         return Page[ResearchStoryShortRead](items=list(map(self.get, get_trending(paginator.page,
                                                                                   paginator.page_size))),
-                                            page_count=math.ceil(get_cache_len()/paginator.page_size))
+                                            page_count=math.ceil(get_cache_len() / paginator.page_size))
 
     def create(self, create_story: ResearchStoryCreate) -> ResearchStory:
         story = ResearchStory()
