@@ -27,7 +27,7 @@ router = APIRouter(tags=['researcher'])
     response_model=List[ResearcherRead]
 )
 async def get_all_researchers(
-        tag_ids: List[int] = Query(default=None, description='A list of tag ids to filter by'),
+        tags: List[str] = Query(default=None, description='A list of tag names to filter by'),
         search: str = Query(default=None, description='Filter researchers by first and last name'),
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
@@ -38,16 +38,14 @@ async def get_all_researchers(
                                         model=User)
         last_name_filter = FieldFilter(field='last_name', operation=FilterOperation.ILIKE, value=search,
                                        model=User)
-        filters.append(first_name_filter)
-        filters.append(last_name_filter)
+        filters.append(
+            FilterCompound(filters=[first_name_filter, last_name_filter], operator=FilterCompoundOperation.OR))
 
-    if tag_ids:
-        tag_filter = FieldFilter(field='id', operation=FilterOperation.IN, value=tag_ids,
-                                 model=Tag)
-        filters.append(tag_filter)
+    if tags:
+        filters.append(FieldFilter(field='name', operation=FilterOperation.IN, value=tags, model=Tag))
 
     if filters:
-        compound = FilterCompound(filters=filters, operator=FilterCompoundOperation.OR)
+        compound = FilterCompound(filters=filters, operator=FilterCompoundOperation.AND)
         filter_by = ModelFilter(FilterExpression(compound), User)
 
     return researcher_service.get_all(filter_by)

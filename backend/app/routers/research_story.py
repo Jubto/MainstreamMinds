@@ -36,7 +36,7 @@ async def get_stories_by_filters(
                                              description="Only return list which have these authors id's"),
         institutions: Optional[List[int]] = Query(default=None,
                                                   description="Only return list which have these institutions id's"),
-        tags: Optional[List[int]] = Query(default=None, description="Only return list which contain these tag id's"),
+        tags: Optional[List[str]] = Query(default=None, description="Only return list which contain these tag names"),
         like_count: Optional[ordering] = Query(default=None, description='Order list by like count'),
         comment_count: Optional[ordering] = Query(default=None, description='Order list by comment count'),
         search: Optional[str] = Query(default=None,
@@ -61,7 +61,7 @@ async def get_stories_by_filters(
         filters.append(FilterCompound(filters=text_filters, operator=FilterCompoundOperation.OR))
 
     if tags:
-        filters.append(FieldFilter(field='id', operation=FilterOperation.IN, value=tags, model=Tag))
+        filters.append(FieldFilter(field='name', operation=FilterOperation.IN, value=tags, model=Tag))
 
     if authors:
         filters.append(FieldFilter(field='id', operation=FilterOperation.IN, value=authors, model=Researcher))
