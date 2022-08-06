@@ -8,9 +8,11 @@ import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResearcherCarousel, ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
+import { useLocation } from "react-router-dom"
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
+  const location = useLocation()
   const { auth, setAuth } = useAuth()
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
@@ -62,7 +64,7 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getAllStories()
-    console.log(story)
+    console.log(location.pathname)
   }, [])
 
 

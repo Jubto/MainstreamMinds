@@ -2,6 +2,7 @@ import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { randomColour } from '../styles/colours';
+import { useNavigate } from 'react-router-dom';
 
 const Tags = (props) => {
   const tags = props.tags;
