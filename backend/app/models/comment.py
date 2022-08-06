@@ -17,7 +17,7 @@ class CommentCreate(CommentBase):
 
 class CommentRead(CommentBase):
     id: int
-    # user: Optional["UserRead"] // crashes docs
+    user: Optional["UserRead"]
     timestamp: datetime.datetime
 
 

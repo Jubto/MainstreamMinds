@@ -5,11 +5,12 @@ from fastapi import Depends
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.comment import CommentCreate, Comment
+from app.models.comment import CommentRead, CommentCreate, Comment
 from app.models.pagination import Page, Paginator
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import assign_members_from_dict
+from app.utils.exceptions import NonExistentEntry
 
 
 class CommentRepository:
@@ -26,9 +27,9 @@ class CommentRepository:
         self.session.commit()
         return db_comment.id
 
-    def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[Comment]:
+    def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[CommentRead]:
         query = select(Comment).where(Comment.story_id == story_id)
-        return Page[Comment](items=self.session.exec(paginator.paginate(query)).all(),
+        return Page[CommentRead](items=self.session.exec(paginator.paginate(query)).all(),
                              page_count=paginator.get_page_count(self.session, query))
 
     def set_comment_like(self, current_user_id: int, comment_id: int, liked: bool):

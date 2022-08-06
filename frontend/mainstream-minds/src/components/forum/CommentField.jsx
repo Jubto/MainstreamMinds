@@ -10,7 +10,6 @@ const CommentField = ({ parentID, storyID, setComments, comments = [] }) => {
   const commentRef = useRef('')
 
   const submit = () => {
-    console.log(`commentRef is:::`)
     console.log(commentRef.current?.value)
     const comment = {
       body: commentRef.current?.value,
@@ -43,6 +42,9 @@ const CommentField = ({ parentID, storyID, setComments, comments = [] }) => {
   return (
     <CommentFieldContainer>
       <Avatar />
+      <Avatar>
+        {'h'.toUpperCase()}
+      </Avatar>
       <FlexBox direction='column' grow={1}>
         <TextField
           id='commentField'
@@ -59,8 +61,8 @@ const CommentField = ({ parentID, storyID, setComments, comments = [] }) => {
               Cancel
             </Button>
             <Button
-              disabled={!/\S+/.test(commentRef.current.value)}
-              onClick={submit}
+              // disabled={!/\S+/.test(commentRef.current.value)} requires commentRef to be state not ref. not sure if I should
+              onClick={() => commentRef.current.value && submit()}
               variant='contained'
             >
               {parentID ? 'Reply' : 'Comment'}
