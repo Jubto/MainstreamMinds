@@ -11,7 +11,8 @@ from app.models.researcher import (
     ResearcherRead,
     ResearcherUpdate,
     ResearcherCreate,
-    ResearcherCreated, Researcher
+    ResearcherCreated,
+    Researcher
 )
 from app.models.research_story import ResearchStoryShortRead
 from app.models.tag import Tag
