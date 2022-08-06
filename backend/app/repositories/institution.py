@@ -1,31 +1,31 @@
-from typing import List
-
 from fastapi import Depends
 from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
+from app.models.pagination import Page, Paginator
 from app.repositories.base import BaseRepository
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
-# TODO: verify what the ResearchStory object looks like
-from app.models.research_story import ResearchStory
+from app.models.researcher import Researcher
+from app.models.research_story import ResearchStoryShortRead, ResearchStory
 from app.utils.model import assign_members_from_dict
 from app.utils.exceptions import NonExistentEntry
 
+
 class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):
 
-    def get_institutions(self) -> List[Institution]:
-        # TODO: pagination
-        return self.session.exec(select(Institution)).all()
+    def get_institutions(self, paginator: Paginator) -> Page[InstitutionRead]:
+        query = select(Institution)
+        return Page[InstitutionRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                     page_count=paginator.get_page_count(self.session, query))
 
-    def get_institution_by_id(self, institution_id) -> Institution:
+    def get_institution_by_id(self, institution_id: int) -> Institution:
         try:
             return self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
         except NoResultFound:
             raise NonExistentEntry('Institution_id', institution_id)
-    
-    # need to assess what info we want to pass in for an institution
-    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int):
+
+    def update_institution(self, updated_institution: InstitutionUpdate, institution_id: int) -> int:
         try:
             db_institution = self.session.exec(select(Institution).where(Institution.id == institution_id)).one()
             assign_members_from_dict(db_institution, updated_institution.dict(exclude_unset=True))
@@ -42,11 +42,28 @@ class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, Insti
         self.session.add(db_institution)
         self.session.commit()
         return db_institution.id
-    
-    def delete_institution(self, institution_id):
+
+    def delete_institution(self, institution_id: int):
         try:
             self.session.delete(self.get(institution_id))
-        except NoResultFound:
+            self.session.commit()
+        except:
+            raise NonExistentEntry('Institution_id', institution_id)
+
+    def get_institution_researchers(self, paginator: Paginator, institution_id: int) -> Page[Researcher]:
+        try:
+            query = select(Researcher).where(Researcher.institution_id == institution_id)
+            return Page[Researcher](items=self.session.exec(paginator.paginate(query)).all(),
+                                    page_count=paginator.get_page_count(self.session, query))
+        except:
+            raise NonExistentEntry('Institution_id', institution_id)
+
+    def get_institution_stories(self, paginator: Paginator, institution_id: int) -> Page[ResearchStoryShortRead]:
+        try:
+            query = select(ResearchStory).where(ResearchStory.institutions.any(Institution.id == institution_id))
+            return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                                page_count=paginator.get_page_count(self.session, query))
+        except:
             raise NonExistentEntry('Institution_id', institution_id)
 
 

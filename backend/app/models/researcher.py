@@ -31,6 +31,12 @@ class ResearcherCreate(ResearcherBase):
     pass
 
 
+class ResearcherCreated(SQLModel):
+    researcher_id: int
+    access_token: str
+    token_type: str
+
+
 class ResearcherUpdate(ResearcherBase):
     pass
 

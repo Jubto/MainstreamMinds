@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useLocation } from "react-router-dom"
-import { Box, Button, List, ListItem, Typography, styled } from "@mui/material"
+import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
-
+import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 const StoryField = styled('div')`
   background-color: #bfece6;
 `
@@ -15,6 +15,26 @@ const DiscoverScreen = () => {
   const location = useLocation()
   const [errorMsg, setErrorMsg] = useState(null)
   const [story, setStory] = useState({})
+  const [interests, setInterests] = useState({})
+
+  const getInterests = async () => {
+    try {
+      const resInterests = await msmAPI.get(`tags/preference_tags`)
+      setInterests(resInterests.data)
+      console.log(interests, resInterests.data)
+      setErrorMsg(null)
+    }
+    catch (err) {
+      if (!err?.response) {
+        setErrorMsg('No Server Response')
+      } else if (err.response?.status === 401) {
+        setErrorMsg('Forbidden, try login')
+      } else {
+        setErrorMsg(`err: ${err}`)
+        console.log(err)
+      }
+    }
+  }
 
   const testPostStory = async () => {
     // Testing jwt Bearer API call
@@ -45,6 +65,7 @@ const DiscoverScreen = () => {
         content_body: "Vestibulum gravida dapibus risus, quis lacinia eros mattis viverra.",
         thumbnail: "string",
         video_link: "string",
+        transcript: "string"
       }
       const resStory = await msmAPI.post('/research_stories', story)
       setStory(resStory.data)
@@ -61,8 +82,28 @@ const DiscoverScreen = () => {
     }
   }
 
+  useEffect(() => {
+    getInterests()
+  }, [])
+
   return (
-    <Page sx={{ ml: 10, mt: 10 }}>
+    <Page>
+      <CardCarousel carouselTitle="Liked Stories"/>
+      <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>
+      <CardCarousel carouselTitle="Trending" extension="/trending"/>
+      
+      {(interests && interests.length) ? 
+        Object.entries(interests).map(([key,value]) => {
+          return(
+            <CardCarousel 
+              carouselTitle={value.name[0].toUpperCase()+value.name.substring(1)}
+              extension={`?tags=${value.name}&page=0&page_size=10`}
+              interestBtn={true}
+            />
+          )
+        })
+        : console.log('no interests to show')}
+      
       <Typography variant='h5'>
         Temp routes
       </Typography>

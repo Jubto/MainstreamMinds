@@ -1,21 +1,25 @@
+import math
 from typing import List
+import random
 
 from fastapi import Depends
 from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
 
 from app.db import get_session
-from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate
+from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate, ResearchStoryShortRead, StoryTagLink
 from app.models.user import User
+from app.models.tag import Tag, UserTagLink
 from app.repositories.tag import get_tag_repository
 from app.repositories.researcher import get_researcher_repository
 from app.repositories.institution import get_institution_repository
 from app.utils.model import assign_members_from_dict
 from app.utils.exceptions import NonExistentEntry
 from app.models.pagination import Page, Paginator
+from app.core.trending_cache import get_cache_len, get_trending
 
 
-class ResearchStoryRepository():
+class ResearchStoryRepository:
     def __init__(self, session: Session):
         self.session = session
         self.researcher_repository = get_researcher_repository(session)
@@ -28,12 +32,31 @@ class ResearchStoryRepository():
         except NoResultFound:
             raise NonExistentEntry('ResearchStory_id', story_id)
 
-    def get_all(self, paginator: Paginator) -> List[ResearchStory]:
-        # pagination not working - doesn't return the researchers in each story for some reason
-        # query = select(ResearchStory)
-        # return Page[ResearchStory](items=self.session.exec(paginator.paginate(query)).all(),
-        #                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_count))
-        return self.session.exec(select(ResearchStory)).all()
+    def get_all(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        query = select(ResearchStory)
+        return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                            page_count=paginator.get_page_count(self.session, query))
+
+    def get_recommended(self, current_user_id: int, n: int) -> List[ResearchStory]:
+        all_recommended_stories = (self.session.query(ResearchStory)
+                                   .join(StoryTagLink, ResearchStory.id == StoryTagLink.story_id)
+                                   .join(Tag, Tag.id == StoryTagLink.tag_id)
+                                   .join(UserTagLink, UserTagLink.tag_id == Tag.id)
+                                   .filter(UserTagLink.user_id == current_user_id)).all()
+        if len(all_recommended_stories) < n:
+            all_stories = self.session.exec(select(ResearchStory)).all()
+            if len(all_stories) < n:
+                return all_stories  # not enough overall stories to satisfy
+            else:
+                return random.sample(all_stories, n)  # not enough recommended stories to satisfy
+        else:
+            return random.sample(all_recommended_stories, n)  # enough recommended stories to satisfy
+
+    def get_trending(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        # could even move all the trending_cache.py stuff here...
+        return Page[ResearchStoryShortRead](items=list(map(self.get, get_trending(paginator.page,
+                                                                                  paginator.page_size))),
+                                            page_count=math.ceil(get_cache_len()/paginator.page_size))
 
     def create(self, create_story: ResearchStoryCreate) -> ResearchStory:
         story = ResearchStory()

@@ -1,14 +1,15 @@
 from typing import List
 
 from fastapi import Depends
-from sqlmodel import select, Session
+from sqlmodel import select, Session, col
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
 from app.db import get_session
 from app.models.institution import Institution
+from app.models.pagination import Paginator, Page
 from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate
 from app.utils.model import assign_members_from_dict
-from app.models.research_story import ResearchStory
+from app.models.research_story import ResearchStory, ResearchStoryShortRead
 from app.utils.exceptions import NonExistentEntry, AlreadyResearcher
 
 
@@ -18,7 +19,7 @@ class ResearcherRepository:
 
     def add_researcher(self, new_researcher: ResearcherCreate, current_user_id: int) -> int:
         try:
-            if new_researcher.institution_id:
+            if new_researcher.institution_id is not None:
                 self.session.exec(select(Institution).where(Institution.id == new_researcher.institution_id)).one()
             to_add = Researcher()
             assign_members_from_dict(to_add, new_researcher.dict(exclude_unset=True))
@@ -28,7 +29,7 @@ class ResearcherRepository:
             self.session.commit()
             return db_researcher.id
         except IntegrityError:
-            raise AlreadyResearcher()
+            raise AlreadyResearcher
         except NoResultFound:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
@@ -57,9 +58,11 @@ class ResearcherRepository:
         except NoResultFound:
             raise NonExistentEntry('Researcher_id', current_user_id)
 
-    def get_stories_by_researcher(self, researcher_id: int) -> List[ResearchStory]:
+    def get_stories_by_researcher(self, researcher_id: int, paginator: Paginator) -> Page[ResearchStoryShortRead]:
         try:
-            return self.session.exec(select(Researcher).where(Researcher.id == researcher_id)).one().stories
+            query = select(ResearchStory).where(ResearchStory.researchers.any(Researcher.id == researcher_id))
+            return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                                page_count=paginator.get_page_count(self.session, query))
         except NoResultFound:
             raise NonExistentEntry('Researcher_id', researcher_id)
 

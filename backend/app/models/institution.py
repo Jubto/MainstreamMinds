@@ -1,4 +1,3 @@
-import enum
 from typing import List, Optional
 
 from sqlalchemy import Column, Enum
