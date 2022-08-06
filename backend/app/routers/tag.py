@@ -4,15 +4,15 @@ from fastapi import APIRouter, Depends, Path, HTTPException
 from pydantic import BaseModel
 
 from app.core.security import get_request_user_id, is_consumer, is_researcher
-from app.models.exception import Message404
+from app.models.exception import HTTPExceptionResponse
 from app.models.pagination import Page, Paginator, get_paginator
-from app.models.tag import TagRW
+from app.models.tag import TagRead, TagCreate
 from app.services.tag import TagService
 
 router = APIRouter(tags=['tag'])
 
 
-@router.get("/preference_tags", response_model=List[TagRW], dependencies=[Depends(is_consumer)])
+@router.get("/preference_tags", response_model=List[TagRead], dependencies=[Depends(is_consumer)])
 async def get_preference_tags(
         tag_service: TagService = Depends(TagService),
         current_user_id: int = Depends(get_request_user_id)
@@ -29,22 +29,23 @@ async def add_preference_tags(
     return tag_service.add_preference_tag(current_user_id, tag)
 
 
-@router.post("/", dependencies=[Depends(is_researcher)])
+@router.post("/", response_model=TagRead, dependencies=[Depends(is_researcher)],
+             responses={409: {"model": HTTPExceptionResponse}})
 async def create_tag(
-        tag: TagRW,
+        tag: TagCreate,
         tag_service: TagService = Depends(TagService),
 ):
     return tag_service.create_tag(tag)
 
 
-@router.get('/', response_model=Page[TagRW])
+@router.get('/', response_model=Page[TagRead])
 async def get_all_tags(
         paginator: Paginator = Depends(get_paginator),
         tag_service: TagService = Depends(TagService)):
     return tag_service.get_tags(paginator)
 
 
-@router.get('/{tag_name}', response_model=TagRW, responses={404: {"model": Message404}})
+@router.get('/{tag_name}', response_model=TagRead, responses={404: {"model": HTTPExceptionResponse}})
 async def get_tag_by_name(
         tag_name: str = Path(default=...),
         tag_service: TagService = Depends(TagService)
