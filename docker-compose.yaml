@@ -1,29 +1,40 @@
 version: '3.1'
 
 services:
+  frontend:
+    build:
+      context: ./frontend/mainstream-minds
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_BACKEND_URL=http://127.0.0.1:8080/api
+    ports:
+      - 80:80
 
-    frontend:
-        build:
-            context: ./fronted/mainstream-minds
-            dockerfile: Dockerfile
-       ports:
-           - 80:80
-       environment:
-           - REACT_APP_BACKEND_URL=http://backend:8080
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_CONN=postgresql://postgres:some_password@db:5432/mainstream-minds
+      - REDIS_CONN=redis://redis:6379
 
-    backend:
-        build:
-            context: ./backend
-            dockerfile: Dockerfile
-        ports:
-            - 8080:8080
-        depends:
-            db
-       environment:
-           - DB_CONN=postgresql://postgres:some_password@db:5432/comp9323
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: some_password
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-    db:
-        image: postgres
-        restart: always
-        environment:
-            POSTGRES_PASSWORD: some_password
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
