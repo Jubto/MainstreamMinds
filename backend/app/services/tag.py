@@ -3,8 +3,9 @@ from typing import List, Optional
 from fastapi import Depends
 
 from app.models.pagination import Page, Paginator
-from app.models.tag import Tag, TagRW
+from app.models.tag import Tag, TagRead, TagCreate
 from app.repositories.tag import TagRepository, get_tag_repository
+from app.utils.exceptions import TagAlreadyExistsHttpException
 
 
 class TagService:
@@ -18,10 +19,12 @@ class TagService:
     def add_preference_tag(self, current_user_id: int, tag: str):
         self.repository.add_preference_tag(current_user_id, tag)
 
-    def create_tag(self, tag: TagRW):
-        self.repository.create_tag(tag)
+    def create_tag(self, tag: TagCreate):
+        if self.repository.get_tag_by_name(tag.name):
+            raise TagAlreadyExistsHttpException()
+        return self.repository.create_tag(tag)
 
-    def get_tags(self, paginator: Paginator) -> Page[TagRW]:
+    def get_tags(self, paginator: Paginator) -> Page[TagRead]:
         return self.repository.get_tags(paginator)
 
     def get_tag_by_name(self, name: str) -> Optional[Tag]:
