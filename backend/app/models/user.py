@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship
 
-from app.models.tag import Tag, UserTagLink, TagRead
+from app.models.tag import Tag, UserTagLink
 from app.models.research_story import StoryLikeLink
 from app.models.comment import UserCommentLikesLink
 
@@ -43,7 +43,6 @@ class UserUpdate(UserBase):
 class UserRead(UserBase):
     id: int
     role: Role = Field(sa_column=Column(Enum(Role)))
-    preference_tags: List[TagRead]
 
 
 class UserGetQuery(BaseModel):

@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import Depends
-from sqlmodel import select, Session, col
+from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
 from app.db import get_session
@@ -9,7 +9,6 @@ from app.models.filter import ModelFilter
 from app.models.institution import Institution
 from app.models.pagination import Paginator, Page
 from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate
-from app.models.tag import Tag
 from app.models.user import User
 from app.utils.model import assign_members_from_dict
 from app.models.research_story import ResearchStory, ResearchStoryShortRead
@@ -40,8 +39,6 @@ class ResearcherRepository:
         query = select(Researcher).join(Researcher.user).join(User.preference_tags, isouter=True)
         if filter_by:
             query = filter_by.apply_filter_to_query(query)
-        # col(User.preference_tags).any_(Tag.id == 1)
-        # query = query.where(col(Tag.id).in_([1]))
         return self.session.exec(query).all()
 
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:
