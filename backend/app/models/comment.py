@@ -17,6 +17,7 @@ class CommentCreate(CommentBase):
 
 class CommentRead(CommentBase):
     id: int
+    # user: Optional["UserRead"] // crashes docs
     timestamp: datetime.datetime
 
 
@@ -29,6 +30,7 @@ class Comment(CommentBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     timestamp: datetime.datetime = Field(default_factory=datetime.datetime.utcnow)
     user_id: int = Field(foreign_key="user.id")  # note: not optional, enforces total participation
+    user: Optional["User"] = Relationship()
 
     # https://github.com/tiangolo/sqlmodel/issues/127
     children: List["Comment"] = Relationship(sa_relationship_kwargs=dict(
