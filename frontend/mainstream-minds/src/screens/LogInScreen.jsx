@@ -34,6 +34,7 @@ const LogInScreen = () => {
       }
       catch (err) {
         if (err.response?.status === 401) {
+          console.log("HERE ERIN")
           setErrorMsg(err.response.data.detail)
         }
       }
