@@ -29,9 +29,19 @@ the following command.
 docker-compose up -d
 ```
 
-This should start all the services for the application and unless anything was changed in the 
-`docker-compose.yaml` file you can navigate to <http://127.0.0.1> to see the frontend and 
-<http://127.0.0.1:8080/docs> to view the swagger documentation for the backend API.
+Upon first launch this will trigger a build of all the images for the services but upon subsequent
+runs it will not. As such if any of the source files for the backend or frontend have changed
+you will need to run the build command first before running the up command as follows.
+
+```shell
+docker-compose build
+docker-compose up -d
+```
+
+After the up command has been run all the services for the application should have been start.
+Unless anything was changed in the `docker-compose.yaml` file you can navigate to 
+<http://127.0.0.1> to see the frontend and <http://127.0.0.1:8080/docs> to view the swagger 
+documentation for the backend API.
 
 ### Deployment without Docker
 
