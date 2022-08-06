@@ -3,15 +3,18 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, Path, Query
 
 from app.core.security import get_request_user_id, is_researcher, is_consumer, create_token
+from app.models.filter import ModelFilter, FieldFilter, FilterOperation, FilterCompoundOperation, FilterCompound, \
+    FilterExpression
 from app.models.security import TokenData
 from app.models.pagination import Page, Paginator, get_paginator
 from app.models.researcher import (
     ResearcherRead,
     ResearcherUpdate,
     ResearcherCreate,
-    ResearcherCreated
+    ResearcherCreated, Researcher
 )
 from app.models.research_story import ResearchStoryShortRead
+from app.models.user import User
 from app.services.researcher import ResearcherService
 
 router = APIRouter(tags=['researcher'])
@@ -23,9 +26,19 @@ router = APIRouter(tags=['researcher'])
     response_model=List[ResearcherRead]
 )
 async def get_all_researchers(
+        search: str = Query(default=None, description='Filter researchers by first and last name'),
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return researcher_service.get_all()
+    filter_by: Optional[ModelFilter[Researcher]] = None
+    if search:
+        first_name_filter = FieldFilter(field='first_name', operation=FilterOperation.ILIKE, value=search,
+                                        model=User)
+        last_name_filter = FieldFilter(field='last_name', operation=FilterOperation.ILIKE, value=search,
+                                       model=User)
+        compound = FilterCompound(filters=[first_name_filter, last_name_filter], operator=FilterCompoundOperation.OR)
+        filter_by = ModelFilter(FilterExpression(compound), User)
+
+    return researcher_service.get_all(filter_by)
 
 
 @router.get(

@@ -1,13 +1,15 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends
 from sqlmodel import select, Session, col
 from sqlalchemy.exc import NoResultFound, IntegrityError
 
 from app.db import get_session
+from app.models.filter import ModelFilter
 from app.models.institution import Institution
 from app.models.pagination import Paginator, Page
 from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate
+from app.models.user import User
 from app.utils.model import assign_members_from_dict
 from app.models.research_story import ResearchStory, ResearchStoryShortRead
 from app.utils.exceptions import NonExistentEntry, AlreadyResearcher
@@ -33,8 +35,8 @@ class ResearcherRepository:
         except NoResultFound:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
-    def get_all(self) -> List[Researcher]:
-        return self.session.exec(select(Researcher)).all()
+    def get_all(self, filter_by: Optional[ModelFilter[Researcher]]) -> List[Researcher]:
+        return self.session.exec(filter_by.apply_filter_to_query(select(Researcher))).all()
 
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:
         try:

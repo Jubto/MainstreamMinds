@@ -44,7 +44,6 @@ class FieldFilter(Filter):
 
     def get_filter_criteria(self) -> Any:
         model_field = getattr(self.model, self.field)
-
         if self.operation == FilterOperation.LIKE:
             return col(model_field).like(f'%{self.value}%')
         elif self.operation == FilterOperation.ILIKE:
