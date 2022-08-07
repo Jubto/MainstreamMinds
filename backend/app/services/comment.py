@@ -2,8 +2,7 @@ from typing import List
 
 from fastapi import Depends
 
-from app.models.comment import CommentRead, CommentCreate, Comment
-from app.models.pagination import Paginator, Page
+from app.models.comment import CommentRead, CommentCreate
 from app.repositories.comment import get_comment_repository, CommentRepository
 
 

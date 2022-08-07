@@ -3,11 +3,8 @@ from typing import List
 from fastapi import APIRouter, Depends
 
 from app.models.comment import CommentCreate, CommentRead
-from app.models.pagination import Page, Paginator, get_paginator
 from app.core.security import get_request_user_id, is_consumer
 from app.services.comment import CommentService
-
-from app.core.security import is_consumer
 
 router = APIRouter(tags=['comment'])
 

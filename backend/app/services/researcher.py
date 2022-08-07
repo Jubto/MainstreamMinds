@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from fastapi import Depends
 
@@ -8,7 +8,7 @@ from app.models.user import Role
 from app.models.researcher import ResearcherCreate, ResearcherUpdate, Researcher, ResearcherRead
 from app.repositories.researcher import ResearcherRepository, get_researcher_repository
 from app.repositories.user import UserRepository, get_user_repository
-from app.models.research_story import ResearchStoryShortRead, ResearchStory
+from app.models.research_story import ResearchStoryShortRead
 
 
 class ResearcherService:

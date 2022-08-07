@@ -6,10 +6,11 @@ from app.models.researcher import Researcher
 from app.models.research_story import ResearchStoryShortRead
 from app.repositories.institution import InstitutionRepository, get_institution_repository
 
+
 class InstitutionService:
     def __init__(self,
                  institution_repository: InstitutionRepository = Depends(get_institution_repository)
-                ):
+                 ):
         self.repository = institution_repository
 
     def get_institutions(self, paginator: Paginator) -> Page[InstitutionRead]:
@@ -17,7 +18,7 @@ class InstitutionService:
 
     def get_institution_by_id(self, institution_id: int) -> Institution:
         return self.repository.get_institution_by_id(institution_id)
-    
+
     def update_institution(self, new_institution: InstitutionUpdate, institution_id: int) -> int:
         return self.repository.update_institution(new_institution, institution_id)
 
