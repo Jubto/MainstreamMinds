@@ -5,82 +5,80 @@ import useMsmApi from "../../hooks/useMsmApi";
 import { timeSince } from "../../utils/helpers";
 import CommentField from "./CommentField";
 import { randomColour } from '../styles/colours';
-import { Avatar, Box, Button, Tooltip, Typography, styled } from "@mui/material";
+import {
+  CommentContainer,
+  CommentButton,
+  CommentHeader,
+  CommentBody,
+  CommentFooter,
+  CommentTreeContainer,
+  CommentsContainer
+} from "./forum.styled";
+import { Avatar, Tooltip, Typography } from "@mui/material";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ReplyIcon from '@mui/icons-material/Reply';
 
-const CommentContainer = styled(Box)`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0px 12px;
-  gap: 4px;
-`
 
-const CommentButton = styled(Button)`
-  color: ${({ theme }) => theme.palette.msm.dull};
-  text-transform: capitalize;
-`
-
-const CommentHeader = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-`
-
-const CommentBody = styled(Typography)`
-  padding-left: 0.5rem;
-`
-
-const CommentFooter = styled(Box)`
-  color: ${({ theme }) => theme.palette.msm.dull};
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  margin-left: 0.25rem;
-  margin-top: -0.5rem;
-  gap: 12px;
-`
-
-const CommentTreeContainer = styled(Box)`
-  margin-bottom: 1.5rem;
-`
-
-const CommentsContainer = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding-left: 50px;
-  gap: 5px;
-`
-
-const StoryComment = ({ parentID, storyID, comment, setComments }) => {
+const StoryComment = ({ comment, setComments, setRootReplyComment, hideButtons = false }) => {
   const { auth } = useAuth()
   const msmAPI = useMsmApi()
   const location = useLocation()
   const navigate = useNavigate()
   const [isParent, setIsParent] = useState(false)
-  const [numLikes, setNumLikes] = useState(0)
   const [writeReply, setWriteReply] = useState(false)
+  const [hasLiked, setHasLiked] = useState(false)
+  const [avatarBgColor, setAvatarBcColor] = useState('')
+  const [replyTo, setReplyTo] = useState('')
+  const [replyID, setReplyID] = useState('')
+
+  const setLike = () => {
+    !auth.accessToken && navigate('/login', { state: { from: location } })
+    const queryParams = new URLSearchParams();
+    queryParams.append('comment_id', comment.id)
+    queryParams.append('liked', !hasLiked)
+    if (!hasLiked) {
+      comment.num_likes++
+      msmAPI.put(`/comments/like?${queryParams}`)
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err))
+
+    }
+    else {
+      comment.num_likes && comment.num_likes--
+      msmAPI.put(`/comments/like?${queryParams}`)
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err))
+    }
+    setHasLiked(!hasLiked)
+  }
+
+  const openReply = () => {
+    !auth.accessToken && navigate('/login', { state: { from: location } })
+    setWriteReply(true)
+  }
 
   useEffect(() => {
-    setIsParent(comment.id === parentID)
-    // TEMP api call
-    msmAPI.get('/comments/likes', { params: { comment_id: comment.id } })
-      .then((res) => setNumLikes(res.data))
-      .catch((err) => console.error(err))
+    setAvatarBcColor(randomColour())
+    console.log(comment.parent_id)
+    console.log(comment.parent_id === 0)
+    console.log(comment)
+    setIsParent(comment.parent_id === 0)
+    setReplyTo(comment.parent_id ? `@${comment.user.first_name} ` : '')
+    setReplyID(comment.parent_id ? comment.parent_id : comment.id)
+    if (auth) {
+      msmAPI.get('/comments/like', { params: { comment_id: comment.id } })
+        .then((res) => res.data && setHasLiked(true))
+        .catch((err) => console.error(err))
+    }
   }, [])
 
   return (
-    <CommentContainer direction='column'>
+    <CommentContainer direction='column' >
       <CommentHeader>
         <Avatar sx={{
-          bgcolor: isParent ? '' : randomColour(),
-          width: isParent ? 34 : 'inital',
-          height: isParent ? 34 : 'inital'
+          bgcolor: avatarBgColor,
+          width: isParent ? 'inital' : 34,
+          height: isParent ? 'inital' : 34
         }}
         >
           {comment.user.first_name[0].toUpperCase()}{comment.user.last_name[0].toUpperCase()}
@@ -95,34 +93,37 @@ const StoryComment = ({ parentID, storyID, comment, setComments }) => {
       <CommentBody>
         {comment.body}
       </CommentBody>
-      <CommentFooter >
-        <Tooltip title='like comment' >
-          <CommentButton
-            onClick={() => !auth.accessToken && navigate('/login', { state: { from: location } })}
-            startIcon={<ThumbUpOffAltIcon
-              sx={{ color: 'msm.dull' }}
-            />}>
-            {numLikes ? `${numLikes} likes` : 'no likes'}
-          </CommentButton>
-        </Tooltip>
-        <Tooltip title='reply' >
-          <CommentButton
-            onClick={() => {
-              !auth.accessToken && navigate('/login', { state: { from: location } })
-              setWriteReply(true)}
-            }
-            startIcon={<ReplyIcon sx={{ color: 'msm.dull' }} />}
-          >
-            Reply
-          </CommentButton>
-        </Tooltip>
-      </CommentFooter>
+      {hideButtons
+        ? ''
+        : <CommentFooter >
+          <Tooltip title='like comment' >
+            <CommentButton
+              onClick={setLike}
+              startIcon={<ThumbUpOffAltIcon
+                sx={{ color: 'msm.dull' }}
+              />}>
+              {comment.num_likes ? `${comment.num_likes} likes` : 'no likes'}
+            </CommentButton>
+          </Tooltip>
+          <Tooltip title='reply' >
+            <CommentButton
+              onClick={openReply}
+              startIcon={<ReplyIcon sx={{ color: 'msm.dull' }} />}
+            >
+              Reply
+            </CommentButton>
+          </Tooltip>
+        </CommentFooter>
+      }
       {writeReply
         ? <CommentField
-          parentID={parentID}
-          storyID={storyID}
+          parentID={comment.parent_id}
+          storyID={comment.story_id}
           setComments={setComments}
           setWriteReply={setWriteReply}
+          replyTo={replyTo}
+          replyID={replyID}
+          setRootReplyComment={setRootReplyComment}
         />
         : ''
       }
@@ -131,27 +132,65 @@ const StoryComment = ({ parentID, storyID, comment, setComments }) => {
 }
 
 
-const StoryCommentTree = ({ rootID, storyID, comments, setComments }) => {
+const StoryCommentTree = ({ comments, setComments }) => {
+  const [showReplies, setShowReplies] = useState(false)
+  const [rootReplyComment, setRootReplyComment] = useState([])
+
+  const handleShowComments = () => {
+    setShowReplies(!showReplies)
+    setRootReplyComment([])
+  }
 
   return (
     <CommentTreeContainer>
       <StoryComment
-        parentID={rootID}
-        storyID={storyID}
         comment={comments[0]}
         setComments={setComments}
+        setRootReplyComment={setRootReplyComment}
       />
-      <CommentsContainer>
-        {comments.slice(1).map((comment, idx) => (
-          <StoryComment
-            key={idx}
-            parentID={rootID}
-            storyID={storyID}
-            comment={comment}
-            setComments={setComments}
-          />
-        ))}
-      </CommentsContainer>
+      <CommentButton
+        onClick={handleShowComments}
+        sx={{ ml: 1, mt: -1, mb: comments.length - 1 > rootReplyComment.length ? 2 : 0 }}
+      >
+        {comments.length > 1 && !(comments.length - 1 === rootReplyComment.length)
+          ? showReplies
+            ? 'Hide replies'
+            : `Show ${comments.length - 1 - rootReplyComment.length} replies`
+          : ''
+        }
+      </CommentButton>
+      {(() => {
+        if (showReplies) {
+          return (
+            <CommentsContainer>
+              {comments.slice(1).map((comment, idx) => (
+                <StoryComment
+                  key={idx}
+                  comment={comment}
+                  setComments={setComments}
+                />
+              ))}
+            </CommentsContainer>
+          )
+        }
+        else if (rootReplyComment.length) {
+          return (
+            <CommentsContainer sx={{ pb: 0, mt: showReplies ? 0 : -2, mb: 2 }}>
+              {rootReplyComment.map((comment, idx) => (
+                <StoryComment
+                  key={idx}
+                  comment={comment}
+                  setComments={setComments}
+                  hideButtons={true}
+                />
+              ))}
+            </CommentsContainer>
+          )
+        }
+        else {
+          return ''
+        }
+      })()}
     </CommentTreeContainer>
   )
 }

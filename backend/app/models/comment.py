@@ -30,8 +30,6 @@ class UserCommentLikesLink(SQLModel, table=True):
 
 class Comment(CommentBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    # timestamp: datetime = Field(default_factory=datetime.utcnow) # original
-    # timestamp: datetime = Field(default_factory=lambda : datetime.now(timezone.utc)) # not sure why this one still has incorrect UTC
     timestamp: datetime = Field(default_factory=datetime.now)
     user_id: int = Field(foreign_key="user.id")  # note: not optional, enforces total participation
     user: Optional["User"] = Relationship()

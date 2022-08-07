@@ -8,14 +8,17 @@ import { ForumContainer } from "./forum.styled"
 import { Box, Typography } from "@mui/material"
 
 const StoryForum = ({ storyID, researcher }) => {
-  const {auth} = useAuth()
+  const { auth } = useAuth()
   const msmAPI = useMsmApi()
   const location = useLocation()
   const navigate = useNavigate()
   const [comments, setComments] = useState({})
 
   useEffect(() => {
-    msmAPI.get('/comments', { params: {story_id: storyID} })
+    const queryParams = new URLSearchParams();
+    queryParams.append('story_id', storyID)
+    queryParams.append('page_size', 100)
+    msmAPI.get(`/comments?${queryParams}`)
       .then((res) => {
         let commentTrees = {}
         res.data.items.forEach((comment) => {
@@ -35,11 +38,13 @@ const StoryForum = ({ storyID, researcher }) => {
     <ForumContainer>
       <Typography variant='h6'>
         {Object.entries(comments).length
-        ? `${Object.entries(comments).length} Comments`
-        : 'No comments yet!'
+          ? `${Object.entries(comments).reduce((sum, [rootID, obj]) => {
+            return sum + comments[rootID].length
+          }, 0)} Comments`
+          : 'No comments yet!'
         }
       </Typography>
-      <Box onClick={() => !auth.accessToken && navigate('/login', { state: {from: location} })}>
+      <Box onClick={() => !auth.accessToken && navigate('/login', { state: { from: location } })}>
         <CommentField
           parentID={0}
           storyID={storyID}
@@ -49,8 +54,6 @@ const StoryForum = ({ storyID, researcher }) => {
       {Object.entries(comments).map(([commentID, comments]) => (
         <StoryCommentTree
           key={commentID}
-          rootID={commentID}
-          storyID={storyID}
           comments={comments}
           setComments={setComments}
         />

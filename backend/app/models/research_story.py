@@ -32,7 +32,7 @@ class ResearchStoryBase(SQLModel):
 
 class ResearchStory(ResearchStoryBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    publish_date: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    publish_date: datetime = Field(default_factory=datetime.now, nullable=False)
     content_body: str = Field()
 
     researchers: List["Researcher"] = Relationship(back_populates="stories", link_model=StoryAuthorLink)

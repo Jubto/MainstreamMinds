@@ -5,49 +5,60 @@ import { CommentFieldContainer } from "./forum.styled"
 import { Avatar, Button, TextField, Tooltip, Typography } from "@mui/material"
 
 
-const CommentField = ({ parentID, storyID, setComments, setWriteReply }) => {
-  const msmAPI = useMsmApi()
+const CommentField = ({
+  parentID,
+  storyID,
+  setComments,
+  setWriteReply,
+  replyTo='',
+  replyID=0,
+  setRootReplyComment
+}) => {
+  const msmAPI = useMsmApi() // TODO potentially only have one of these at parent component and pass down, see if its less calls
   const [commentButtons, setCommentButtons] = useState(false)
   const commentRef = useRef('')
 
   const handleCancelButton = () => {
-    if (parentID) {
+    if (setWriteReply) {
       setWriteReply(false) // For reply comment fields
     }
     setCommentButtons(false)
   }
 
   const submit = () => {
-    console.log(commentRef.current?.value)
     const body = {
-      body: commentRef.current?.value,
-      parent_id: parentID,
+      body: replyTo + commentRef.current?.value,
+      // body: commentRef.current?.value,
+      parent_id: replyID ? replyID : parentID,
       story_id: storyID
     }
     commentRef.current.value = ''
     msmAPI.post('/comments', body)
       .then((res) => {
         const comment = res.data
-        if (parentID) {
+        if (parentID || replyID) {
           // responding to a comment
+          if (parentID === 0) {
+            setRootReplyComment(prevState => ([...prevState, comment]))
+          }
           setComments((prevState) => {
-            let comments = prevState[parentID]
+            let comments = prevState[parentID ? parentID : replyID]
             comments.push(comment)
-            return {...prevState, [parentID]: comments}
+            return {...prevState, [parentID ? parentID : replyID]: comments}
           })
           setWriteReply(false) // close textfield
         }
         else {
           // Posting new root comment
-          const commentID = res.data
-          setComments(prevState => ({...prevState, [commentID]: [res.data]})) 
+          const commentID = res.data.id
+          setComments(prevState => ({...prevState, [commentID]: [res.data]}))
         }
       })
       .catch((err) => console.error(err))
   }
 
   return (
-    <CommentFieldContainer reply={parentID ? 1 : 0}>
+    <CommentFieldContainer reply={replyID ? 1 : 0}>
       <Avatar sx={{width: parentID ? 34 : 'inital', height: parentID ? 34 : 'inital'}} />
       <FlexBox direction='column' grow={1}>
         <TextField
@@ -60,7 +71,7 @@ const CommentField = ({ parentID, storyID, setComments, setWriteReply }) => {
           onClick={() => setCommentButtons(true)}
           sx={{ width: '100%', pb: 1, flex: 1 }}
         />
-        {commentButtons || parentID
+        {commentButtons || parentID || setWriteReply
           ? <FlexBox justify='flex-end'>
             <Button onClick={handleCancelButton} sx={{ mr: 1 }}>
               Cancel

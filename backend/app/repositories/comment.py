@@ -26,7 +26,6 @@ class CommentRepository:
         db_comment = Comment.from_orm(to_add)
         self.session.add(db_comment)
         self.session.commit()
-        # print(f'@@@@@@@@@@@@@ {db_comment}')
         return db_comment
 
     def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[CommentRead]:
