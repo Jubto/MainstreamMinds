@@ -1,4 +1,4 @@
-import { CarouselContainer } from "../../layout/StoryCards/CardStyles"
+import { CarouselContainer, CarouselTitle} from "../../layout/StoryCards/CardStyles"
 import { ResearcherCarouselTitle } from "./ResearcherStyles"
 
 
@@ -6,9 +6,9 @@ const ResearcherCarousel = (props) => {
 
   return(
     <CarouselContainer>
-      <ResearcherCarouselTitle>
+      <CarouselTitle>
         Researchers
-      </ResearcherCarouselTitle>
+      </CarouselTitle>
     </CarouselContainer>
   )
 }
