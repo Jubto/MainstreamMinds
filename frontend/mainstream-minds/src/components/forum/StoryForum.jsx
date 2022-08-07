@@ -55,6 +55,8 @@ const StoryForum = ({ storyID, researcher }) => {
           key={commentID}
           comments={comments}
           setComments={setComments}
+          msmAPI={msmAPI}
+          auth={auth}
         />
       ))}
     </ForumContainer>

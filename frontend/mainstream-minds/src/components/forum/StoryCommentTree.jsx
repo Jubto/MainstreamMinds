@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import useAuth from "../../hooks/useAuth";
-import useMsmApi from "../../hooks/useMsmApi";
 import { timeSince } from "../../utils/helpers";
 import CommentField from "./CommentField";
 import { randomColour } from '../styles/colours';
@@ -19,9 +17,14 @@ import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ReplyIcon from '@mui/icons-material/Reply';
 
 
-const StoryComment = ({ comment, setComments, setRootReplyComment, hideButtons = false }) => {
-  const { auth } = useAuth()
-  const msmAPI = useMsmApi()
+const StoryComment = ({
+  comment,
+  setComments,
+  setRootReplyComment,
+  msmAPI,
+  auth,
+  hideButtons = false
+}) => {
   const location = useLocation()
   const navigate = useNavigate()
   const [isParent, setIsParent] = useState(false)
@@ -129,7 +132,7 @@ const StoryComment = ({ comment, setComments, setRootReplyComment, hideButtons =
 }
 
 
-const StoryCommentTree = ({ comments, setComments }) => {
+const StoryCommentTree = ({ comments, setComments, msmAPI, auth }) => {
   const [showReplies, setShowReplies] = useState(false)
   const [rootReplyComment, setRootReplyComment] = useState([])
 
@@ -144,6 +147,8 @@ const StoryCommentTree = ({ comments, setComments }) => {
         comment={comments[0]}
         setComments={setComments}
         setRootReplyComment={setRootReplyComment}
+        msmAPI={msmAPI}
+        auth={auth}
       />
       <CommentButton
         onClick={handleShowComments}
@@ -165,6 +170,8 @@ const StoryCommentTree = ({ comments, setComments }) => {
                   key={idx}
                   comment={comment}
                   setComments={setComments}
+                  msmAPI={msmAPI}
+                  auth={auth}
                 />
               ))}
             </CommentsContainer>
@@ -179,6 +186,8 @@ const StoryCommentTree = ({ comments, setComments }) => {
                   comment={comment}
                   setComments={setComments}
                   hideButtons={true}
+                  msmAPI={msmAPI}
+                  auth={auth}
                 />
               ))}
             </CommentsContainer>

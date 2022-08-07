@@ -1,8 +1,8 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import useMsmApi from "../../hooks/useMsmApi"
 import { FlexBox } from "../styles/util.styled"
 import { CommentFieldContainer } from "./forum.styled"
-import { Avatar, Button, TextField, Tooltip, Typography } from "@mui/material"
+import { Avatar, Button, TextField } from "@mui/material"
 
 
 const CommentField = ({
@@ -14,9 +14,11 @@ const CommentField = ({
   replyID=0,
   setRootReplyComment
 }) => {
-  const msmAPI = useMsmApi() // TODO potentially only have one of these at parent component and pass down, see if its less calls
+  const msmAPI = useMsmApi()
   const [commentButtons, setCommentButtons] = useState(false)
+  const [submitted, setSubmitted] = useState(0)
   const commentRef = useRef('')
+  let prevKey = useRef('')
 
   const handleCancelButton = () => {
     if (setWriteReply) {
@@ -25,14 +27,25 @@ const CommentField = ({
     setCommentButtons(false)
   }
 
-  const submit = () => {
+  const handleEnterPress = (e) => {
+    if (e.key === 'Enter' && prevKey.current !== 'Shift') {
+      submitComment() // if prev key press was shift key, i.e. Shift+Enter, it won't submit
+    } 
+    else if (e.key !== 'Enter') {
+      prevKey.current = e.key // allow for multiple shift enters in a row
+    }
+  }
+
+  const submitComment = () => {
+    if (!/\S+/.test(commentRef.current.value)) {
+      setSubmitted(submitted + 1)
+      return null // comment needs at least some substance
+    }
     const body = {
       body: replyTo + commentRef.current?.value,
-      // body: commentRef.current?.value,
       parent_id: replyID ? replyID : parentID,
       story_id: storyID
     }
-    commentRef.current.value = ''
     msmAPI.post('/comments', body)
       .then((res) => {
         const comment = res.data
@@ -53,9 +66,14 @@ const CommentField = ({
           const commentID = res.data.id
           setComments(prevState => ({...prevState, [commentID]: [res.data]}))
         }
+        setSubmitted(submitted + 1)
       })
       .catch((err) => console.error(err))
   }
+
+  useEffect(() => {
+    commentRef.current.value = ''
+  }, [submitted])
 
   return (
     <CommentFieldContainer reply={replyID ? 1 : 0}>
@@ -68,6 +86,7 @@ const CommentField = ({
           autoFocus
           variant="standard"
           placeholder={parentID ? 'Add a reply...' : 'Type your comment here'}
+          onKeyDown={handleEnterPress}
           onClick={() => setCommentButtons(true)}
           sx={{ width: '100%', pb: 1, flex: 1 }}
         />
@@ -77,8 +96,7 @@ const CommentField = ({
               Cancel
             </Button>
             <Button
-              // disabled={!/\S+/.test(commentRef.current.value)} requires commentRef to be state not ref. not sure if I should
-              onClick={() => commentRef.current.value && submit()}
+              onClick={() => commentRef.current.value && submitComment()}
               variant='contained'
             >
               {parentID ? 'Reply' : 'Comment'}

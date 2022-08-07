@@ -26,7 +26,6 @@ export const CommentContainer = styled(Box)`
   gap: 4px;
 `
 
-
 export const CommentButton = styled(Button)`
   color: ${({ theme }) => theme.palette.msm.dull};
   text-transform: capitalize;
@@ -42,6 +41,9 @@ export const CommentHeader = styled(Box)`
 
 
 export const CommentBody = styled(Typography)`
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
   padding-left: 0.5rem;
 `
 
