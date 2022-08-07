@@ -61,7 +61,11 @@ async def get_stories_by_filters(
         filters.append(FilterCompound(filters=text_filters, operator=FilterCompoundOperation.OR))
 
     if tags:
-        filters.append(FieldFilter(field='name', operation=FilterOperation.IN, value=tags, model=Tag))
+        tag_filters = []
+        for tag in tags:
+            tag_filters.append(FieldFilter(field='name', operation=FilterOperation.CONTAINS, value=tag, model=Tag,
+                                           relationship_field=ResearchStory.tags))
+        filters.append(FilterCompound(filters=tag_filters, operator=FilterCompoundOperation.AND))
 
     if authors:
         filters.append(FieldFilter(field='id', operation=FilterOperation.IN, value=authors, model=Researcher))

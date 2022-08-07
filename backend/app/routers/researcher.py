@@ -26,11 +26,12 @@ router = APIRouter(tags=['researcher'])
 @router.get(
     "",
     description='Return all researchers from the database',
-    response_model=List[ResearcherRead]
+    response_model=Page[ResearcherRead]
 )
 async def get_all_researchers(
         tags: List[str] = Query(default=None, description='A list of tag names to filter by'),
         search: str = Query(default=None, description='Filter researchers by first and last name'),
+        paginator: Paginator = Depends(get_paginator),
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
     filter_by: Optional[ModelFilter[Researcher]] = None
@@ -44,13 +45,17 @@ async def get_all_researchers(
             FilterCompound(filters=[first_name_filter, last_name_filter], operator=FilterCompoundOperation.OR))
 
     if tags:
-        filters.append(FieldFilter(field='name', operation=FilterOperation.IN, value=tags, model=Tag))
+        tag_filters = []
+        for tag in tags:
+            tag_filters.append(FieldFilter(field='name', operation=FilterOperation.CONTAINS, value=tag, model=Tag,
+                                           relationship_field=User.preference_tags))
+        filters.append(FilterCompound(filters=tag_filters, operator=FilterCompoundOperation.AND))
 
     if filters:
         compound = FilterCompound(filters=filters, operator=FilterCompoundOperation.AND)
         filter_by = ModelFilter(FilterExpression(compound), User)
 
-    return researcher_service.get_all(filter_by)
+    return researcher_service.get_all(filter_by, paginator)
 
 
 @router.get(
