@@ -23,7 +23,17 @@ export const getTags = (array) => {
   return tagList
 }
 
-export const appendToSearch = (searchPath, addTag) => {
+export const getSearch = (array) => {
+  let search = ""
+  array.forEach(element => {
+    if (element.startsWith("search=")) {
+      search = element.slice(7)
+    }
+  })
+  return search
+}
+
+export const appendTagSearch = (searchPath, addTag) => {
   let newPath
   if (searchPath.length !== 0) {
     newPath = searchPath.concat(`&tags=${addTag}`)
@@ -34,7 +44,28 @@ export const appendToSearch = (searchPath, addTag) => {
   return newPath
 }
 
-export const removeFromSearch = (searchPath, removeTag) => {
+const removeKeywordFromSearch = (searchPath) => {
+  let newPath
+  const listItems = searchPath.substring(1).split('&')
+  const newList = listItems.filter((x) => x.startsWith('search=') !== true)
+  newPath = newList.join('&')
+  console.log(newList, newPath)
+  return('?'.concat(newPath))
+}
+
+export const appendKeywordSearch = (searchPath, keyword) => {
+  const clearedPath = removeKeywordFromSearch(searchPath)
+  let newPath
+  if (clearedPath.length !== 0) {
+    newPath = clearedPath.concat(`&search=${keyword}`)
+  } else {
+    newPath = "?search=".concat(keyword)
+  }
+  console.log(newPath)
+  return newPath
+}
+
+export const removeTagFromSearch = (searchPath, removeTag) => {
   const tagName = encodeSpaces(removeTag)
   let newPath
   console.log(searchPath.substring(1))
@@ -45,6 +76,7 @@ export const removeFromSearch = (searchPath, removeTag) => {
   console.log(newList, newPath)
   return('?'.concat(newPath))
 }
+
 
 export const encodeSpaces = (string) => {
   const strArr = string.split(' ')

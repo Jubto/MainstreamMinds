@@ -8,14 +8,15 @@ import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResultsContainer, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import searchTags from "../components/SearchComponents/searchTags"
-import { extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
+  const nav = useNavigate()
   const { auth, setAuth } = useAuth()
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
@@ -43,14 +44,22 @@ const SearchScreen = () => {
     }
   }
 
-  const getSelectedTags = () => {
+  const getTagsAndSearch = () => {
     const queryArr = extractQuery(location.search)
     setSelectedTags(getTags(queryArr))
   }
 
+  const searchKeyword = (e) => {
+    if (e.key === "Enter") {
+      console.log("search", e.target.value);
+      const newPath = appendKeywordSearch(location.search, e.target.value)
+      nav(`/search${newPath}`)
+    }
+  }
+
   useEffect(() => {
     getStories(location.search)
-    getSelectedTags()
+    getTagsAndSearch()
   }, [location.search])
 
   return (

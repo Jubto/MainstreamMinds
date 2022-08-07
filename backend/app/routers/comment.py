@@ -12,19 +12,18 @@ from app.core.security import is_consumer
 router = APIRouter(tags=['comment'])
 
 
-@router.get("", response_model=Page[CommentRead])
+@router.get("", response_model=List[CommentRead])
 async def get_story_comments(
         story_id: int,
-        comment_service: CommentService = Depends(CommentService),
-        paginator: Paginator = Depends(get_paginator)
+        comment_service: CommentService = Depends(CommentService)
 ):
     """
     Given a research story id, returns a list of all comments under that story:
     """
-    return comment_service.get_story_comments(story_id, paginator)
+    return comment_service.get_story_comments(story_id)
 
 
-@router.post("", response_model=int, dependencies=[Depends(is_consumer)])
+@router.post("", response_model=CommentRead, dependencies=[Depends(is_consumer)])
 async def add_comment(
         comment: CommentCreate,
         comment_service: CommentService = Depends(CommentService),
