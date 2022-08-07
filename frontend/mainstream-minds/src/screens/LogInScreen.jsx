@@ -12,6 +12,12 @@ const LogInScreen = () => {
   const [, setAccount] = context.account;
   const [errorMsg, setErrorMsg] = useState(null)
 
+  const [formErrors, setFormErrors] = useState({
+    error: false,
+    email: null,
+    password: null,
+  })
+
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
@@ -22,7 +28,22 @@ const LogInScreen = () => {
     const email = data.get('email');
     const password = data.get('password');
 
-    if ('no errors') {
+    formErrors.error = false;
+
+    if (!/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(email)) {
+      setFormErrors(prevState => {
+        return {...prevState, email: true}
+      })
+      formErrors.error = true
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password) || password.length < 8) {
+      setFormErrors(prevState => {
+        return {...prevState, password: true}
+      })
+      formErrors.error = true
+    }
+
+    if (!formErrors.error) {
       try {
         setErrorMsg(null)
         const formParams = new URLSearchParams(); // backend requires form data, not json data
@@ -43,7 +64,7 @@ const LogInScreen = () => {
   return (
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>
       <Grid item xs={6}>
-        <LogInLogoPanel />
+        <LogInLogoPanel/>
       </Grid>
       <Grid item xs={4}>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10, mr: 10}}>
@@ -57,6 +78,13 @@ const LogInScreen = () => {
             name="email"
             label="Email"
             placeholder="Email"
+            onChange={() => {
+              formErrors.email && setFormErrors(prevState => {
+                return {...prevState, email: false}
+              })
+            }}
+            error={formErrors.email}
+            helperText={formErrors.email ? 'Invalid email.' : ''}
             sx={{width: '100%'}}
           />
           <TextField
@@ -65,7 +93,14 @@ const LogInScreen = () => {
             name="password"
             label="Password"
             placeholder="Password"
+            error={formErrors.password}
+            onChange={() => {
+              formErrors.password && setFormErrors(prevState => {
+                return {...prevState, password: false}
+              })
+            }}
             sx={{mt: 3, width: '100%'}}
+            helperText={formErrors.password ? 'Password must be at least 8 characters long and contain 1 lower case, 1 upper case, 1 number and one special character' : ''}
           />
           <br/>
 
@@ -80,9 +115,10 @@ const LogInScreen = () => {
             </Button>
           </Box>
 
-          <Typography variant='subtitle1' sx={{color: 'error.main', mt: 2, fontWeight: 1000}}>
+          <Typography variant='subtitle1' sx={{color: 'error.main', mt: 2, fontWeight: 500}}>
             {errorMsg}
           </Typography>
+
         </Box>
       </Grid>
     </Grid>
