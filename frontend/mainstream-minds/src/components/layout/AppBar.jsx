@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import useAuth from "../../hooks/useAuth";
 
 
-const AppBar = () => {
+const AppBar = (props) => {
   const navigate = useNavigate()
   const location = useLocation();
   const {auth, setAuth} = useAuth();
