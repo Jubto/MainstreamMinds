@@ -25,7 +25,7 @@ const randomColour = () => {
  * @param value
  */
 const getColourForString = (value) => {
-  return colours[value[0].charCodeAt(0) % colours.length];
+  return colours[value.split('').reduce((prev, chr) => prev + chr.charCodeAt(0), 0) % colours.length];
 };
 
 export {randomColour, getColourForString};
