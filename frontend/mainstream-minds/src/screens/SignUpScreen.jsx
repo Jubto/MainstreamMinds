@@ -82,10 +82,11 @@ const SignUpScreen = () => {
         navigate(from, {replace: true});
       } catch (err) {
         if (err.response?.status === 409) {
-          console.log(err) // email has to be unique, backend currently crashes if not
+          setErrorMsg('Email already exists in the database.')
+        } else {
+          setErrorMsg('An unexpected error happened while trying to sign up')
         }
         console.error(err)
-        setErrorMsg('Email already exists in the database.') // currently DB does not return HTTP_409_CONFLICT
       }
     }
   }
