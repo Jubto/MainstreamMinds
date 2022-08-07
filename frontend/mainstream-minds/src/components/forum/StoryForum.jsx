@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import useAuth from "../../hooks/useAuth"
 import useMsmApi from "../../hooks/useMsmApi"
 import CommentField from "./CommentField"
 import StoryCommentTree from "./StoryCommentTree"
 import { ForumContainer } from "./forum.styled"
-import { Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 
 const StoryForum = ({ storyID, researcher }) => {
+  const {auth} = useAuth()
   const msmAPI = useMsmApi()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [comments, setComments] = useState({})
 
   useEffect(() => {
@@ -34,7 +39,13 @@ const StoryForum = ({ storyID, researcher }) => {
         : 'No comments yet!'
         }
       </Typography>
-      <CommentField parentID={0} storyID={storyID} setComments={setComments} />
+      <Box onClick={() => !auth.accessToken && navigate('/login', { state: {from: location} })}>
+        <CommentField
+          parentID={0}
+          storyID={storyID}
+          setComments={setComments}
+        />
+      </Box>
       {Object.entries(comments).map(([commentID, comments]) => (
         <StoryCommentTree
           key={commentID}

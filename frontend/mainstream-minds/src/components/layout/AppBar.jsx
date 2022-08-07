@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ToolTip from '@mui/material/Tooltip';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Toolbar from '@mui/material/Toolbar';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -12,6 +12,7 @@ import useAuth from "../../hooks/useAuth";
 
 
 const AppBar = () => {
+  const navigate = useNavigate()
   const location = useLocation();
   const { auth, setAuth } = useAuth();
 
@@ -42,7 +43,10 @@ const AppBar = () => {
         color="inherit"
         aria-label="menu"
         sx={{ mr: 2 }}
-        onClick={() => setAuth({})}
+        onClick={() => {
+          setAuth({})
+          navigate('/')
+        }}
         >
             <LogoutIcon/>
       </IconButton>

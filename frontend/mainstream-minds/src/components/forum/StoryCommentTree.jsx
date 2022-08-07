@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+import useAuth from "../../hooks/useAuth";
 import useMsmApi from "../../hooks/useMsmApi";
 import { timeSince } from "../../utils/helpers";
 import CommentField from "./CommentField";
@@ -56,7 +58,10 @@ const CommentsContainer = styled(Box)`
 `
 
 const StoryComment = ({ parentID, storyID, comment, setComments }) => {
+  const { auth } = useAuth()
   const msmAPI = useMsmApi()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [isParent, setIsParent] = useState(false)
   const [numLikes, setNumLikes] = useState(0)
   const [writeReply, setWriteReply] = useState(false)
@@ -91,15 +96,26 @@ const StoryComment = ({ parentID, storyID, comment, setComments }) => {
         {comment.body}
       </CommentBody>
       <CommentFooter >
-        <CommentButton startIcon={<ThumbUpOffAltIcon sx={{ color: 'msm.dull' }} />}>
-          {numLikes ? `${numLikes} likes` : 'no likes'}
-        </CommentButton>
-        <CommentButton
-          onClick={() => setWriteReply(true)}
-          startIcon={<ReplyIcon sx={{ color: 'msm.dull' }} />}
-        >
-          Reply
-        </CommentButton>
+        <Tooltip title='like comment' >
+          <CommentButton
+            onClick={() => !auth.accessToken && navigate('/login', { state: { from: location } })}
+            startIcon={<ThumbUpOffAltIcon
+              sx={{ color: 'msm.dull' }}
+            />}>
+            {numLikes ? `${numLikes} likes` : 'no likes'}
+          </CommentButton>
+        </Tooltip>
+        <Tooltip title='reply' >
+          <CommentButton
+            onClick={() => {
+              !auth.accessToken && navigate('/login', { state: { from: location } })
+              setWriteReply(true)}
+            }
+            startIcon={<ReplyIcon sx={{ color: 'msm.dull' }} />}
+          >
+            Reply
+          </CommentButton>
+        </Tooltip>
       </CommentFooter>
       {writeReply
         ? <CommentField
