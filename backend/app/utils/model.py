@@ -55,6 +55,7 @@ def password_validator(value: str) -> str:
         'Password must be at least 8 characters long')
 
 
+
 def email_validator(value: str) -> str:
     if email_regex.match(value):
         return value

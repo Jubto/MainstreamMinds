@@ -31,7 +31,8 @@ const theme = createTheme({
     msm: {
       main: '#1976D2',
       dark: '#0E4DA4',
-      light: '#559ADE'
+      light: '#559ADE',
+      dull: '#b5b5b5'
     }
   }
 })
