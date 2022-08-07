@@ -42,7 +42,7 @@ function App() {
       <AuthProvider>
         <ContextProvider>
           <Router>
-            <AppBar hideForRoutes={['/login']} />
+            <AppBar hideForRoutes={['/login', '/sign-up']} />
             <Routes>
               <Route path='/' element={<DiscoverScreen />} />
               <Route path='/search' element={<SearchScreen />} />

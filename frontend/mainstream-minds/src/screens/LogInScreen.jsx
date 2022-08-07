@@ -2,8 +2,8 @@ import {useState} from "react";
 import useAuth from "../hooks/useAuth";
 import useGlobal from "../hooks/useGlobal";
 import msmLogin from "../api/msmLogin";
-import {useNavigate, useLocation} from 'react-router-dom';
-import {Box, Button, Grid, Link, TextField, Typography} from "@mui/material";
+import {useNavigate, useLocation, Link} from 'react-router-dom';
+import {Box, Button, Grid, TextField, Typography} from "@mui/material";
 import LogInLogoPanel from "../components/account/LogInLogoPanel";
 
 const LogInScreen = () => {
@@ -49,27 +49,29 @@ const LogInScreen = () => {
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10, mr: 10}}>
           <Typography variant='h2' sx={{color: '#0E4DA4', fontWeight: 600}}>Welcome!</Typography>
           <Typography variant='subtitle1'>Ready to connect with the latest developments in research?</Typography>
-          <Typography variant='subtitle1'>Create a new <Link>account today</Link>!</Typography>
+          <Typography variant='subtitle1'>Create a new <Box component={'span'}>account today</Box>!</Typography>
           <br/>
           <TextField
             autoFocus
             required
             name="email"
-            label="Account email"
+            label="Email"
+            placeholder="Email"
             sx={{width: '100%'}}
           />
           <TextField
             required
             type="password"
             name="password"
-            label="password"
+            label="Password"
+            placeholder="Password"
             sx={{mt: 3, width: '100%'}}
           />
           <br/>
 
           <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 3}}>
             <Typography variant='body3' sx={{color: 'rgba(0,0,0,0.6)', pr: 2}}>Don't have an account? <Link
-              sx={{ml: 1}}>Sign Up</Link></Typography>
+              sx={{ml: 1}} to="/sign-up">Sign Up</Link></Typography>
           </Box>
 
           <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
