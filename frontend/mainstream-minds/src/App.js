@@ -47,6 +47,7 @@ function App() {
             <Routes>
               <Route path='/' element={<DiscoverScreen />} />
               <Route path='/search' element={<SearchScreen />} />
+              <Route path='/search/:tags' element={<SearchScreen/>} />
               <Route path='/login' element={<LogInScreen />} />
               <Route path='/sign-up' element={<SignUpScreen />} />
               <Route path='/researcher/registration' element={<ResearcherRegScreen />} />

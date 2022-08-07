@@ -10,11 +10,6 @@ from app.settings import Settings
 email_regex_pattern: str = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
 email_regex: re = re.compile(email_regex_pattern)
 
-# Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-# https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
-password_regex_pattern: str = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-password_regex: re = re.compile(password_regex_pattern)
-
 
 class ModelFieldsMapping:
     _mappings = {}
@@ -51,11 +46,10 @@ def validate_lookup_fields(model: Type[ModelT], lookup_fields: List[str]):
 
 
 def password_validator(value):
-    if password_regex.match(value):
+    if len(value) >= 8:
         return value
     raise ValueError(
-        'Password must be at least 8 characters long, contain 1 lower case, 1 upper case, 1 digit and 1 special '
-        'character')
+        'Password must be at least 8 characters long')
 
 
 def email_validator(value):

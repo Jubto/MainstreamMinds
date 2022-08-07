@@ -8,16 +8,24 @@ import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResearcherCarousel, ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
+import { useLocation, useNavigate } from "react-router-dom"
+import searchTags from "../components/SearchComponents/searchTags"
+import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
+  const nav = useNavigate()
   const { auth, setAuth } = useAuth()
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
+  const location = useLocation()
+  const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
 
-  const getAllStories = async () => {
+  const getStories = async () => {
     try {
-      const resStory = await msmAPI.get(`/research_stories`)
+      console.log('getting stories',`/research_stories${location.search}`)
+      const resStory = await msmAPI.get(`/research_stories${location.search}`)
+      console.log(resStory)
       setStory(resStory.data.items)
       console.log(resStory.data)
       setErrorMsg(null)
@@ -33,38 +41,23 @@ const SearchScreen = () => {
     }
   }
 
-  const showTags = [
-    {
-      name: "science"
-    },
-    {
-      name: "psychology"
-    },
-    {
-      name: "agriculture"
-    },
-    {
-      name: "computers"
-    },
-    {
-      name: "global issues"
-    },
-    {
-      name: "law"
-    },
-    {
-      name: "journalism"
-    },
-    {
-      name: "robotics"
-    },
-  ]
+  const getTagsAndSearch = () => {
+    const queryArr = extractQuery(location.search)
+    setSelectedTags(getTags(queryArr))
+  }
+
+  const searchKeyword = (e) => {
+    if (e.key === "Enter") {
+      console.log("search", e.target.value);
+      const newPath = appendKeywordSearch(location.search, e.target.value)
+      nav(`/search${newPath}`)
+    }
+  }
 
   useEffect(() => {
-    getAllStories()
-    console.log(story)
-  }, [])
-
+    getStories(location.search)
+    getTagsAndSearch()
+  }, [location.search])
 
   return (
     <Page mt={48}>
@@ -76,8 +69,9 @@ const SearchScreen = () => {
             size="small"
             fullWidth
             sx={{maxWidth: 720, marginRight: '8px'}}
+            onKeyPress={(e) => searchKeyword(e)}
           />
-          <SearchStack tags={showTags} />
+          <SearchStack tags={searchTags} selectedTags={[]}/>
           <Button variant="outlined" startIcon={<FilterAltIcon />} sx={{height:'40px', minWidth: '92px', marginLeft: '8px'}}>
             Filter
           </Button>
