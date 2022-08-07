@@ -6,7 +6,7 @@ import Card from "../components/layout/StoryCards/Card"
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import { ResultsContainer, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
+import { ResultsContainer, ResultsContents, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
 import { useLocation, useNavigate } from "react-router-dom"
 import searchTags from "../components/SearchComponents/searchTags"
@@ -77,25 +77,25 @@ const SearchScreen = () => {
       </SearchContainer>
       <p>Researcher Carousel</p>
       <ResultsContainer >
-        <ResultsGrid container rowSpacing={3} columnSpacing={{xs:'auto', sm:2, md:3}} >
-          {(story && story.length!==0) ? Object.entries(story).map(([key, value], idx) => (
-                <ResultsGridItem item>
-
-                  <Card 
-                    key={idx} 
-                    title={value.title} 
-                    tags={value.tags}
-                    researcherId={value.researchers[0]}
-                    storyId={value.id}
-                    showLikes={!!auth.accessToken}
-                    thumbnail={value.thumbnail}
-                  />
-                
-                </ResultsGridItem>
-                
-              )) : <p>No stories to show</p>
-          }
-        </ResultsGrid>
+        <ResultsContents>
+          <ResultsGrid container rowSpacing={3} columnSpacing={{xs:'auto', sm:2, md:3}} >
+            {(story && story.length!==0) ? Object.entries(story).map(([key, value], idx) => (
+                  <ResultsGridItem item>
+                    <Card 
+                      key={idx} 
+                      title={value.title} 
+                      tags={value.tags}
+                      researcherId={value.researchers[0]}
+                      storyId={value.id}
+                      showLikes={!!auth.accessToken}
+                      thumbnail={value.thumbnail}
+                    />
+                  </ResultsGridItem>
+                  
+                )) : <p>No stories to show</p>
+            }
+          </ResultsGrid>
+        </ResultsContents>
       </ResultsContainer>
       
     </Page>
