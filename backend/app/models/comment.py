@@ -20,6 +20,7 @@ class CommentRead(CommentBase):
     id: int
     user: Optional["UserRead"]
     timestamp: datetime
+    num_likes: Optional[int] = 0
 
 
 class UserCommentLikesLink(SQLModel, table=True):

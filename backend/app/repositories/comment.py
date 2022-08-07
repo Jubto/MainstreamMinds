@@ -2,10 +2,11 @@ from typing import List
 import math
 
 from fastapi import Depends
+from sqlalchemy import func
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.comment import CommentRead, CommentCreate, Comment
+from app.models.comment import CommentRead, CommentCreate, Comment, UserCommentLikesLink
 from app.models.pagination import Page, Paginator
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
@@ -30,8 +31,15 @@ class CommentRepository:
 
     def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[CommentRead]:
         query = select(Comment).where(Comment.story_id == story_id)
-        return Page[CommentRead](items=self.session.exec(paginator.paginate(query)).all(),
-                             page_count=paginator.get_page_count(self.session, query))
+        comments = Page[CommentRead](items=self.session.exec(paginator.paginate(query)).all(),
+                                     page_count=paginator.get_page_count(self.session, query))
+        # Tried to use select count subquery working but wasn't able to due to sqlmodel difficulties
+        # e.g. not handling hybrid_properties https://github.com/tiangolo/sqlmodel/issues/299
+        for comment in comments.items:
+            count_query = select(func.count(UserCommentLikesLink.comment_id)).where(
+                UserCommentLikesLink.comment_id == comment.id)
+            comment.num_likes = self.session.exec(count_query).first()
+        return comments
 
     def set_comment_like(self, current_user_id: int, comment_id: int, liked: bool):
         comment = self.session.exec(select(Comment).where(Comment.id == comment_id)).one()
