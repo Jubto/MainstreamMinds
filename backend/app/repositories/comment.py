@@ -19,14 +19,14 @@ class CommentRepository:
         self.session = session
         self.user_repository = user_repository
 
-    def add_comment(self, new_comment: CommentCreate, current_user_id: int) -> int:
+    def add_comment(self, new_comment: CommentCreate, current_user_id: int) -> CommentRead:
         to_add = Comment()
         assign_members_from_dict(to_add, new_comment.dict(exclude_unset=True))
         to_add.user_id = current_user_id
         db_comment = Comment.from_orm(to_add)
         self.session.add(db_comment)
         self.session.commit()
-        return db_comment.id
+        return CommentRead.from_orm(db_comment)
 
     def get_story_comments(self, story_id: int) -> List[CommentRead]:
         comments: List[CommentRead] = [CommentRead.from_orm(comment) for comment in
