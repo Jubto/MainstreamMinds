@@ -24,6 +24,7 @@ const StoryDetailsContainer = styled(Box)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 `
 
 const StoryMetrics = styled(Box)`
@@ -47,10 +48,11 @@ const ResearchStoryScreen = () => {
   const { auth } = useAuth()
   const msmAPI = useMsmApi()
   const [researcher, setResearcher] = useState({})
-  const [researcherInstitution, setResearcherInstitution] = useState(null)
+  const [researcherInstitution, setResearcherInstitution] = useState({})
   const [story, setStory] = useState({})
   const [hasLiked, setHasLiked] = useState(false)
   const [numStoryLikes, setNumStoryLikes] = useState(0)
+  const [bgColor, setBgColor] = useState('')
 
   const formatDate = (utcDateString) => {
     const date = new Date(utcDateString)
@@ -78,12 +80,14 @@ const ResearchStoryScreen = () => {
   }
 
   useEffect(() => {
-
+  
     msmAPI.get(`/research_stories/${id}`)
       .then((res) => {
         setStory(res.data)
         setResearcher(res.data.researchers[0])
-        msmAPI.get(`/institutions/${res.data.researchers[0].institution_id}`)
+        const researcherTmp = res.data.researchers[0]
+        setBgColor(getColourForString(researcherTmp.user.first_name + researcherTmp.user.last_name))
+        msmAPI.get(`/institutions/${researcherTmp.institution_id}`)
         .then((res) => setResearcherInstitution(res.data))
         .catch((err) => console.error(err))
       })
@@ -96,9 +100,7 @@ const ResearchStoryScreen = () => {
     msmAPI.get(`/research_stories/like?story_id=${id}`)
       .then((res) => setHasLiked(res.data))
       .catch((err) => console.error(err))
-
     
-
   }, [])
 
   return (
@@ -135,10 +137,12 @@ const ResearchStoryScreen = () => {
             </FlexBox>
           </StoryMetrics>
           <AuthorContainer>
-            <Avatar  />
+            <Avatar sx={{bgColor:bgColor}}>
+              {researcher.user?.first_name[0].toUpperCase()} {researcher.user?.last_name[0].toUpperCase()}
+            </Avatar>
             <Box>
               <Typography sx={{fontWeight: 700}}>
-                {researcher.user.first_name} {researcher.user.last_name}
+                {researcher.user?.first_name} {researcher.user?.last_name}
               </Typography>
               <Typography variant='caption'>
                 {researcherInstitution.name}
