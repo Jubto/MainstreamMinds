@@ -43,14 +43,24 @@ const LogInScreen = () => {
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>
       <Grid item xs={6}>
         <Box sx={{background: '#1976D2', width: '100%', height: '100%'}}>
-          <img src={process.env.PUBLIC_URL + '/lightbulb.png'} alt={'Logo'}/>
-          <Typography variant='h1' sx={{color: 'white'}}>MAINSTREAM</Typography>
-          <Typography variant='h1' sx={{color: 'white'}}>MINDS</Typography>
+          <Box sx={{
+            height: '80%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <img src={process.env.PUBLIC_URL + '/lightbulb.png'} alt={'Logo'}/>
+            <Box sx={{borderLeft: '5px solid white', pl: 3}}>
+              <Typography variant='h1' sx={{color: 'white'}}>MAINSTREAM</Typography>
+              <Typography variant='h1' sx={{color: 'white'}}>MINDS</Typography>
+            </Box>
+          </Box>
         </Box>
       </Grid>
       <Grid item xs={4}>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10}}>
-          <Typography variant='h3'>Welcome!</Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10, mr: 10}}>
+          <Typography variant='h2' sx={{color: '#0E4DA4', fontWeight: 600}}>Welcome!</Typography>
           <Typography variant='subtitle1'>Ready to connect with the latest developments in research?</Typography>
           <Typography variant='subtitle1'>Create a new <Link>account today</Link>!</Typography>
           <br/>
@@ -59,18 +69,22 @@ const LogInScreen = () => {
             required
             name="email"
             label="Account email"
-            sx={{mr: 2}}
+            sx={{width: '100%'}}
           />
           <TextField
             required
             type="password"
             name="password"
             label="password"
+            sx={{mt: 3, width: '100%'}}
           />
           <br/>
-          <Button variant='contained' type='submit' sx={{mt: 2}}>
-            Log in
-          </Button>
+          <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+            <Button variant='contained' type='submit' sx={{mt: 5, width: '80%'}}>
+              LOG IN
+            </Button>
+          </Box>
+
           <Typography variant='subtitle1' sx={{color: 'error.main', mt: 2, fontWeight: 1000}}>
             {errorMsg}
           </Typography>
@@ -78,35 +92,6 @@ const LogInScreen = () => {
       </Grid>
     </Grid>
   );
-
-  return (
-    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10}}>
-      <Typography variant='h5'>
-        LogInScreen
-      </Typography>
-      <br/>
-      <TextField
-        autoFocus
-        required
-        name="email"
-        label="Account email"
-        sx={{mr: 2}}
-      />
-      <TextField
-        required
-        type="password"
-        name="password"
-        label="password"
-      />
-      <br/>
-      <Button variant='contained' type='submit' sx={{mt: 2}}>
-        Log in
-      </Button>
-      <Typography variant='subtitle1' sx={{color: 'error.main', mt: 2, fontWeight: 1000}}>
-        {errorMsg}
-      </Typography>
-    </Box>
-  )
 }
 
 export default LogInScreen
