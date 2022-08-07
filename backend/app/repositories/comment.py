@@ -6,7 +6,7 @@ from sqlalchemy import func
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.comment import CommentRead, CommentCreate, Comment, UserCommentLikesLink
+from app.models.comment import CommentCreate, Comment
 from app.models.pagination import Page, Paginator
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
@@ -19,14 +19,14 @@ class CommentRepository:
         self.session = session
         self.user_repository = user_repository
 
-    def add_comment(self, new_comment: CommentCreate, current_user_id: int) -> CommentRead:
+    def add_comment(self, new_comment: CommentCreate, current_user_id: int) -> int:
         to_add = Comment()
         assign_members_from_dict(to_add, new_comment.dict(exclude_unset=True))
         to_add.user_id = current_user_id
         db_comment = Comment.from_orm(to_add)
         self.session.add(db_comment)
         self.session.commit()
-        return db_comment
+        return db_comment.id
 
     def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[CommentRead]:
         query = select(Comment).where(Comment.story_id == story_id)

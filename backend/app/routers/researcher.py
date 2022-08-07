@@ -1,17 +1,23 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Path, Query
 
 from app.core.security import get_request_user_id, is_researcher, is_consumer, create_token
+from app.models.exception import HTTPExceptionResponse
+from app.models.filter import ModelFilter, FieldFilter, FilterOperation, FilterCompoundOperation, FilterCompound, \
+    FilterExpression
 from app.models.security import TokenData
 from app.models.pagination import Page, Paginator, get_paginator
 from app.models.researcher import (
     ResearcherRead,
     ResearcherUpdate,
     ResearcherCreate,
-    ResearcherCreated
+    ResearcherCreated,
+    Researcher
 )
 from app.models.research_story import ResearchStoryShortRead
+from app.models.tag import Tag
+from app.models.user import User
 from app.services.researcher import ResearcherService
 
 router = APIRouter(tags=['researcher'])
@@ -23,9 +29,28 @@ router = APIRouter(tags=['researcher'])
     response_model=List[ResearcherRead]
 )
 async def get_all_researchers(
+        tags: List[str] = Query(default=None, description='A list of tag names to filter by'),
+        search: str = Query(default=None, description='Filter researchers by first and last name'),
         researcher_service: ResearcherService = Depends(ResearcherService)
 ):
-    return researcher_service.get_all()
+    filter_by: Optional[ModelFilter[Researcher]] = None
+    filters = []
+    if search:
+        first_name_filter = FieldFilter(field='first_name', operation=FilterOperation.ILIKE, value=search,
+                                        model=User)
+        last_name_filter = FieldFilter(field='last_name', operation=FilterOperation.ILIKE, value=search,
+                                       model=User)
+        filters.append(
+            FilterCompound(filters=[first_name_filter, last_name_filter], operator=FilterCompoundOperation.OR))
+
+    if tags:
+        filters.append(FieldFilter(field='name', operation=FilterOperation.IN, value=tags, model=Tag))
+
+    if filters:
+        compound = FilterCompound(filters=filters, operator=FilterCompoundOperation.AND)
+        filter_by = ModelFilter(FilterExpression(compound), User)
+
+    return researcher_service.get_all(filter_by)
 
 
 @router.get(
@@ -57,7 +82,10 @@ async def get_stories_by_researcher(
     "",
     description='This will permanently upgrade an existing user to hold researcher privileges',
     response_model=ResearcherCreated,
-    dependencies=[Depends(is_consumer)]
+    dependencies=[Depends(is_consumer)],
+    responses={
+        404: {"model": HTTPExceptionResponse,
+              'description': 'Returned if institution specified by institution_id does not exist'}}
 )
 async def upgrade_to_researcher(
         new_researcher: ResearcherCreate,

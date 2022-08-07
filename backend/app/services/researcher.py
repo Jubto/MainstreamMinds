@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from fastapi import Depends
 
+from app.models.filter import ModelFilter
 from app.models.pagination import Paginator, Page
 from app.models.user import Role
 from app.models.researcher import ResearcherCreate, ResearcherUpdate, Researcher
@@ -23,8 +24,8 @@ class ResearcherService:
         self.user_repository.update_role(current_user_id, Role.RESEARCHER)
         return researcher_id
 
-    def get_all(self) -> List[Researcher]:
-        return self.repository.get_all()
+    def get_all(self, filter_by: Optional[ModelFilter[Researcher]]) -> List[Researcher]:
+        return self.repository.get_all(filter_by)
 
     def get_researcher_by_id(self, researcher_id: int) -> Researcher:
         return self.repository.get_researcher_by_id(researcher_id)
