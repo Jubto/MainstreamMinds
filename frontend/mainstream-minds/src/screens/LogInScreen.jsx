@@ -50,8 +50,8 @@ const LogInScreen = () => {
         formParams.append('username', email); // temp note: backend OAUTH form maps username to email
         formParams.append('password', password);
         const resLogin = await msmLogin.post('/users/login', formParams);
-        setAuth({accessToken: resLogin.data.access_token, role: 0}); // globally sets auth, note: temporarily leaving role: 0 (remove once /api/user/me endpoint exists)
-        // TODO backend set up /api/user/me endpoint, send valid jwt, returns user details + role
+        const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
+        setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
         navigate(from, {replace: true});
       } catch (err) {
         if (err.response?.status === 401) {

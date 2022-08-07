@@ -77,7 +77,8 @@ const SignUpScreen = () => {
         formParams.append('username', email);
         formParams.append('password', password);
         const resLogin = await msmLogin.post('/users/login', formParams);
-        setAuth({accessToken: resLogin.data.access_token, role: 0}); // temp role
+        const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
+        setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
         navigate(from, {replace: true});
       } catch (err) {
         if (err.response?.status === 409) {
