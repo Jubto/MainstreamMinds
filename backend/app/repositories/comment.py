@@ -6,7 +6,7 @@ from sqlalchemy import func
 from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.comment import CommentCreate, Comment
+from app.models.comment import CommentCreate, Comment, CommentRead, UserCommentLikesLink
 from app.models.pagination import Page, Paginator
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
@@ -28,13 +28,12 @@ class CommentRepository:
         self.session.commit()
         return db_comment.id
 
-    def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[CommentRead]:
-        query = select(Comment).where(Comment.story_id == story_id)
-        comments = Page[CommentRead](items=self.session.exec(paginator.paginate(query)).all(),
-                                     page_count=paginator.get_page_count(self.session, query))
+    def get_story_comments(self, story_id: int) -> List[CommentRead]:
+        comments: List[CommentRead] = [CommentRead.from_orm(comment) for comment in
+                                       self.session.exec(select(Comment).where(Comment.story_id == story_id)).all()]
         # Tried to use select count subquery working but wasn't able to due to sqlmodel difficulties
         # e.g. not handling hybrid_properties https://github.com/tiangolo/sqlmodel/issues/299
-        for comment in comments.items:
+        for comment in comments:
             count_query = select(func.count(UserCommentLikesLink.comment_id)).where(
                 UserCommentLikesLink.comment_id == comment.id)
             comment.num_likes = self.session.exec(count_query).first()

@@ -59,7 +59,6 @@ def password_validator(value):
 
 
 def email_validator(value):
-    print(value)
     if email_regex.match(value):
         return value
     raise ValueError('Provided email is invalid')
