@@ -39,8 +39,7 @@ const StoryForum = ({ storyID, researcher }) => {
       <Typography variant='h6'>
         {Object.entries(comments).length
           ? `${Object.entries(comments).reduce((sum, [rootID]) => {
-            return sum + comments[rootID].length
-          }, 0)} Comments`
+            return sum + comments[rootID].length}, 0)} Comments`
           : 'No comments yet!'
         }
       </Typography>
