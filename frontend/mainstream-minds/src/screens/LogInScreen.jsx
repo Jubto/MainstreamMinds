@@ -4,6 +4,7 @@ import useGlobal from "../hooks/useGlobal";
 import msmLogin from "../api/msmLogin";
 import {useNavigate, useLocation} from 'react-router-dom';
 import {Box, Button, Grid, Link, TextField, Typography} from "@mui/material";
+import LogInLogoPanel from "../components/account/LogInLogoPanel";
 
 const LogInScreen = () => {
   const {setAuth} = useAuth();
@@ -42,21 +43,7 @@ const LogInScreen = () => {
   return (
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>
       <Grid item xs={6}>
-        <Box sx={{background: '#1976D2', width: '100%', height: '100%'}}>
-          <Box sx={{
-            height: '80%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <img src={process.env.PUBLIC_URL + '/lightbulb.png'} alt={'Logo'}/>
-            <Box sx={{borderLeft: '5px solid white', pl: 3}}>
-              <Typography variant='h1' sx={{color: 'white'}}>MAINSTREAM</Typography>
-              <Typography variant='h1' sx={{color: 'white'}}>MINDS</Typography>
-            </Box>
-          </Box>
-        </Box>
+        <LogInLogoPanel />
       </Grid>
       <Grid item xs={4}>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10, mr: 10}}>
@@ -79,6 +66,12 @@ const LogInScreen = () => {
             sx={{mt: 3, width: '100%'}}
           />
           <br/>
+
+          <Box sx={{width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 3}}>
+            <Typography variant='body3' sx={{color: 'rgba(0,0,0,0.6)', pr: 2}}>Don't have an account? <Link
+              sx={{ml: 1}}>Sign Up</Link></Typography>
+          </Box>
+
           <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <Button variant='contained' type='submit' sx={{mt: 5, width: '80%'}}>
               LOG IN
