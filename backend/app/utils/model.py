@@ -2,6 +2,16 @@ from typing import Callable, Any, Type, List, TypeVar
 
 from fastapi import HTTPException
 from sqlmodel import SQLModel
+import re
+
+from app.settings import Settings
+
+# https://uibakery.io/regex-library/email-regex-python
+email_regex_pattern: str = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+email_regex: re = re.compile(email_regex_pattern)
+# https://stackoverflow.com/a/30795206
+youtube_regex_pattern: str = "^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]{7,15})(?:[\?&][a-zA-Z0-9\_-]+=[a-zA-Z0-9\_-]+)*$"
+youtube_regex: re = re.compile(youtube_regex_pattern)
 
 
 class ModelFieldsMapping:
@@ -34,12 +44,27 @@ ModelT = TypeVar("ModelT", bound=SQLModel)
 
 def validate_lookup_fields(model: Type[ModelT], lookup_fields: List[str]):
     for field in lookup_fields:
-        # TODO: Consider verifying types
         if field not in model.__fields__:
             raise HTTPException(status_code=422, detail=f"Unable to sort by field: {field}")
-    # TODO: Consider implementing relational lookups using the following
-    # for r in model.__mapper__.relationships:
-    #     print(type(r))
-    #     print(dir(r))
-    #     print(r.mapper.class_)
-    # print([str(a) for a in model.__mapper__.relationships])
+
+
+def password_validator(value: str) -> str:
+    if len(value) >= 8:
+        return value
+    raise ValueError(
+        'Password must be at least 8 characters long')
+
+
+
+def email_validator(value: str) -> str:
+    if email_regex.match(value):
+        return value
+    raise ValueError('Provided email is invalid')
+
+
+def youtube_validator(value: str) -> str:
+    if match := youtube_regex.search(value):
+        return "https://youtube.com/embed/" + match.group(1)
+    else:
+        raise ValueError('Youtube url invalid')
+

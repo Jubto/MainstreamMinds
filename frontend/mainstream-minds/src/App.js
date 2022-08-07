@@ -31,7 +31,8 @@ const theme = createTheme({
     msm: {
       main: '#1976D2',
       dark: '#0E4DA4',
-      light: '#559ADE'
+      light: '#559ADE',
+      dull: '#b5b5b5'
     }
   }
 })
@@ -46,6 +47,7 @@ function App() {
             <Routes>
               <Route path='/' element={<DiscoverScreen />} />
               <Route path='/search' element={<SearchScreen />} />
+              <Route path='/search/:tags' element={<SearchScreen/>} />
               <Route path='/login' element={<LogInScreen />} />
               <Route path='/sign-up' element={<SignUpScreen />} />
               <Route path='/researcher/registration' element={<ResearcherRegScreen />} />

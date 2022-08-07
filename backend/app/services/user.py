@@ -11,6 +11,7 @@ from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
 from app.models.user import Role, User, UserCreate, UserUpdate
 from app.repositories.user import UserRepository, get_user_repository
+from app.utils.exceptions import EmailAlreadyExistsHttpException
 from app.utils.model import ModelFieldsMapping
 
 
@@ -25,7 +26,9 @@ class UserService:
         self.field_mappings.add_field_mapping('password', 'password_hash', value_mapping_func=get_password_hash)
 
     def create(self, user_create: UserCreate):
-        return self.repository.create(user_create, mappings=self.field_mappings)
+        if self.repository.get_by_email(user_create.email):
+            raise EmailAlreadyExistsHttpException()
+        self.repository.create(user_create, mappings=self.field_mappings)
 
     def update(self, current_user_id: int, user_update: UserUpdate):
         return self.repository.update(current_user_id, user_update, mappings=self.field_mappings)
