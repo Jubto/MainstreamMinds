@@ -1,9 +1,11 @@
 from datetime import datetime
 from typing import List, Optional
 from sqlmodel import Relationship, SQLModel, Field
+from pydantic import validator
 
 from app.models.researcher import StoryAuthorLink
 from app.models.institution import InstitutionStoryLink
+from app.utils.model import youtube_validator
 
 
 # ============================= Research story LINK tables =============================
@@ -28,6 +30,10 @@ class ResearchStoryBase(SQLModel):
     thumbnail: str = Field()
     video_link: str = Field()
     transcript: Optional[str] = Field()
+
+    @validator('video_link')
+    def youtube_link_validator(cls, value):
+        return youtube_validator(value)
 
 
 class ResearchStory(ResearchStoryBase, table=True):
