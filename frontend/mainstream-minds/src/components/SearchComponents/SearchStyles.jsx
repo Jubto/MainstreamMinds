@@ -1,4 +1,4 @@
-import { styled } from "@mui/material"
+import { Chip, styled } from "@mui/material"
 
 const maxWidth = 1500
 const minWidth = 600
