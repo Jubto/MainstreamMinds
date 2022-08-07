@@ -1,24 +1,20 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import Depends
 
+from app.models.filter import ModelFilter
 from app.models.research_story import (
     ResearchStory,
     ResearchStoryShortRead, ResearchStoryCreate, ResearchStoryUpdate,
-    # ResearchStoryLongRead,
-    # ResearchStoryCreate,
-    # ResearchStoryUpdate,
-    # ResearchStoryResponse
 )
 from app.repositories.research_story import ResearchStoryRepository, get_researchstory_repository
 from app.utils.exceptions import AuthorDetailsMissing
-from app.utils.model import ModelFieldsMapping, assign_members_from_dict
+from app.utils.model import ModelFieldsMapping
 from app.models.pagination import Page, Paginator
 from app.repositories.researcher import ResearcherRepository, get_researcher_repository
 
 
 class ResearchStoryService:
-
     field_mappings: ModelFieldsMapping
 
     def __init__(self,
@@ -30,11 +26,21 @@ class ResearchStoryService:
         self.researcher_repository = researcher_repository
         self.field_mappings = ModelFieldsMapping()
 
-    def get_all(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
-        return self.repository.get_all(paginator)
+    def get_all(self, paginator: Paginator, filter_by: Optional[ModelFilter[ResearchStory]]) -> Page[
+        ResearchStoryShortRead]:
+        return self.repository.get_all(paginator, filter_by)
 
     def get(self, story_id: int) -> ResearchStory:
         return self.repository.get(story_id)
+
+    def get_liked(self, current_user_id: int, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        return self.repository.get_liked(current_user_id, paginator)
+
+    def get_recommended(self, current_user_id: int, n: int) -> List[ResearchStory]:
+        return self.repository.get_recommended(current_user_id, n)
+
+    def get_trending(self, paginator: Paginator) -> Page[ResearchStoryShortRead]:
+        return self.repository.get_trending(paginator)
 
     def create(self, create_story: ResearchStoryCreate) -> ResearchStory:
         return self.repository.create(create_story)
