@@ -5,7 +5,7 @@ import SearchChip from './SearchChip';
 
 const SearchStack = (props) => {
   const tags = props.tags;
-  const selected = []
+  const selected = [] // todo: persist selected tag style
   
   return (
     <Stack direction="row" spacing={1} sx={{width: '40vw', overflow: 'auto'}}>

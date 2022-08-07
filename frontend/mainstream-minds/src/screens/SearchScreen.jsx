@@ -19,10 +19,11 @@ const SearchScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null)
   const location = useLocation()
   const path = location.pathname.split('?')
+  const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
 
   const getStories = async () => {
     try {
-      console.log(`/research_stories${location.search}`)
+      console.log('getting stories',`/research_stories${location.search}`)
       const resStory = await msmAPI.get(`/research_stories${location.search}`)
       console.log(resStory)
       setStory(resStory.data.items)
@@ -40,13 +41,15 @@ const SearchScreen = () => {
     }
   }
 
-  useEffect(() => {
-    const q = extractQuery(location.search)
-    getTags(q)
-    getStories(location.search)
-    console.log(location, location.search.split('&'), location.search.slice(1))
-  }, [])
+  const getSelectedTags = () => {
+    const queryArr = extractQuery(location.search)
+    setSelectedTags(getTags(queryArr))
+  }
 
+  useEffect(() => {
+    getStories(location.search)
+    getSelectedTags()
+  }, [location.search])
 
   return (
     <Page mt={48}>
@@ -59,7 +62,7 @@ const SearchScreen = () => {
             fullWidth
             sx={{maxWidth: 720, marginRight: '8px'}}
           />
-          <SearchStack tags={searchTags} />
+          <SearchStack tags={searchTags} selectedTags={[]}/>
           <Button variant="outlined" startIcon={<FilterAltIcon />} sx={{height:'40px', minWidth: '92px', marginLeft: '8px'}}>
             Filter
           </Button>
