@@ -4,7 +4,7 @@ export const ForumContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 0px 0px 0px 68px;
+  /* padding: 0px 0px 0px 68px; */
 `
 
 export const CommentFieldContainer = styled(Box)`

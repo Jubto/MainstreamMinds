@@ -1,45 +1,25 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { monthNames } from "../utils/enums"
 import useAuth from "../hooks/useAuth"
 import useMsmApi from "../hooks/useMsmApi"
 import { useParams } from "react-router-dom"
 import { getColourForString } from "../components/styles/colours"
 import Page from "../components/layout/Page"
+import Tags from "../components/layout/Tags"
 import StoryForum from "../components/forum/StoryForum"
 import { FlexBox } from "../components/styles/util.styled"
-import { Avatar, Box, Button, Typography, styled } from "@mui/material"
+import {
+  StoryContainer,
+  StoryDetailsContainer,
+  StoryMetrics,
+  AuthorContainer,
+  StoryBody
+} from "../components/story/story.styled"
+import { Avatar, Box, Button, Typography } from "@mui/material"
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-const tempURL = "https://www.youtube.com/embed/aRGdDy18qfY"
-
-const StoryContainer = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 12px 68px;
-  gap: 10px;
-`
-
-const StoryDetailsContainer = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-`
-
-const StoryMetrics = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  /* padding: 0px 68px; */
-  gap: 4px;
-`
-
-const AuthorContainer = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
 
 const ResearchStoryScreen = () => {
   const location = useLocation()
@@ -56,7 +36,13 @@ const ResearchStoryScreen = () => {
 
   const formatDate = (utcDateString) => {
     const date = new Date(utcDateString)
-    return `${date.getUTCDay()} ${date.getMonth()}, ${date.getFullYear()}`
+    return `${date.getDate()} ${monthNames[date.getMonth()]}, ${date.getFullYear()}`
+  }
+
+  const goToPaper = () => {
+    if (story.papers.includes('http')) {
+      window.open(story.papers, '_blank')
+    }
   }
 
   const setLike = () => {
@@ -80,16 +66,16 @@ const ResearchStoryScreen = () => {
   }
 
   useEffect(() => {
-  
     msmAPI.get(`/research_stories/${id}`)
       .then((res) => {
         setStory(res.data)
+        console.log(res.data)
         setResearcher(res.data.researchers[0])
         const researcherTmp = res.data.researchers[0]
         setBgColor(getColourForString(researcherTmp.user.first_name + researcherTmp.user.last_name))
         msmAPI.get(`/institutions/${researcherTmp.institution_id}`)
-        .then((res) => setResearcherInstitution(res.data))
-        .catch((err) => console.error(err))
+          .then((res) => setResearcherInstitution(res.data))
+          .catch((err) => console.error(err))
       })
       .catch((err) => console.error(err))
 
@@ -100,48 +86,58 @@ const ResearchStoryScreen = () => {
     msmAPI.get(`/research_stories/like?story_id=${id}`)
       .then((res) => setHasLiked(res.data))
       .catch((err) => console.error(err))
-    
+
   }, [])
 
   return (
     <Page>
       <StoryContainer>
-        <iframe width="1204px" height="663px" src={tempURL}
-          title="YouTube video player" frameborder="0"
+        <iframe width="1204px" height="663px" src={story.video_link}
+          title="YouTube video player" frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
+          allowFullScreen
         />
         <StoryDetailsContainer>
           <StoryMetrics>
-            <Typography sx={{ fontWeight: 700 }}>
+            <Typography variant='h5' sx={{ fontWeight: 700 }}>
               {story.title}
             </Typography>
-            <FlexBox>
-              <Typography variant='caption'>
+            <FlexBox gap='16px'>
+              <Typography variant='subtitle2'>
                 {formatDate(story.publish_date)}
               </Typography>
-              <Typography variant='caption'>
+              <Typography variant='subtitle2'>
                 {numStoryLikes
                   ? numStoryLikes === 1 ? `${numStoryLikes} like` : `${numStoryLikes} likes`
                   : 'No likes'
                 }
               </Typography>
             </FlexBox>
-            <FlexBox>
-              <Button onClick={setLike} color={hasLiked ? 'success' : 'primary'}>
+            <FlexBox gap='8px' >
+              <Button
+                onClick={setLike}
+                variant='contained'
+                startIcon={<ThumbUpOffAltIcon />}
+                sx={{ height: '30px' }}
+              >
                 {hasLiked ? 'liked' : 'like'}
               </Button>
-              <Button>
+              <Button
+                onClick={goToPaper}
+                variant='contained'
+                startIcon={<MenuBookIcon />}
+                sx={{ height: '30px' }}
+              >
                 Read Journal
               </Button>
             </FlexBox>
           </StoryMetrics>
           <AuthorContainer>
-            <Avatar sx={{bgColor:bgColor}}>
-              {researcher.user?.first_name[0].toUpperCase()} {researcher.user?.last_name[0].toUpperCase()}
+            <Avatar sx={{ bgcolor: bgColor, width: 58, height: 58, mr: 1 }}>
+              {researcher.user?.first_name[0].toUpperCase()}{researcher.user?.last_name[0].toUpperCase()}
             </Avatar>
             <Box>
-              <Typography sx={{fontWeight: 700}}>
+              <Typography sx={{ fontWeight: 700, mb: -0.5 }}>
                 {researcher.user?.first_name} {researcher.user?.last_name}
               </Typography>
               <Typography variant='caption'>
@@ -150,13 +146,18 @@ const ResearchStoryScreen = () => {
             </Box>
           </AuthorContainer>
         </StoryDetailsContainer>
-      </StoryContainer>
-      <StoryForum
+        <StoryBody>
+          {story.summary}
+        </StoryBody>
+        <Tags tags={story.tags} tagSize="medium" />
+        <Box sx={{mb:'4rem'}} />
+        <StoryForum
         storyID={id}
         researcher={researcher}
         msmAPI={msmAPI}
         auth={auth}
       />
+      </StoryContainer>
     </Page>
   )
 }
