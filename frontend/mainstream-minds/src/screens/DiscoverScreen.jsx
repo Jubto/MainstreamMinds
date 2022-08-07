@@ -88,8 +88,8 @@ const DiscoverScreen = () => {
 
   return (
     <Page>
-      <CardCarousel carouselTitle="Liked Stories"/>
-      <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>
+      {auth.accessToken && <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>}
+      {auth.accessToken && <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>}
       <CardCarousel carouselTitle="Trending" extension="/trending"/>
       
       {(interests && interests.length) ? 
