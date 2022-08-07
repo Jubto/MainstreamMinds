@@ -39,7 +39,7 @@ async def get_all_users(
     return user_service.get_all(sort_by, filter_by, paginator)
 
 
-@router.get("/current_user_details",
+@router.get("/me",
             dependencies=[Depends(is_consumer)],
             response_model=UserRead
             )
