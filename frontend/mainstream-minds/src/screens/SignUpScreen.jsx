@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useState} from "react";
 import useAuth from "../hooks/useAuth";
 import useGlobal from "../hooks/useGlobal";
 import msmLogin from "../api/msmLogin";
@@ -9,7 +9,7 @@ import LogInLogoPanel from "../components/account/LogInLogoPanel";
 
 
 const SignUpScreen = () => {
-  const { setAuth } = useAuth();
+  const {setAuth} = useAuth();
   const context = useGlobal();
   const [, setAccount] = context.account;
   const [errorMsg, setErrorMsg] = useState(null)
@@ -17,6 +17,14 @@ const SignUpScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+
+  const [formErrors, setFormErrors] = useState({
+    error: false,
+    firstName: null,
+    lastName: null,
+    email: null,
+    password: null,
+  })
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,7 +34,35 @@ const SignUpScreen = () => {
     const email = data.get('email');
     const password = data.get('password');
 
-    if ('no errors') {
+    formErrors.error = false;
+
+    if (!/^[a-zA-Z]+(\s[a-zA-Z]+)*$/.test(firstName)) {
+      setFormErrors(prevState => {
+        return {...prevState, firstName: true}
+      })
+      formErrors.error = true
+    }
+    if (!/^[a-zA-Z]+(\s[a-zA-Z]+)*$/.test(lastName)) {
+      setFormErrors(prevState => {
+        return {...prevState, lastName: true}
+      })
+      formErrors.error = true
+    }
+
+    if (!/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(email)) {
+      setFormErrors(prevState => {
+        return {...prevState, email: true}
+      })
+      formErrors.error = true
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password) || password.length < 8) {
+      setFormErrors(prevState => {
+        return {...prevState, password: true}
+      })
+      formErrors.error = true
+    }
+
+    if (!formErrors.error) {
       setErrorMsg(null)
       try {
         const body = {
@@ -41,10 +77,9 @@ const SignUpScreen = () => {
         formParams.append('username', email);
         formParams.append('password', password);
         const resLogin = await msmLogin.post('/users/login', formParams);
-        setAuth({ accessToken: resLogin.data.access_token, role: 0 }); // temp role
-        navigate(from, { replace: true });
-      }
-      catch (err) {
+        setAuth({accessToken: resLogin.data.access_token, role: 0}); // temp role
+        navigate(from, {replace: true});
+      } catch (err) {
         if (err.response?.status === 409) {
           console.log(err) // email has to be unique, backend currently crashes if not
         }
@@ -57,7 +92,7 @@ const SignUpScreen = () => {
   return (
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>
       <Grid item xs={6}>
-        <LogInLogoPanel />
+        <LogInLogoPanel/>
       </Grid>
       <Grid item xs={4}>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10, mr: 10}}>
@@ -72,6 +107,13 @@ const SignUpScreen = () => {
             label="First Name"
             placeholder="First Name"
             sx={{width: '100%'}}
+            onChange={() => {
+              formErrors.firstName && setFormErrors(prevState => {
+                return {...prevState, firstName: false}
+              })
+            }}
+            error={formErrors.firstName}
+            helperText={formErrors.firstName ? 'Must be a valid firstname.' : ''}
           />
           <TextField
             required
@@ -79,6 +121,13 @@ const SignUpScreen = () => {
             label="Last Name"
             placeholder="Last Name"
             sx={{mt: 3, width: '100%'}}
+            onChange={() => {
+              formErrors.lastName && setFormErrors(prevState => {
+                return {...prevState, lastName: false}
+              })
+            }}
+            error={formErrors.lastName}
+            helperText={formErrors.lastName ? 'Must be a valid lastname.' : ''}
           />
           <TextField
             required
@@ -86,6 +135,13 @@ const SignUpScreen = () => {
             label="Email"
             placeholder="Email"
             sx={{mt: 3, width: '100%'}}
+            onChange={() => {
+              formErrors.email && setFormErrors(prevState => {
+                return {...prevState, email: false}
+              })
+            }}
+            error={formErrors.email}
+            helperText={formErrors.email ? 'Invalid email.' : ''}
           />
           <TextField
             required
@@ -94,6 +150,13 @@ const SignUpScreen = () => {
             label="Password"
             placeholder="Password"
             sx={{mt: 3, width: '100%'}}
+            error={formErrors.password}
+            onChange={() => {
+              formErrors.password && setFormErrors(prevState => {
+                return {...prevState, password: false}
+              })
+            }}
+            helperText={formErrors.password ? 'Password must be at least 8 characters long and contain 1 lower case, 1 upper case, 1 number and one special character' : ''}
           />
           <br/>
 
