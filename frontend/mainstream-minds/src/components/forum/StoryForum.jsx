@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import useAuth from "../../hooks/useAuth"
-import useMsmApi from "../../hooks/useMsmApi"
 import CommentField from "./CommentField"
 import StoryCommentTree from "./StoryCommentTree"
 import { ForumContainer } from "./forum.styled"
 import { Box, Typography } from "@mui/material"
 
-const StoryForum = ({ storyID, researcher }) => {
-  const { auth } = useAuth()
-  const msmAPI = useMsmApi()
+const StoryForum = ({ storyID, researcher, msmAPI, auth }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const [comments, setComments] = useState({})
@@ -17,7 +13,6 @@ const StoryForum = ({ storyID, researcher }) => {
   useEffect(() => {
     const queryParams = new URLSearchParams();
     queryParams.append('story_id', storyID)
-    queryParams.append('page_size', 100)
     msmAPI.get(`/comments?${queryParams}`)
       .then((res) => {
         let commentTrees = {}

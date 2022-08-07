@@ -11,7 +11,6 @@ export const CommentFieldContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   width: 100%;
-  /* padding: 24px 0px; */
   padding: ${({ reply }) => reply ? '' : '24px 0px' };
   gap: 12px;
 `
