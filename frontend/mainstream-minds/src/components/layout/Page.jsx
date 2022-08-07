@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 const Page = (props) => {
   const marginTop = props.mt || 60
   const padding = props.padding || ''
+  const align = props.align || 'center'
 
   return (
     <Box sx={{ 
@@ -15,7 +16,7 @@ const Page = (props) => {
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: `${align}`
       }}>
         {props.children}
       </Box>
