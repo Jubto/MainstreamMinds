@@ -17,7 +17,7 @@ const SearchChip = (props) => {
 
   const handleDelete = () => {
     setSelected(false)
-    const newPath = appendTagSearch(location.search, name)
+    const newPath = removeTagFromSearch(location.search, name)
     nav(`/search${newPath}`)
   }
 

@@ -6,11 +6,13 @@ import Card from "../components/layout/StoryCards/Card"
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import { ResearcherCarousel, ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
+import { ResultsContainer, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
 import { useLocation, useNavigate } from "react-router-dom"
 import searchTags from "../components/SearchComponents/searchTags"
 import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
+
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
@@ -20,6 +22,7 @@ const SearchScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null)
   const location = useLocation()
   const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
+
 
   const getStories = async () => {
     try {
@@ -60,38 +63,41 @@ const SearchScreen = () => {
   }, [location.search])
 
   return (
-    <Page mt={48}>
-        <SearchContainer>
-          <TextField 
+    <Page mt={48} align="left" >
+      <SearchContainer sx={{width: '90vw'}}>
+        <TextField 
             id="outlined-search" 
             label="Search" 
             type="search" 
             size="small"
             fullWidth
             sx={{maxWidth: 720, marginRight: '8px'}}
-            onKeyPress={(e) => searchKeyword(e)}
-          />
-          <SearchStack tags={searchTags} selectedTags={[]}/>
-          <Button variant="outlined" startIcon={<FilterAltIcon />} sx={{height:'40px', minWidth: '92px', marginLeft: '8px'}}>
-            Filter
-          </Button>
-        </SearchContainer>
-        <ResearcherCarousel />
-        <p>Researchers</p>
-        <ResultsContainer>
-          {(story && story.length) ? Object.entries(story).map(([key, value], idx) => (
-              <Card 
-                key={idx} 
-                title={value.title} 
-                tags={value.tags}
-                researcherId={value.researchers[0]}
-                storyId={value.id}
-                showLikes={!!auth.accessToken}
-                thumbnail={value.thumbnail}
-              />
-            )) : <p>No stories to show</p>
-            }
-        </ResultsContainer>
+        />
+        <SearchStack tags={searchTags} selectedTags={[]}/>
+      </SearchContainer>
+      <p>Researcher Carousel</p>
+      <ResultsContainer >
+        <ResultsGrid container rowSpacing={3} columnSpacing={{xs:'auto', sm:2, md:3}} >
+          {(story && story.length!==0) ? Object.entries(story).map(([key, value], idx) => (
+                <ResultsGridItem item>
+
+                  <Card 
+                    key={idx} 
+                    title={value.title} 
+                    tags={value.tags}
+                    researcherId={value.researchers[0]}
+                    storyId={value.id}
+                    showLikes={!!auth.accessToken}
+                    thumbnail={value.thumbnail}
+                  />
+                
+                </ResultsGridItem>
+                
+              )) : <p>No stories to show</p>
+          }
+        </ResultsGrid>
+      </ResultsContainer>
+      
     </Page>
   )
 }

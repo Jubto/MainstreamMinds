@@ -13,7 +13,7 @@ const Tags = (props) => {
   };
 
   return (
-    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'auto'}}>
+    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'hidden'}}>
       {tags && tags.length!==0 && tags.map((value) => (
           <Chip 
             key={value.name}
