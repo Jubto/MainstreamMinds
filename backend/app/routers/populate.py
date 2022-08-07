@@ -28,8 +28,8 @@ async def populate_universities(
         tag_service: TagService = Depends(TagService),
         user_service: UserService = Depends(UserService),
 ):
-    populate_universities(n, institution_service)
-    populate_researchers(n, user_service, researcher_service)
+    populate_universities(institution_service)
+    populate_researchers(user_service, researcher_service)
     populate_research_stories(n, story_service, tag_service, researcher_service)
     
     return f'populated database'
