@@ -100,7 +100,6 @@ const SignUpScreen = () => {
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ml: 10, mt: 10, mr: 10}}>
           <Typography variant='h2' sx={{color: '#0E4DA4', fontWeight: 600}}>Welcome!</Typography>
           <Typography variant='subtitle1'>Ready to connect with the latest developments in research?</Typography>
-          <Typography variant='subtitle1'>Create a new <Box component={'span'}>account today</Box>!</Typography>
           <br/>
           <TextField
             autoFocus
