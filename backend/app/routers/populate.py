@@ -21,7 +21,7 @@ base_path = pathlib.Path.cwd() / "app/data"
     description='populates database',
     # dependencies=[Depends(is_researcher)] 
 )
-async def populate(
+async def populate_database(
         n: int,
         institution_service: InstitutionService = Depends(InstitutionService),
         researcher_service: ResearcherService = Depends(ResearcherService),
@@ -63,13 +63,12 @@ def populate_researchers(
         with open(file_path) as json_file:
             user_data = json.load(json_file)
             for user in user_data:
-                print(user)
                 user_obj = UserCreate(first_name = user['first_name'], 
                                       last_name = user['last_name'], 
                                       email = user['email'], 
-                                      password = user['password'] + "Aa;Aa;Aa;")
+                                      password = user['password']) 
                 new_user = user_service.create(user_obj)
-                print(f"User created with id: {new_user}")
+                print(f"User created with id: {new_user.id}")
 
                 inst = user['institution']
                 if inst == 0: 
