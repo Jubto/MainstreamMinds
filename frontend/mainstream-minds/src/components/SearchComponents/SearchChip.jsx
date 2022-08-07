@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Chip } from "@mui/material"
 import { useLocation, useNavigate } from "react-router-dom"
-import { appendToSearch, removeFromSearch } from "./searchHelpers"
+import { appendTagSearch, removeTagFromSearch } from "./searchHelpers"
 
 const SearchChip = (props) => {
   const nav = useNavigate()
@@ -11,13 +11,13 @@ const SearchChip = (props) => {
 
   const handleClick = () => {
     setSelected(true)
-    const newPath = appendToSearch(location.search, name)
+    const newPath = appendTagSearch(location.search, name)
     nav(`/search${newPath}`)
   }
 
   const handleDelete = () => {
     setSelected(false)
-    const newPath = removeFromSearch(location.search, name)
+    const newPath = appendTagSearch(location.search, name)
     nav(`/search${newPath}`)
   }
 
