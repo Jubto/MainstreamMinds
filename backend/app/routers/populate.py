@@ -20,7 +20,7 @@ router = APIRouter(tags=['populate'])
     description='populates database',
     # dependencies=[Depends(is_researcher)] 
 )
-async def populate_universities(
+async def populate_database(
         n: int,
         institution_service: InstitutionService = Depends(InstitutionService),
         researcher_service: ResearcherService = Depends(ResearcherService),

@@ -28,7 +28,7 @@ class UserService:
     def create(self, user_create: UserCreate):
         if self.repository.get_by_email(user_create.email):
             raise EmailAlreadyExistsHttpException()
-        self.repository.create(user_create, mappings=self.field_mappings)
+        return self.repository.create(user_create, mappings=self.field_mappings)
 
     def update(self, current_user_id: int, user_update: UserUpdate):
         return self.repository.update(current_user_id, user_update, mappings=self.field_mappings)
