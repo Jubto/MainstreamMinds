@@ -23,7 +23,7 @@ async def get_story_comments(
     return comment_service.get_story_comments(story_id)
 
 
-@router.post("", response_model=int, dependencies=[Depends(is_consumer)])
+@router.post("", response_model=CommentRead, dependencies=[Depends(is_consumer)])
 async def add_comment(
         comment: CommentCreate,
         comment_service: CommentService = Depends(CommentService),
