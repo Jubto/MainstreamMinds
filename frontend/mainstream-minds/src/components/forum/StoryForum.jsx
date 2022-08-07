@@ -21,7 +21,7 @@ const StoryForum = ({ storyID, researcher }) => {
     msmAPI.get(`/comments?${queryParams}`)
       .then((res) => {
         let commentTrees = {}
-        res.data.items.forEach((comment) => {
+        res.data.forEach((comment) => {
           if (comment.parent_id === 0 || comment.parent_id == null) {
             commentTrees[comment.id] = [comment]
           }
