@@ -36,7 +36,6 @@ async def populate_universities(
 
 
 def populate_universities(
-        n: int, 
         institution_service: InstitutionService = Depends(InstitutionService),
     ):
         # script_dir = os.path.dirname(__file__)
@@ -55,7 +54,6 @@ def populate_universities(
 
 
 def populate_researchers(
-        n: int,
         user_service: UserService = Depends(UserService),
         researcher_service: ResearcherService = Depends(ResearcherService),
     ):
@@ -81,7 +79,7 @@ def populate_researchers(
 
 
 def populate_research_stories(
-        n: int,
+        number_of_stories: int,
         story_service: ResearchStoryService = Depends(),
         tag_service: TagService = Depends(TagService),
         researcher_service: ResearcherService = Depends(ResearcherService),
@@ -92,7 +90,7 @@ def populate_research_stories(
             story_data = json.load(json_file)
             i = 0
             for story in story_data:
-                if i >= n: break
+                if i >= number_of_stories: break
                 
                 tag_ids = generate_tags(tag_service, story['tags'])
                 authors = generate_authors()
@@ -111,7 +109,7 @@ def populate_research_stories(
                 print(f"Story created with id: {new_user.id}")
                 i += 1
 
-        return f'added {n} new stories'
+        return f'added {number_of_stories} new stories'
 
 
 def generate_tags(tag_service, tag_list):
