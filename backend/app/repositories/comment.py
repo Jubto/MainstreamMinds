@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import Depends
 from sqlmodel import select, Session
 

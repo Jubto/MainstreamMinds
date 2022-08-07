@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, Query
 
 from app.core.security import get_request_user_id, is_researcher, is_consumer, create_token
+from app.models.exception import HTTPExceptionResponse
 from app.models.filter import ModelFilter, FieldFilter, FilterOperation, FilterCompoundOperation, FilterCompound, \
     FilterExpression
 from app.models.security import TokenData
@@ -83,7 +84,8 @@ async def get_stories_by_researcher(
     response_model=ResearcherCreated,
     dependencies=[Depends(is_consumer)],
     responses={
-        404: {"model": Message404, 'description': 'Returned if institution specified by institution_id does not exist'}}
+        404: {"model": HTTPExceptionResponse,
+              'description': 'Returned if institution specified by institution_id does not exist'}}
 )
 async def upgrade_to_researcher(
         new_researcher: ResearcherCreate,
