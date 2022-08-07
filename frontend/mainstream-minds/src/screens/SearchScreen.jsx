@@ -72,6 +72,7 @@ const SearchScreen = () => {
             size="small"
             fullWidth
             sx={{maxWidth: 720, marginRight: '8px'}}
+            onKeyDown={searchKeyword}
         />
         <SearchStack tags={searchTags} selectedTags={[]}/>
       </SearchContainer>
