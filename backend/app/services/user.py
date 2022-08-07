@@ -25,7 +25,7 @@ class UserService:
         self.field_mappings.add_field_mapping('password', 'password_hash', value_mapping_func=get_password_hash)
 
     def create(self, user_create: UserCreate):
-        self.repository.create(user_create, mappings=self.field_mappings)
+        return self.repository.create(user_create, mappings=self.field_mappings)
 
     def update(self, current_user_id: int, user_update: UserUpdate):
         return self.repository.update(current_user_id, user_update, mappings=self.field_mappings)
