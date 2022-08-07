@@ -99,16 +99,17 @@ const StoryComment = ({ comment, setComments, setRootReplyComment, hideButtons =
           <Tooltip title='like comment' >
             <CommentButton
               onClick={setLike}
-              startIcon={<ThumbUpOffAltIcon
-                sx={{ color: 'msm.dull' }}
-              />}>
-              {comment.num_likes ? `${comment.num_likes} likes` : 'no likes'}
+              startIcon={<ThumbUpOffAltIcon sx={{ color: 'msm.dull' }}/>}
+              sx={{ml: comment.num_likes ? 0 : '-0.75rem'}}
+            >
+              {comment.num_likes ? `${comment.num_likes} ${comment.num_likes === 1 ? 'like' : 'likes' }` : ''}
             </CommentButton>
           </Tooltip>
           <Tooltip title='reply' >
             <CommentButton
               onClick={openReply}
               startIcon={<ReplyIcon sx={{ color: 'msm.dull' }} />}
+              sx={{ml: comment.num_likes ? 0 : '-2rem'}}
             >
               Reply
             </CommentButton>

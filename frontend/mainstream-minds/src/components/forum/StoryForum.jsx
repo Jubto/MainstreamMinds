@@ -38,7 +38,7 @@ const StoryForum = ({ storyID, researcher }) => {
     <ForumContainer>
       <Typography variant='h6'>
         {Object.entries(comments).length
-          ? `${Object.entries(comments).reduce((sum, [rootID, obj]) => {
+          ? `${Object.entries(comments).reduce((sum, [rootID]) => {
             return sum + comments[rootID].length
           }, 0)} Comments`
           : 'No comments yet!'
