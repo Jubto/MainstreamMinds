@@ -6,11 +6,12 @@ import Card from "../components/layout/StoryCards/Card"
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import { ResearcherCarousel, ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
+import { ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
 import { useLocation } from "react-router-dom"
 import searchTags from "../components/SearchComponents/searchTags"
 import { extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
@@ -68,7 +69,6 @@ const SearchScreen = () => {
           </Button>
         </SearchContainer>
         <ResearcherCarousel />
-        <p>Researchers</p>
         <ResultsContainer>
           {(story && story.length) ? Object.entries(story).map(([key, value], idx) => (
               <Card 
