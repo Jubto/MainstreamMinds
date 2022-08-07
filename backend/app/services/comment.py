@@ -15,8 +15,8 @@ class CommentService:
     def add_comment(self, new_comment: CommentCreate, current_user_id: int) -> CommentRead:
         return self.repository.add_comment(new_comment, current_user_id)
 
-    def get_story_comments(self, story_id: int, paginator: Paginator) -> Page[CommentRead]:
-        return self.repository.get_story_comments(story_id, paginator)
+    def get_story_comments(self, story_id: int) -> List[CommentRead]:
+        return self.repository.get_story_comments(story_id)
 
     def set_comment_like(self, current_user_id: int, comment_id: int, liked: bool):
         self.repository.set_comment_like(current_user_id, comment_id, liked)
