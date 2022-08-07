@@ -41,7 +41,6 @@ const StoryComment = ({ comment, setComments, setRootReplyComment, hideButtons =
       msmAPI.put(`/comments/like?${queryParams}`)
         .then((res) => console.log(res))
         .catch((err) => console.error(err))
-
     }
     else {
       comment.num_likes && comment.num_likes--
@@ -59,9 +58,6 @@ const StoryComment = ({ comment, setComments, setRootReplyComment, hideButtons =
 
   useEffect(() => {
     setAvatarBcColor(randomColour())
-    console.log(comment.parent_id)
-    console.log(comment.parent_id === 0)
-    console.log(comment)
     setIsParent(comment.parent_id === 0)
     setReplyTo(comment.parent_id ? `@${comment.user.first_name} ` : '')
     setReplyID(comment.parent_id ? comment.parent_id : comment.id)
@@ -151,9 +147,9 @@ const StoryCommentTree = ({ comments, setComments }) => {
       />
       <CommentButton
         onClick={handleShowComments}
-        sx={{ ml: 1, mt: -1, mb: comments.length - 1 > rootReplyComment.length ? 2 : 0 }}
+        sx={{ ml: 1, mt: -1, mb: (comments.length - 1 > rootReplyComment.length) && !showReplies ? 2 : 0 }}
       >
-        {comments.length > 1 && !(comments.length - 1 === rootReplyComment.length)
+        {comments.length > 1 && (comments.length - 1 > rootReplyComment.length)
           ? showReplies
             ? 'Hide replies'
             : `Show ${comments.length - 1 - rootReplyComment.length} replies`
