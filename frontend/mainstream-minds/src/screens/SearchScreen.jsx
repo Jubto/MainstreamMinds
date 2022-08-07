@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import searchTags from "../components/SearchComponents/searchTags"
 import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
+import { grey } from "@mui/material/colors"
 
 
 const SearchScreen = () => {
@@ -75,8 +76,9 @@ const SearchScreen = () => {
         />
         <SearchStack tags={searchTags} selectedTags={[]}/>
       </SearchContainer>
-      <p>Researcher Carousel</p>
+      <ResearcherCarousel />
       <ResultsContainer >
+        <h2>Results</h2>
         <ResultsContents>
           <ResultsGrid container rowSpacing={3} columnSpacing={{xs:'auto', sm:2, md:3}} >
             {(story && story.length!==0) ? Object.entries(story).map(([key, value], idx) => (
@@ -92,7 +94,7 @@ const SearchScreen = () => {
                     />
                   </ResultsGridItem>
                   
-                )) : <p>No stories to show</p>
+                )) : <p sx={{margin: '0 0 0 60px', color:`${grey[700]}`}}>No stories to show</p>
             }
           </ResultsGrid>
         </ResultsContents>
