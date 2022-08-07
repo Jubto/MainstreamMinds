@@ -28,8 +28,8 @@ export const CarouselContainer = styled('div')`
 `
 
 export const StyledCard = styled(MuiCard)`
-  max-width: ${cardSize}px;
   min-width: ${cardSize}px;
+  width: ${cardSize}px;
   border: none; 
   box-shadow: none; 
 `
