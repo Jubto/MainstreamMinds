@@ -36,7 +36,7 @@ const LogInScreen = () => {
       })
       formErrors.error = true
     }
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password) || password.length < 8) {
+    if (password.length < 8) {
       setFormErrors(prevState => {
         return {...prevState, password: true}
       })
@@ -99,7 +99,7 @@ const LogInScreen = () => {
               })
             }}
             sx={{mt: 3, width: '100%'}}
-            helperText={formErrors.password ? 'Password must be at least 8 characters long and contain 1 lower case, 1 upper case, 1 number and one special character' : ''}
+            helperText={formErrors.password ? 'Password must be at least 8 characters long' : ''}
           />
           <br/>
 
