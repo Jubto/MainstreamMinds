@@ -16,9 +16,9 @@ from app.services.user import UserService
 
 router = APIRouter(tags=['populate'])
 base_path = pathlib.Path.cwd() / "app/data"
-acceptable_tags = ["science", "psycology", "statistics", "agriculture", "computer", 
+acceptable_tags = ["science", "psychology", "statistics", "agriculture", "computer", 
                    "global", "history", "chemistry", "geography", "research", "lawyer", 
-                   "journalism", "robotics" "medicine", "engineering", "physiotherapy", 
+                   "journalism", "robotics", "medicine", "engineering", "physiotherapy", 
                    "philosophy", "physics", "quantum", "gene", "genome", "disease", 
                    "legal", "fertility", "research", "university"]
 
@@ -87,7 +87,8 @@ def populate_researchers(
                 if inst == 0: 
                     inst = None
                 researcher_info = ResearcherCreate(bio = user['bio'],
-                                                   institution_id = inst)
+                                                   institution_id = inst
+                                                   )
 
                 researcher_service.upgrade(researcher_info, new_user.id)
                 add_researcher_preference_tags(tag_service, new_user.id)
