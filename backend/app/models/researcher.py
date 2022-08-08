@@ -1,13 +1,8 @@
-import enum
 from typing import Optional, List
 from datetime import datetime
 
 from sqlmodel import SQLModel, Field, Relationship
 from app.models.institution import Institution, InstitutionResearcherLink
-
-
-# from app.models.user import UserBase
-# from app.models.research_story import ResearchStory
 
 
 class StoryAuthorLink(SQLModel, table=True):

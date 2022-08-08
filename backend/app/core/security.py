@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Union, Optional
+from typing import Union
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -9,15 +9,13 @@ from passlib.context import CryptContext
 from app.models.security import TokenData
 from app.models.user import User, Role
 from app.repositories.user import UserRepository, get_user_repository
+from app.settings import Settings, get_settings
 from app.utils.exceptions import InvalidJWTHttpException, MissingPermissionsHttpException
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# TODO: Get values from config
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+settings: Settings = get_settings()
 
 
 def authenticate_user(
@@ -45,8 +43,8 @@ def create_token(data: TokenData):
     :param data:
     :return:
     """
-    data.exp = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    return jwt.encode(data.dict(), SECRET_KEY, algorithm=ALGORITHM)
+    data.exp = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    return jwt.encode(data.dict(), settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
 def get_request_user_id(token: str = Depends(oauth2_scheme)) -> int:
@@ -58,7 +56,7 @@ def get_request_user_id(token: str = Depends(oauth2_scheme)) -> int:
     :return: Validated User
     """
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         user_id: int = payload.get("sub")
         if user_id is None:
             raise InvalidJWTHttpException()
@@ -112,7 +110,7 @@ def does_request_user_have_permission(
     :raises InvalidCredentialsHttpException
     """
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         role: Role = payload.get("role")
         if role is None or not can_role_access(min_role_required, role):
             raise MissingPermissionsHttpException()

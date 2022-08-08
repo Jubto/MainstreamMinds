@@ -1,5 +1,4 @@
-# import datetime, timezone
-from datetime import datetime, timezone
+from datetime import datetime
 
 from typing import List, Optional
 from sqlalchemy.orm import backref
@@ -40,5 +39,3 @@ class Comment(CommentBase, table=True):
     ))
 
     user_likes: List["User"] = Relationship(back_populates="comment_likes", link_model=UserCommentLikesLink)
-
-
