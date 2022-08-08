@@ -19,6 +19,8 @@ class FilterOperation(Enum):
     GTE = 'gte'
     LT = 'lt'
     LTE = 'lte'
+    IN = 'in'
+    CONTAINS = 'contains'
 
 
 @dataclass
@@ -38,17 +40,22 @@ class FieldFilter(Filter):
     value: Any
     operation: FilterOperation
     model: Type[ModelT]
+    relationship_field: Optional[Any] = None
 
     def __str__(self):
         return f'{self.field} {self.operation.value} {self.value}'
 
     def get_filter_criteria(self) -> Any:
         model_field = getattr(self.model, self.field)
-
         if self.operation == FilterOperation.LIKE:
             return col(model_field).like(f'%{self.value}%')
         elif self.operation == FilterOperation.ILIKE:
             return col(model_field).ilike(f'%{self.value}%')
+        elif self.operation == FilterOperation.IN:
+            return col(model_field).in_(self.value)
+        elif self.operation == FilterOperation.CONTAINS:
+            assert self.relationship_field is not None, 'relationship_field needs to be set for FilterOperation.CONTAINS'
+            return self.relationship_field.any(model_field == self.value)
         elif self.operation == FilterOperation.EQ:
             return model_field == self.value
         elif self.operation == FilterOperation.NQ:
@@ -73,10 +80,11 @@ class FilterCompound(Filter):
 
     def get_filter_criteria(self) -> Any:
         children_criteria = [f.get_filter_criteria() for f in self.filters]
-        if self.operator == FilterCompoundOperation.AND:
-            return or_(*children_criteria)
-        elif self.operator == FilterCompoundOperation.OR:
+
+        if self.operator.value == FilterCompoundOperation.AND.value:
             return and_(*children_criteria)
+        elif self.operator.value == FilterCompoundOperation.OR.value:
+            return or_(*children_criteria)
 
 
 @dataclass
@@ -100,8 +108,6 @@ class ModelFilter(Generic[ModelT]):
         self._model = model
         self._filter_expression = filter_expression
         self._allowed_sort_fields = _allowed_filter_fields
-        # TODO: Validate lookup fields
-        # validate_lookup_fields(self._model, [f.field for f in self._sort_fields])
 
     def apply_filter_to_query(self, query: Union[Select, SelectOfScalar]):
         return query.where(self._filter_expression.get_filter_criteria())

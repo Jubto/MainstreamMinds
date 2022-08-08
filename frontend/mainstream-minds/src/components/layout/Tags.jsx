@@ -1,23 +1,25 @@
 import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { randomColour } from '../styles/colours';
+import { getColourForString } from '../styles/colours';
+import { useNavigate } from 'react-router-dom';
 
 const Tags = (props) => {
-  const tags = props.tags;
+  const navigate = useNavigate()
+  const tags = props.tags
   const tagSize = props.tagSize || ""
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
+  const handleClick = (name) => {
+    navigate(`/search?tags=${name}`)
   };
 
   return (
-    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'auto'}}>
+    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'hidden'}}>
       {tags && tags.length!==0 && tags.map((value) => (
           <Chip 
             key={value.name}
             label={value.name}
-            onClick={handleClick} 
-            sx={{ bgcolor: randomColour(), color: 'white'}}
+            onClick={() => handleClick(value.name)} 
+            sx={{ bgcolor: getColourForString(value.name), color: 'white'}}
             size={tagSize}
           />
         ))

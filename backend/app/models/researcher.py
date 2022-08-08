@@ -1,11 +1,10 @@
-import enum
 from typing import Optional, List
 from datetime import datetime
 
+from pydantic import validator
 from sqlmodel import SQLModel, Field, Relationship
 from app.models.institution import Institution, InstitutionResearcherLink
-# from app.models.user import UserBase
-# from app.models.research_story import ResearchStory
+from app.utils.model import email_validator
 
 
 class StoryAuthorLink(SQLModel, table=True):
@@ -16,14 +15,24 @@ class StoryAuthorLink(SQLModel, table=True):
 class ResearcherBase(SQLModel):
     bio: Optional[str] = Field()
     institution_id: Optional[int] = Field(foreign_key="institution.id")
+    institution_email: Optional[str] = Field(default=None)
+    institution_position: Optional[str] = Field(default=None)
+
+    @validator('institution_email')
+    def user_email_validator(cls, value):
+        if value is None:
+            return value
+        return email_validator(value)
 
 
 class Researcher(ResearcherBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    date_verified: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    date_verified: datetime = Field(default_factory=datetime.now, nullable=False)
     user_id: int = Field(index=True, nullable=False, foreign_key="user.id", sa_column_kwargs={'unique': True})
+    user: Optional["User"] = Relationship()
 
-    institution: Optional["Institution"] = Relationship(back_populates="researchers", link_model=InstitutionResearcherLink )
+    institution: Optional["Institution"] = Relationship(back_populates="researchers",
+                                                        link_model=InstitutionResearcherLink)
     stories: List["ResearchStory"] = Relationship(back_populates="researchers", link_model=StoryAuthorLink)
 
 
@@ -44,3 +53,4 @@ class ResearcherUpdate(ResearcherBase):
 class ResearcherRead(ResearcherBase):
     id: int
     user_id: int
+    user: Optional["UserRead"]

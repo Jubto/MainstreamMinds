@@ -16,7 +16,7 @@ const ScrollStories = (props) => {
 
   return (
     <Scroll>
-      {(story && story.length) && <IconButton sx={{borderRadius: '4px'}} onClick={() => scroll(-cardSize*numStories)}>
+      {(story && story.length > 0) && <IconButton sx={{borderRadius: '4px'}} onClick={() => scroll(-cardSize*numStories)}>
         <BackIcon/>
       </IconButton>}
       <CardCarouselStyle ref={componentRef}>
@@ -26,7 +26,7 @@ const ScrollStories = (props) => {
               key={idx} 
               title={value.title} 
               tags={value.tags}
-              researcherId={value.researchers[0]}
+              researcher={value.researchers[0]}
               storyId={value.id}
               showLikes={props.showLikes}
               thumbnail={value.thumbnail}
@@ -35,7 +35,7 @@ const ScrollStories = (props) => {
         }
         
       </CardCarouselStyle>
-      {(story && story.length) && <IconButton sx={{borderRadius: '4px'}} onClick={() => scroll(cardSize*numStories)}>
+      {(story && story.length > 0) && <IconButton sx={{borderRadius: '4px'}} onClick={() => scroll(cardSize*numStories)}>
         <NextIcon/>
         </IconButton>}
     </Scroll>

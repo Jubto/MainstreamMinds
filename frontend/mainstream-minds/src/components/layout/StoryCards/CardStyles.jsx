@@ -1,5 +1,5 @@
 import { styled } from "@mui/material"
-import { default as MuiCard } from '@mui/material/Card';
+import { CardMedia as MuiCardMedia, Card as MuiCard } from "@mui/material";
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { grey } from "@mui/material/colors";
@@ -28,8 +28,8 @@ export const CarouselContainer = styled('div')`
 `
 
 export const StyledCard = styled(MuiCard)`
-  max-width: ${cardSize}px;
   min-width: ${cardSize}px;
+  width: ${cardSize}px;
   border: none; 
   box-shadow: none; 
 `
@@ -43,6 +43,10 @@ export const CardTitle = styled('h4')`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+
+export const CardLink = styled(MuiCardMedia)`
+  cursor: pointer;
 `
 
 export const CardContent = styled('div')`

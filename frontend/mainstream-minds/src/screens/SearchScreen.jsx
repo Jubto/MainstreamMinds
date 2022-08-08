@@ -6,18 +6,30 @@ import Card from "../components/layout/StoryCards/Card"
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import { ResearcherCarousel, ResultsContainer, SearchContainer } from "../components/SearchComponents/SearchStyles"
+import { ResultsContainer, ResultsContents, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
+import { useLocation, useNavigate } from "react-router-dom"
+import searchTags from "../components/SearchComponents/searchTags"
+import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
+import { grey } from "@mui/material/colors"
+
 
 const SearchScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
+  const nav = useNavigate()
   const { auth, setAuth } = useAuth()
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
+  const location = useLocation()
+  const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
 
-  const getAllStories = async () => {
+
+  const getStories = async () => {
     try {
-      const resStory = await msmAPI.get(`/research_stories`)
+      console.log('getting stories',`/research_stories${location.search}`)
+      const resStory = await msmAPI.get(`/research_stories${location.search}`)
+      console.log(resStory)
       setStory(resStory.data.items)
       console.log(resStory.data)
       setErrorMsg(null)
@@ -33,71 +45,62 @@ const SearchScreen = () => {
     }
   }
 
-  const showTags = [
-    {
-      name: "science"
-    },
-    {
-      name: "psychology"
-    },
-    {
-      name: "agriculture"
-    },
-    {
-      name: "computers"
-    },
-    {
-      name: "global issues"
-    },
-    {
-      name: "law"
-    },
-    {
-      name: "journalism"
-    },
-    {
-      name: "robotics"
-    },
-  ]
+  const getTagsAndSearch = () => {
+    const queryArr = extractQuery(location.search)
+    setSelectedTags(getTags(queryArr))
+  }
+
+  const searchKeyword = (e) => {
+    if (e.key === "Enter") {
+      console.log("search", e.target.value);
+      const newPath = appendKeywordSearch(location.search, e.target.value)
+      nav(`/search${newPath}`)
+    }
+  }
 
   useEffect(() => {
-    getAllStories()
-    console.log(story)
-  }, [])
-
+    getStories(location.search)
+    getTagsAndSearch()
+  }, [location.search])
 
   return (
-    <Page mt={48}>
-        <SearchContainer>
-          <TextField 
+    <Page mt={48} align="left" >
+      <SearchContainer sx={{width: '90vw'}}>
+        <TextField 
             id="outlined-search" 
             label="Search" 
             type="search" 
             size="small"
             fullWidth
             sx={{maxWidth: 720, marginRight: '8px'}}
-          />
-          <SearchStack tags={showTags} />
-          <Button variant="outlined" startIcon={<FilterAltIcon />} sx={{height:'40px', minWidth: '92px', marginLeft: '8px'}}>
-            Filter
-          </Button>
-        </SearchContainer>
-        <ResearcherCarousel />
-        <p>Researchers</p>
-        <ResultsContainer>
-          {(story && story.length) ? Object.entries(story).map(([key, value], idx) => (
-              <Card 
-                key={idx} 
-                title={value.title} 
-                tags={value.tags}
-                researcherId={value.researchers[0]}
-                storyId={value.id}
-                showLikes={!!auth.accessToken}
-                thumbnail={value.thumbnail}
-              />
-            )) : <p>No stories to show</p>
+            onKeyDown={searchKeyword}
+        />
+        <SearchStack tags={searchTags} selectedTags={[]}/>
+      </SearchContainer>
+      <ResearcherCarousel />
+      <ResultsContainer >
+        <h2>Results</h2>
+        <ResultsContents>
+          <ResultsGrid container rowSpacing={3} columnSpacing={{xs:'auto', sm:2, md:3}} >
+            {(story && story.length!==0) ? Object.entries(story).map(([key, value], idx) => (
+                  <ResultsGridItem item>
+                    <Card 
+                      key={idx} 
+                      title={value.title} 
+                      tags={value.tags}
+                      researcher={value.researchers[0]}
+                      storyId={value.id}
+                      showLikes={!!auth.accessToken}
+                      thumbnail={value.thumbnail}
+                    />
+                  </ResultsGridItem>
+                  
+                )) : <p sx={{margin: '0 0 0 60px', color:`${grey[700]}`}}>No stories to show</p>
             }
-        </ResultsContainer>
+          </ResultsGrid>
+        </ResultsContents>
+      </ResultsContainer>
+      
     </Page>
   )
 }

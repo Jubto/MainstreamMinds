@@ -1,13 +1,14 @@
 import enum
 from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship
 
 from app.models.tag import Tag, UserTagLink
 from app.models.research_story import StoryLikeLink
 from app.models.comment import UserCommentLikesLink
+from app.utils.model import email_validator, password_validator
 
 
 class Role(int, enum.Enum):
@@ -20,6 +21,10 @@ class UserBase(SQLModel):
     first_name: str = Field()
     last_name: str = Field()
     email: str = Field(sa_column_kwargs={'unique': True})
+
+    @validator('email')
+    def user_email_validator(cls, value):
+        return email_validator(value)
 
 
 class User(UserBase, table=True):
@@ -35,6 +40,10 @@ class User(UserBase, table=True):
 class UserCreate(UserBase):
     password: str = Field()
 
+    @validator('password')
+    def user_password_validator(cls, value):
+        return password_validator(value)
+
 
 class UserUpdate(UserBase):
     password: Optional[str] = Field()
@@ -43,6 +52,7 @@ class UserUpdate(UserBase):
 class UserRead(UserBase):
     id: int
     role: Role = Field(sa_column=Column(Enum(Role)))
+    preference_tags: List["TagRead"]
 
 
 class UserGetQuery(BaseModel):
