@@ -1,0 +1,242 @@
+[
+  {
+    "name": "Chang College",
+    "address": "990 Colonial Road, Leland, North Carolina, 8286",
+    "year_established": 1989,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Oneill Research Centre",
+    "address": "521 Schroeders Avenue, Kimmell, Louisiana, 6786",
+    "year_established": 2010,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Phillips University",
+    "address": "180 Montieth Street, Avoca, Vermont, 1626",
+    "year_established": 1995,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Horton University",
+    "address": "192 Apollo Street, Escondida, Kentucky, 1968",
+    "year_established": 1962,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Simpson University",
+    "address": "451 Gerritsen Avenue, Fontanelle, American Samoa, 8880",
+    "year_established": 1927,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Scott Institute",
+    "address": "121 Leonard Street, Leeper, Florida, 9731",
+    "year_established": 1925,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Mcpherson Research Centre",
+    "address": "905 Independence Avenue, Edenburg, Oregon, 4462",
+    "year_established": 1957,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Levine University",
+    "address": "391 Fay Court, Wilsonia, Washington, 8784",
+    "year_established": 1986,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Cherry University",
+    "address": "155 Eastern Parkway, Dale, Utah, 5624",
+    "year_established": 1924,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Dunlap Institute",
+    "address": "443 Essex Street, Klondike, District Of Columbia, 3406",
+    "year_established": 1854,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Glass Institute",
+    "address": "130 Sumner Place, Canterwood, Wyoming, 3197",
+    "year_established": 1936,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Glover Research Centre",
+    "address": "241 Hanover Place, Walland, Alabama, 5935",
+    "year_established": 1991,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Payne University",
+    "address": "799 Eckford Street, Soudan, Arizona, 2838",
+    "year_established": 2004,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Lewis College",
+    "address": "233 Sunnyside Avenue, Crisman, Iowa, 3127",
+    "year_established": 1902,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Hoover University",
+    "address": "689 Rutledge Street, Chestnut, Ohio, 2342",
+    "year_established": 1938,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Booth Institute",
+    "address": "986 Channel Avenue, Choctaw, Missouri, 5208",
+    "year_established": 1875,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Madden College",
+    "address": "379 Conklin Avenue, Bagtown, Tennessee, 3985",
+    "year_established": 2003,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Walker Research Centre",
+    "address": "968 Rogers Avenue, Caledonia, Virginia, 4261",
+    "year_established": 1958,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Mccarthy College",
+    "address": "855 Lacon Court, Cuylerville, Minnesota, 3590",
+    "year_established": 1956,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Buckley Institute",
+    "address": "686 Beach Place, Trexlertown, Georgia, 1118",
+    "year_established": 1928,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Cotton Research Centre",
+    "address": "893 Hazel Court, Madrid, Massachusetts, 6382",
+    "year_established": 1901,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Miranda College",
+    "address": "943 Nassau Street, Dubois, California, 3487",
+    "year_established": 1903,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Anderson Institute",
+    "address": "984 Metropolitan Avenue, Franklin, Palau, 6611",
+    "year_established": 1925,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Cantu Institute",
+    "address": "240 Johnson Street, Turah, Pennsylvania, 5012",
+    "year_established": 1962,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Barry University",
+    "address": "439 Georgia Avenue, Crumpler, Idaho, 9322",
+    "year_established": 2019,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Rodriguez Institute",
+    "address": "303 Howard Avenue, Santel, Nebraska, 8628",
+    "year_established": 2018,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Dickerson Research Centre",
+    "address": "264 Neptune Avenue, Hendersonville, Connecticut, 2679",
+    "year_established": 1903,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Head Institute",
+    "address": "333 Village Road, Alden, Mississippi, 2160",
+    "year_established": 1981,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Wooten College",
+    "address": "482 Caton Avenue, Lawrence, Indiana, 3833",
+    "year_established": 1878,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Langley College",
+    "address": "133 Verona Place, Dunnavant, Arkansas, 6125",
+    "year_established": 1874,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Norris College",
+    "address": "563 Manhattan Court, Barronett, Oklahoma, 6244",
+    "year_established": 1896,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Price College",
+    "address": "441 Norwood Avenue, Shaft, Illinois, 2221",
+    "year_established": 1895,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Duke Research Centre",
+    "address": "754 Morton Street, Advance, Montana, 1163",
+    "year_established": 1999,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Cook College",
+    "address": "804 Gilmore Court, Alderpoint, South Dakota, 7259",
+    "year_established": 1991,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Newton University",
+    "address": "151 Scholes Street, Kipp, Michigan, 2394",
+    "year_established": 1956,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Dickson Research Centre",
+    "address": "160 Beadel Street, Gwynn, New Jersey, 5764",
+    "year_established": 1917,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Pacheco University",
+    "address": "335 Madoc Avenue, Galesville, South Carolina, 9844",
+    "year_established": 1924,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Houston College",
+    "address": "540 Williams Avenue, Cutter, Wisconsin, 4441",
+    "year_established": 1866,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "Davidson University",
+    "address": "429 Milton Street, Fulford, Kansas, 9156",
+    "year_established": 1902,
+    "logo": "http://placehold.it/32x32"
+  },
+  {
+    "name": "House College",
+    "address": "486 Everit Street, Suitland, Northern Mariana Islands, 3022",
+    "year_established": 1861,
+    "logo": "http://placehold.it/32x32"
+  }
+]

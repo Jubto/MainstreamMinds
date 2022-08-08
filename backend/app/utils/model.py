@@ -35,7 +35,6 @@ def assign_members_from_dict(class_instance: object, dict_to_assign: dict,
     for field, value in dict_to_assign.items():
         if field_mappings:
             field, value = field_mappings.map_field(field, value)
-            # print(field, value)
         setattr(class_instance, field, value)
 
 
@@ -53,6 +52,7 @@ def password_validator(value: str) -> str:
         return value
     raise ValueError(
         'Password must be at least 8 characters long')
+
 
 
 def email_validator(value: str) -> str:

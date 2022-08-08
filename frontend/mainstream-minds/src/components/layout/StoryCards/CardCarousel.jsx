@@ -14,14 +14,14 @@ const CardCarousel = (props) => {
   const extension = props.extension || ''
   const title = props.carouselTitle
   const interestBtn = props.interestBtn
-  console.log(`/research_stories${extension}`)
+  // console.log(`/research_stories${extension}`)
 
   const getStories = async () => {
     try {
       const resStory = await msmAPI.get(`/research_stories${extension}`)
       setStory(resStory.data.items)
-			console.log(resStory.data, typeof resStory.data)
-      console.log(story, story.items)
+			// console.log(resStory.data, typeof resStory.data)
+      // console.log(story, story.items)
       setErrorMsg(null)
     }
     catch (err) {
