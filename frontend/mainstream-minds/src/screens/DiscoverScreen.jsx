@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom"
 import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
+import DiscoverBanner from "../components/layout/DiscoverBanner"
 const StoryField = styled('div')`
   background-color: #bfece6;
 `
@@ -58,10 +59,15 @@ const DiscoverScreen = () => {
 
   return (
     <Page>
-      {auth.accessToken && <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>}
-      {auth.accessToken && <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>}
+      {auth.accessToken ? (
+          <>
+            <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>
+            <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>
+          </>
+        ) :
+        <DiscoverBanner/>
+      }
       <CardCarousel carouselTitle="Trending" extension="/trending"/>
-      
       {(interests && interests.length) ? 
         Object.entries(interests).map(([key,value]) => {
           return(
@@ -73,8 +79,10 @@ const DiscoverScreen = () => {
           )
         })
         : console.log('no interests to show')}
-      
-      <Typography variant='h5'>
+      <CardCarousel carouselTitle="Science" extension="?tags=science"/>
+      <CardCarousel carouselTitle="Physics" extension="?tags=physics"/>
+      <CardCarousel carouselTitle="Engineering" extension="?tags=engineering"/>
+      {/* <Typography variant='h5'>
         Temp routes
       </Typography>
       <br />
@@ -137,7 +145,7 @@ const DiscoverScreen = () => {
           </div>
           : ''
         }
-      </Typography>
+      </Typography> */}
     </Page>
   )
 }

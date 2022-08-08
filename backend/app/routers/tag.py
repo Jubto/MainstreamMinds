@@ -29,6 +29,16 @@ async def add_preference_tags(
     return tag_service.add_preference_tag(current_user_id, tag)
 
 
+@router.delete("/preference_tags", dependencies=[Depends(is_consumer)],
+              responses={404: {"model": HTTPExceptionResponse}})
+async def remove_preference_tag(
+        tag: str,
+        tag_service: TagService = Depends(TagService),
+        current_user_id: int = Depends(get_request_user_id),
+):
+    return tag_service.remove_preference_tag(current_user_id, tag)
+
+
 @router.post("/", response_model=TagRead, dependencies=[Depends(is_researcher)],
              responses={409: {"model": HTTPExceptionResponse}})
 async def create_tag(
