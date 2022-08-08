@@ -21,8 +21,8 @@ const Card = (props) => {
   const researcher = props.researcher
   const storyId = props.storyId
   const thumbnail = props.thumbnail
-  console.log(`I am card ${title}`)
-  console.log(researcher)
+  //console.log(`I am card ${title}`)
+  //console.log(researcher)
 
   const getLiked = async () => {
     try {

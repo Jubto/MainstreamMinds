@@ -10,8 +10,10 @@ export const SearchContainer = styled('div')`
 export const ResultsContainer = styled('div')`
   width: 100%;
   padding: 16px 12px;
-  justify-content: center;
-  align-items: center;
+`
+
+export const ResultsContents = styled('div')`
+
 `
 export const ResultsGrid = styled(Grid)`
   align-content: center;
