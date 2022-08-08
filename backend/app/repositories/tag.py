@@ -27,6 +27,12 @@ class TagRepository:
         user.preference_tags.append(db_tag)
         self.session.commit()
 
+    def remove_preference_tag(self, current_user_id: int, tag: str):
+        user = self.session.exec(select(User).where(User.id == current_user_id)).one()
+        db_tag = self.session.exec(select(Tag).where(Tag.name == tag)).one()
+        user.preference_tags.remove(db_tag)
+        self.session.commit()
+
     def create_tag(self, tag: TagCreate):
         db_tag = Tag.from_orm(tag)
         self.session.add(db_tag)

@@ -17,9 +17,16 @@ class TagService:
         return self.repository.get_preference_tags(current_user_id)
 
     def add_preference_tag(self, current_user_id: int, tag: str):
-        if self.repository.get_tag_by_name(tag):
-            self.repository.add_preference_tag(current_user_id, tag)
-        raise NonExistentEntry('Tag.name', tag)
+        if not self.repository.get_tag_by_name(tag):
+            raise NonExistentEntry('Tag.name', tag)
+        self.repository.add_preference_tag(current_user_id, tag)
+
+    def remove_preference_tag(self, current_user_id: int, tag: str):
+        if not self.repository.get_tag_by_name(tag):
+            raise NonExistentEntry('Tag.name', tag)
+        if tag not in self.repository.get_preference_tags(current_user_id):
+            raise NonExistentEntry('Tag.name', tag)
+        self.repository.remove_preference_tag(current_user_id, tag)
 
     def create_tag(self, tag: TagCreate):
         if self.repository.get_tag_by_name(tag.name):

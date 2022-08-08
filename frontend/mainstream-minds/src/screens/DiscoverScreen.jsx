@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom"
 import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
+import DiscoverBanner from "../components/layout/DiscoverBanner"
 const StoryField = styled('div')`
   background-color: #bfece6;
 `
@@ -16,21 +17,6 @@ const DiscoverScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null)
   const [story, setStory] = useState({})
   const [interests, setInterests] = useState({})
-  const Pop = async () => {
-    try{
-      const res = await msmAPI.post(`populate`, 20)
-    }
-    catch (err) {
-      if (!err?.response) {
-        setErrorMsg('No Server Response')
-      } else if (err.response?.status === 401) {
-        setErrorMsg('Forbidden, try login')
-      } else {
-        setErrorMsg(`err: ${err}`)
-        console.log(err)
-      }
-    }
-  }
 
   const getInterests = async () => {
     try {
@@ -51,6 +37,51 @@ const DiscoverScreen = () => {
     }
   }
 
+  const testPostStory = async () => {
+    // Testing jwt Bearer API call
+    try {
+      // all fields are required, schema avaliable on /docs
+      const story = {
+        title: "Test story",
+        summary: "Lorem",
+        authors: [
+          {
+            researcher_id: 0,
+            institution_id: 0
+          }
+        ],
+        papers: [
+          {
+            paper_title: "Breakthrough",
+            paper_abstract: "Science",
+            paper_link: "string",
+            paper_citations: 0
+          }
+        ],
+        tags: [
+          {
+            name: "SaaSy"
+          }
+        ],
+        content_body: "Vestibulum gravida dapibus risus, quis lacinia eros mattis viverra.",
+        thumbnail: "string",
+        video_link: "string",
+        transcript: "string"
+      }
+      const resStory = await msmAPI.post('/research_stories', story)
+      setStory(resStory.data)
+      setErrorMsg(null)
+    }
+    catch (err) {
+      if (!err?.response) {
+        setErrorMsg('No Server Response')
+      } else if (err.response?.status === 401) {
+        setErrorMsg('Forbidden, try login')
+      } else {
+        setErrorMsg('Could not reach backend server')
+      }
+    }
+  }
 
   useEffect(() => {
     getInterests()
@@ -58,14 +89,19 @@ const DiscoverScreen = () => {
 
   return (
     <Page>
-      {auth.accessToken && <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>}
-      {auth.accessToken && <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>}
+      {auth.accessToken ? (
+          <>
+            <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>
+            <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>
+          </>
+        ) :
+        <DiscoverBanner/>
+      }
       <CardCarousel carouselTitle="Trending" extension="/trending"/>
-
-      {(interests && interests.length) ?
+      {(interests && interests.length) ? 
         Object.entries(interests).map(([key,value]) => {
           return(
-            <CardCarousel
+            <CardCarousel 
               carouselTitle={value.name[0].toUpperCase()+value.name.substring(1)}
               extension={`?tags=${value.name}&page=0&page_size=10`}
               interestBtn={true}
@@ -73,8 +109,10 @@ const DiscoverScreen = () => {
           )
         })
         : console.log('no interests to show')}
-
-      <Typography variant='h5'>
+      <CardCarousel carouselTitle="Science" extension="?tags=science"/>
+      <CardCarousel carouselTitle="Physics" extension="?tags=physics"/>
+      <CardCarousel carouselTitle="Engineering" extension="?tags=engineering"/>
+      {/* <Typography variant='h5'>
         Temp routes
       </Typography>
       <br />
@@ -94,7 +132,7 @@ const DiscoverScreen = () => {
         <ListItem component={Link} to={'/researcher/registration'} state={{ from: location }}>
           researcher registration
         </ListItem >
-        <ListItem component={Link} to={'/researcher/1'} state={{ from: location }}>
+        <ListItem component={Link} to={'/researcher/John'} state={{ from: location }}>
           researcher
         </ListItem >
         <ListItem component={Link} to={'/research-story/1'} state={{ from: location }}>
@@ -111,7 +149,7 @@ const DiscoverScreen = () => {
         </ListItem >
       </List>
       <br />
-      <Button variant='contained' onClick={Pop} sx={{ mr: 5 }}>
+      <Button variant='contained' onClick={testPostStory} sx={{ mr: 5 }}>
         Press to post story
       </Button>
       {auth.accessToken
@@ -137,7 +175,7 @@ const DiscoverScreen = () => {
           </div>
           : ''
         }
-      </Typography>
+      </Typography> */}
     </Page>
   )
 }
