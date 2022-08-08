@@ -115,7 +115,6 @@ const ResearcherProfileScreen = () => {
       }
 
 
-
     </Page>
   )
 }
