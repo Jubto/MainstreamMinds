@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 import json
 import random
+import pathlib
 
 from app.models.institution import InstitutionCreate
 from app.models.researcher import ResearcherCreate
@@ -14,7 +15,7 @@ from app.services.tag import TagService
 from app.services.user import UserService
 
 router = APIRouter(tags=['populate'])
-
+base_path = pathlib.Path.cwd() / "app/data"
 @router.post(
     "/", 
     description='populates database',
@@ -41,7 +42,7 @@ def populate_universities(
         # script_dir = os.path.dirname(__file__)
         # file_path = script_dir + 'institutions.json'
         # Just using full file path because was having issues accessing data without it - happy for it to be overwritten
-        file_path = '/mnt/c/Users/HCharak/OneDrive/Documents/UNSW-DESKTOP-UK70UPK/COMP9323/research-stories/backend/app/data/institutions.json'
+        file_path = base_path / "institutions.json"
         with open(file_path) as json_file:
             uni_data = json.load(json_file)
             for institution in uni_data:
@@ -58,7 +59,7 @@ def populate_researchers(
         researcher_service: ResearcherService = Depends(ResearcherService),
     ):
         
-        file_path = '/mnt/c/Users/HCharak/OneDrive/Documents/UNSW-DESKTOP-UK70UPK/COMP9323/research-stories/backend/app/data/user_researcher.json'
+        file_path = base_path / "user_researcher.json"
         with open(file_path) as json_file:
             user_data = json.load(json_file)
             for user in user_data:
@@ -84,8 +85,7 @@ def populate_research_stories(
         tag_service: TagService = Depends(TagService),
         researcher_service: ResearcherService = Depends(ResearcherService),
     ):
-        
-        file_path = '/mnt/c/Users/HCharak/OneDrive/Documents/UNSW-DESKTOP-UK70UPK/COMP9323/research-stories/backend/app/data/research_stories.json'
+        file_path = base_path / "research_stories.json"
         with open(file_path) as json_file:
             story_data = json.load(json_file)
             i = 0
@@ -124,6 +124,7 @@ def generate_tags(tag_service, tag_list):
             tag_id_list.append(tag_info.id)
     return tag_id_list
 
+
 def generate_authors():
     # To be used if able to cope with multiple authors
     # num_auth = random.randint(0,3)
@@ -132,6 +133,7 @@ def generate_authors():
     #     author = random.randint(0,40)
     #     authors.append(author)
     return [random.randint(1,40)]
+
 
 def generate_institutions(researcher_service, authors):
     institutions = []
