@@ -66,7 +66,6 @@ const UploadStoryScreen = ({ researcher }) => {
   }
 
   const validateYTLink = (link) => {
-    console.log('validation::: ', link)
     if (/^(?:https?:)?(?:\/\/)?(?:youtu\.be\/|(?:www\.|m\.)?youtube\.com\/(?:watch|v|embed)(?:\.php)?(?:\?.*v=|\/))([a-zA-Z0-9\_-]{7,15})(?:[\?&][a-zA-Z0-9\_-]+=[a-zA-Z0-9\_-]+)*$/.test(link)) {
       return true
     }    
@@ -162,8 +161,6 @@ const UploadStoryScreen = ({ researcher }) => {
       })
       .catch((err) => console.error(err))
   }, [])
-
-  console.log(videoLink)
 
   return (
     <Page>
