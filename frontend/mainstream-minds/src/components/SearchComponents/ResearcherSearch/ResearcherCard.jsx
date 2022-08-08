@@ -4,19 +4,30 @@ import { ResearcherCardContainer, ResearcherDetails, ResearcherInstitution, Rese
 import { getColourForString } from "../../../components/styles/colours"
 import { useEffect } from "react"
 import msmAPI from "../../../api/msmAPI"
+import {Button} from "@mui/material";
+import {useNavigate, useLocation, Link} from 'react-router-dom';
+
 
 const ResearcherCard = (props) => {
   const user = props.value.user
   const institution_id = props.value.institution_id
   const [institutionName, setIntitutionName] = useState('')
   const [institutionPosition, setInstitutionPosition] = useState('')
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   
   const bgColour = getColourForString(user.first_name+user.last_name)
   const firstName = user.first_name
   console.log(props.value)
   console.log(user.first_name, user.last_name)
   console.log(institutionName)
+  const toProfile = () =>{
+   // event.preventDefault();
+    const to = `/researcher/${firstName}`
+    navigate(to, {replace: true});
+  }
+
 
   useEffect(() => {
     if(institution_id) {
@@ -43,6 +54,7 @@ const ResearcherCard = (props) => {
         {institutionPosition && <Typography variant="body2">
           {institutionPosition}
         </Typography>}
+        <Button onClick={toProfile}>Go</Button>
       </ResearcherDetails>
     </ResearcherCardContainer>
 
