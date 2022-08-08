@@ -1,6 +1,6 @@
 import { styled, Button } from "@mui/material"
 import { blue } from "@mui/material/colors"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 const Banner = styled('div')`
   background-color: ${blue[800]};
@@ -29,6 +29,7 @@ const Strike = styled('span')`
 
 const DiscoverBanner = () => {
   const nav = useNavigate()
+  const location = useLocation()
 
   return(
     <Banner>
@@ -36,10 +37,10 @@ const DiscoverBanner = () => {
       <BannerContents>
         <h1>Welcome!</h1>
         <p>Mainstream Minds is bridging the gap between research and the people. Get involved now because great minds <Strike>think alike</Strike> share their knowlege.</p>
-        <Button variant="outlined" sx={{backgroundColor: 'white'}} onClick={nav('/login')}>
+        <Button variant="outlined" sx={{backgroundColor: 'white'}} onClick={() => nav('/login', {state: {from: location}})}>
           Log In
         </Button>
-        <Button variant="outlined" sx={{color: 'white', margin: '0 0 0 12px'}} onClick={nav('/sign-up')}>
+        <Button variant="outlined" sx={{color: 'white', margin: '0 0 0 12px'}} onClick={() => nav('/sign-up', {state: {from: location}})}>
           Sign Up
         </Button>
       </BannerContents>
