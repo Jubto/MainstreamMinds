@@ -59,8 +59,32 @@ async def get_all_researchers(
 
 
 @router.get(
+    "/me",
+    description='Returns details for the current researcher',
+    response_model=ResearcherRead
+)
+async def get_current_researcher(
+        current_user_id: int = Depends(get_request_user_id),
+        researcher_service: ResearcherService = Depends(ResearcherService)
+):
+    return researcher_service.get_researcher_by_user_id(current_user_id)
+
+
+@router.get(
+    "/from_user/{user_id}",
+    description='Returns details for a researcher given their user id. Returns 404 if no researcher found.',
+    response_model=ResearcherRead
+)
+async def get_researcher_by_user_id(
+        user_id: int = Path(default=..., gt=0),
+        researcher_service: ResearcherService = Depends(ResearcherService)
+):
+    return researcher_service.get_researcher_by_user_id(user_id)
+
+
+@router.get(
     "/{researcher_id}",
-    description='Returns details for a researcher given their id',
+    description='Returns details for a researcher given their id.',
     response_model=ResearcherRead
 )
 async def get_researcher_by_id(
