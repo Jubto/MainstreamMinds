@@ -130,7 +130,7 @@ return (
         {interests && interests.length!=0 && 
         <SearchStack tags={interests}></SearchStack>
         } 
-        {interests && interests.length==0 && <Typography>No tags</Typography>}
+        {interests && interests.length==0 && <Typography>No Interests</Typography>}
         <Button onClick={addInterests}>Add</Button>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
