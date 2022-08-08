@@ -52,7 +52,12 @@ const LogInScreen = () => {
         const resLogin = await msmLogin.post('/users/login', formParams);
         const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
         setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
-        navigate(from, {replace: true});
+        if (location.state?.redirect) {
+          navigate(from, { state: { redirect: location.state.redirect } })
+        }
+        else {
+          navigate(from, { replace: true });
+        }
       } catch (err) {
         if (err.response?.status === 401) {
           setErrorMsg(err.response.data.detail)

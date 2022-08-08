@@ -42,6 +42,7 @@ class ResearchStoryRepository:
                  .join(ResearchStory.tags, isouter=True)).distinct()
         if filter_by:
             query = filter_by.apply_filter_to_query(query)
+
         return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
                                             page_count=paginator.get_page_count(self.session, query))
 
