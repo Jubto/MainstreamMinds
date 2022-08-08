@@ -113,15 +113,16 @@ def populate_research_stories(
 
 
 def generate_tags(tag_service, tag_list):
-    clean_tags = [string for string in tag_list.split("|") if ' ' not in string]
-    clean_tags = [string for string in clean_tags if len(string) > 5 and len(string)<20]
     tag_id_list = []
-    for tag_name in clean_tags:
+    for tag_name in tag_list:
         tag = tag_service.get_tag_by_name(tag_name)
+        print("tag collected:", tag)
         if not tag:
             tag_obj = TagCreate(name = tag_name)
             tag_info = tag_service.create_tag(tag_obj)
             tag_id_list.append(tag_info.id)
+        else:
+            tag_id_list.append(tag.id) 
     return tag_id_list
 
 
