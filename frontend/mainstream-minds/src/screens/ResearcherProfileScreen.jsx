@@ -104,9 +104,16 @@ const ResearcherProfileScreen = () => {
         Research Stories
       </Typography>
 
-      <Grid container spacing={3}>
-        {storyCards}
-      </Grid>
+      {storyCards.length ?
+        <Grid container spacing={3}>
+          {storyCards}
+        </Grid>
+        :
+        <Typography variant='h5' sx={{color: 'rgba(0,0,0,0.6)'}}>
+          No Research Stories
+        </Typography>
+      }
+
 
 
     </Page>
