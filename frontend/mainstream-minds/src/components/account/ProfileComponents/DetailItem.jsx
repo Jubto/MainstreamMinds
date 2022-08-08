@@ -14,6 +14,7 @@ const DetailItem = (props) => {
     const info = props.info;
     const icon = props.icon;
     const route= props.route || 'testroute';
+    const editable = props.edit || true;
     
 
    /* const testFn = async (event ) => {
