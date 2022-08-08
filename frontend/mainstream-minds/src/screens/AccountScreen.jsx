@@ -2,7 +2,6 @@ import { useState, useEffect} from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
 import SearchStack from "../components/SearchComponents/SearchStack"
 import Tags from "../components/layout/Tags"
@@ -10,9 +9,30 @@ import { Box } from "@mui/system";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 import AccountDetails from "../components/account/ProfileComponents/AccountDetails"
 import { CarouselTitle, Subtitle} from "../components/layout/StoryCards/CardStyles"
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-//user details are breaking now >:(
+import {
+  Autocomplete,
+  Button,
+  IconButton,
+  InputAdornment,
+  Popper,
+  TextField,
+  Tooltip,
+  Typography
+} from "@mui/material"
+
+const CustomerPopper = function (props) {
+  return (
+    <Popper
+      {...props}
+      placement="bottom-start"
+      sx={{
+        '.MuiAutocomplete-paper': { height: '250px', overflow: 'hidden' },
+      }}
+    />
+  );
+};
+
+
 const AccountScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
   const { auth, setAuth } = useAuth()
@@ -22,7 +42,13 @@ const AccountScreen = () => {
   const [type, setType] = useState(null)
   const [id, setID] = useState(null)
   const [interests, setInterests] = useState()
-  const [allTags, setAllTags] = useState({})
+  const [selectedTopics, setSelectedTopics] = useState(new Set())
+  const [selectedTopic, setSelectedTopic] = useState(null)
+  const [unSelect, setUnSelect] = useState('')
+  const [inputValue, setInputValue] = useState(null)
+  const [AllTopics, setAllTopics] = useState([])
+  const [AllTopicsLookup, setAllTopicsLookup] = useState([])
+
 
   const navigate = useNavigate();
   const regis = location.state?.from?.pathname || "/researcher/register";
@@ -49,26 +75,20 @@ const AccountScreen = () => {
         }
       }
     }
-
-    const getTags = async () => {
-      try {
-        const resTags = await msmAPI.get(`tags/`)
-        setAllTags(resTags.data.items)
-        console.log(resTags.data.items)
-        setErrorMsg(null)
+    const addSelected = (selected) => {
+      setSelectedTopic(selected);
+      if (selected) {
+        setSelectedTopics(selectedTopics.add(selected))
       }
-      catch (err) {
-        if (!err?.response) {
-          setErrorMsg('No Server Response')
-        } else if (err.response?.status === 401) {
-          setErrorMsg('Forbidden, try login')
-        } else {
-          setErrorMsg(`err: ${err}`)
-          console.log(err)
-        }
-      }
-
     }
+  
+    const handleEnterPress = (e) => {
+      if (e.key === 'Enter' && selectedTopic) {
+        addSelected(selectedTopic)
+      }
+    }
+
+  
     
     const getInterests = async () => {
       try {
@@ -109,9 +129,28 @@ const AccountScreen = () => {
         }
       }
     }
-
+    useEffect(() => {
+      // no time to utilise the pagination sorry
+      msmApi.get('/tags/?page_size=1000')
+        .then((res) => {
+          setAllTopics(res.data.items.map((tag) => tag.name))
+          const tagMap = {}
+          res.data.items.forEach((tag) => {
+            tagMap[tag.name] = tag.id
+          })
+          setAllTopicsLookup(tagMap)
+        })
+        .catch((err) => console.error(err))
+    }, [])
    
-
+    useEffect(() => {
+      if (unSelect) {
+        selectedTopics.delete(unSelect)
+        setSelectedTopics(selectedTopics)
+        setUnSelect('')
+      }
+    }, [unSelect])
+  
     useEffect(() => {
       getUserDetails()
       console.log("ID IS")
