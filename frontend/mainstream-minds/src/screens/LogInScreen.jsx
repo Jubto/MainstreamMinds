@@ -30,7 +30,13 @@ const LogInScreen = () => {
         const resLogin = await msmLogin.post('/users/login', formParams);
         setAuth({ accessToken: resLogin.data.access_token, role: 0 }); // globally sets auth, note: temporarily leaving role: 0 (remove once /api/user/me endpoint exists)
         // TODO backend set up /api/user/me endpoint, send valid jwt, returns user details + role
-        navigate(from, { replace: true });
+        
+        if (location.state?.redirect) {
+          navigate(from, { state: { redirect: location.state.redirect } })
+        }
+        else {
+          navigate(from, { replace: true });
+        }
       }
       catch (err) {
         if (err.response?.status === 401) {
@@ -63,7 +69,7 @@ const LogInScreen = () => {
       <Button variant='contained' type='submit' sx={{ mt: 2 }}>
         Log in
       </Button>
-      <Typography variant='subtitle1' sx={{color: 'error.main', mt:2, fontWeight: 1000}}>
+      <Typography variant='subtitle1' sx={{ color: 'error.main', mt: 2, fontWeight: 1000 }}>
         {errorMsg}
       </Typography>
     </Box>

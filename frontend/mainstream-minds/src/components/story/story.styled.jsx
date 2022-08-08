@@ -4,7 +4,6 @@ export const StoryContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 4rem;
   width: 1204px;
   padding: 12px 68px;
   gap: 10px;

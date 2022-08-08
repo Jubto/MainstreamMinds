@@ -16,7 +16,7 @@ import {
   AuthorContainer,
   StoryBody
 } from "../components/story/story.styled"
-import { Avatar, Box, Button, Typography } from "@mui/material"
+import { Avatar, Box, Button, Tooltip, Typography } from "@mui/material"
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
@@ -40,9 +40,13 @@ const ResearchStoryScreen = () => {
   }
 
   const goToPaper = () => {
-    !auth.accessToken && navigate('/login', { state: { from: location } })
     if (story.papers.includes('http')) {
-      window.open(story.papers, '_blank')
+      if (auth.accessToken) {
+        window.open(location.state.redirect, '_blank')
+      }
+      else {
+        navigate('/login', { state: { from: location, redirect: story.papers } })
+      }
     }
   }
 
@@ -87,6 +91,12 @@ const ResearchStoryScreen = () => {
     msmAPI.get(`/research_stories/like?story_id=${id}`)
       .then((res) => setHasLiked(res.data))
       .catch((err) => console.error(err))
+    
+    console.log('=============================')
+    console.log(location)
+    if (location.state?.redirect) {
+      window.open(location.state.redirect, '_blank')
+    }
 
   }, [])
 
@@ -123,14 +133,16 @@ const ResearchStoryScreen = () => {
               >
                 {hasLiked ? 'liked' : 'like'}
               </Button>
-              <Button
-                onClick={goToPaper}
-                variant='contained'
-                startIcon={<MenuBookIcon />}
-                sx={{ height: '30px' }}
-              >
-                Read Journal
-              </Button>
+              <Tooltip title='Go to published Paper'>
+                <Button
+                  onClick={goToPaper}
+                  variant='contained'
+                  startIcon={<MenuBookIcon />}
+                  sx={{ height: '30px' }}
+                >
+                  Read Journal
+                </Button>
+              </Tooltip>
             </FlexBox>
           </StoryMetrics>
           <AuthorContainer>
@@ -151,13 +163,13 @@ const ResearchStoryScreen = () => {
           {story.summary}
         </StoryBody>
         <Tags tags={story.tags} tagSize="medium" />
-        <Box sx={{mb:'4rem'}} />
+        <Box sx={{ mb: '4rem' }} />
         <StoryForum
-        storyID={id}
-        researcher={researcher}
-        msmAPI={msmAPI}
-        auth={auth}
-      />
+          storyID={id}
+          researcher={researcher}
+          msmAPI={msmAPI}
+          auth={auth}
+        />
       </StoryContainer>
     </Page>
   )
