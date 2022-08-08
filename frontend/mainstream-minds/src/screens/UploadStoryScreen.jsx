@@ -35,7 +35,7 @@ const CustomerPopper = function (props) {
 const UploadStoryScreen = ({ researcher_REPLACE_ME }) => {
   const researcher = {
     id: 1,
-    institution: 10
+    institution_id: 10
   } // TEMP, REPLACE with 'researcher_REPLACE_ME'
   const navigate = useNavigate()
   const msmApi = useMsmApi()
@@ -132,7 +132,7 @@ const UploadStoryScreen = ({ researcher_REPLACE_ME }) => {
           researcher.id
         ],
         institutions: [
-          researcher.institution
+          researcher.institution_id
         ],
         tags: Array.from(selectedTopics).map((tagName) => AllTopicsLookup[tagName]),
         content_body: "string"
