@@ -2,6 +2,7 @@ import { useState, useEffect} from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useNavigate, useLocation } from "react-router-dom"
+import { Button, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
 import SearchStack from "../components/SearchComponents/SearchStack"
 import Tags from "../components/layout/Tags"
@@ -9,30 +10,9 @@ import { Box } from "@mui/system";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 import AccountDetails from "../components/account/ProfileComponents/AccountDetails"
 import { CarouselTitle, Subtitle} from "../components/layout/StoryCards/CardStyles"
-import {
-  Autocomplete,
-  Button,
-  IconButton,
-  InputAdornment,
-  Popper,
-  TextField,
-  Tooltip,
-  Typography
-} from "@mui/material"
-
-const CustomerPopper = function (props) {
-  return (
-    <Popper
-      {...props}
-      placement="bottom-start"
-      sx={{
-        '.MuiAutocomplete-paper': { height: '250px', overflow: 'hidden' },
-      }}
-    />
-  );
-};
-
-
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+//user details are breaking now >:(
 const AccountScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
   const { auth, setAuth } = useAuth()
@@ -42,13 +22,7 @@ const AccountScreen = () => {
   const [type, setType] = useState(null)
   const [id, setID] = useState(null)
   const [interests, setInterests] = useState()
-  const [selectedTopics, setSelectedTopics] = useState(new Set())
-  const [selectedTopic, setSelectedTopic] = useState(null)
-  const [unSelect, setUnSelect] = useState('')
-  const [inputValue, setInputValue] = useState(null)
-  const [AllTopics, setAllTopics] = useState([])
-  const [AllTopicsLookup, setAllTopicsLookup] = useState([])
-
+  const [allTags, setAllTags] = useState({})
 
   const navigate = useNavigate();
   const regis = location.state?.from?.pathname || "/researcher/register";
@@ -75,20 +49,26 @@ const AccountScreen = () => {
         }
       }
     }
-    const addSelected = (selected) => {
-      setSelectedTopic(selected);
-      if (selected) {
-        setSelectedTopics(selectedTopics.add(selected))
-      }
-    }
-  
-    const handleEnterPress = (e) => {
-      if (e.key === 'Enter' && selectedTopic) {
-        addSelected(selectedTopic)
-      }
-    }
 
-  
+    const getTags = async () => {
+      try {
+        const resTags = await msmAPI.get(`tags/`)
+        setAllTags(resTags.data.items)
+        console.log(resTags.data.items)
+        setErrorMsg(null)
+      }
+      catch (err) {
+        if (!err?.response) {
+          setErrorMsg('No Server Response')
+        } else if (err.response?.status === 401) {
+          setErrorMsg('Forbidden, try login')
+        } else {
+          setErrorMsg(`err: ${err}`)
+          console.log(err)
+        }
+      }
+
+    }
     
     const getInterests = async () => {
       try {
@@ -112,9 +92,10 @@ const AccountScreen = () => {
       console.log("setting interests")
       try {
         const intParams = new URLSearchParams(); // backend requires form data, not json data
-        intParams.append('tag', "netflix"); // 
+        intParams.append('tag', "computer"); // 
         const resInterests = await msmAPI.patch(`tags/preference_tags?${intParams}`)
         setInterests(resInterests.data)
+        getInterests()
         console.log(interests, resInterests.data)
        // setErrorMsg(null)
       }
@@ -129,28 +110,9 @@ const AccountScreen = () => {
         }
       }
     }
-    useEffect(() => {
-      // no time to utilise the pagination sorry
-      msmApi.get('/tags/?page_size=1000')
-        .then((res) => {
-          setAllTopics(res.data.items.map((tag) => tag.name))
-          const tagMap = {}
-          res.data.items.forEach((tag) => {
-            tagMap[tag.name] = tag.id
-          })
-          setAllTopicsLookup(tagMap)
-        })
-        .catch((err) => console.error(err))
-    }, [])
+
    
-    useEffect(() => {
-      if (unSelect) {
-        selectedTopics.delete(unSelect)
-        setSelectedTopics(selectedTopics)
-        setUnSelect('')
-      }
-    }, [unSelect])
-  
+
     useEffect(() => {
       getUserDetails()
       console.log("ID IS")
@@ -193,7 +155,6 @@ return (
         <SearchStack tags={interests}></SearchStack>
         } 
         {interests && interests.length==0 && <Subtitle>No interests to show</Subtitle>}
-        <Box component="form" noValidate onSubmit={addInterests}>
           <Autocomplete 
                 disablePortal
                 id="add-interests"
@@ -203,8 +164,7 @@ return (
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => <TextField {...params} label="Add Interests" />}
                 />
-          <Button variant='contained' type='submit'>Add</Button>
-        </Box>
+          <Button variant='contained' onClick={addInterests}>Add</Button>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
         <CarouselTitle>
