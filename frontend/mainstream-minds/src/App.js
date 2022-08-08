@@ -50,7 +50,7 @@ function App() {
               <Route path='/search/:tags' element={<SearchScreen/>} />
               <Route path='/login' element={<LogInScreen />} />
               <Route path='/sign-up' element={<SignUpScreen />} />
-              <Route path='/researcher/:name' element={<ResearcherProfileScreen />} />
+              <Route path='/researcher/:id' element={<ResearcherProfileScreen />} />
               <Route path='/research-story/:id' element={<ResearchStoryScreen />} />
               <Route path='/unauthorized' element={<Unauthorized />} />
               <Route element={<ProtectedRoute allowedRole={[ROLES.user]} />}>

@@ -61,11 +61,11 @@ const DiscoverScreen = () => {
       {auth.accessToken && <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>}
       {auth.accessToken && <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>}
       <CardCarousel carouselTitle="Trending" extension="/trending"/>
-      
-      {(interests && interests.length) ? 
+
+      {(interests && interests.length) ?
         Object.entries(interests).map(([key,value]) => {
           return(
-            <CardCarousel 
+            <CardCarousel
               carouselTitle={value.name[0].toUpperCase()+value.name.substring(1)}
               extension={`?tags=${value.name}&page=0&page_size=10`}
               interestBtn={true}
@@ -73,7 +73,7 @@ const DiscoverScreen = () => {
           )
         })
         : console.log('no interests to show')}
-      
+
       <Typography variant='h5'>
         Temp routes
       </Typography>
@@ -94,7 +94,7 @@ const DiscoverScreen = () => {
         <ListItem component={Link} to={'/researcher/registration'} state={{ from: location }}>
           researcher registration
         </ListItem >
-        <ListItem component={Link} to={'/researcher/John'} state={{ from: location }}>
+        <ListItem component={Link} to={'/researcher/1'} state={{ from: location }}>
           researcher
         </ListItem >
         <ListItem component={Link} to={'/research-story/1'} state={{ from: location }}>
