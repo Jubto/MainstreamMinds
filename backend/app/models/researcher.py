@@ -1,16 +1,21 @@
-from typing import Optional, List
 from datetime import datetime
+from typing import Optional, List
 
 from pydantic import validator
 from sqlmodel import SQLModel, Field, Relationship
+
 from app.models.institution import Institution, InstitutionRead
 from app.utils.model import email_validator
 
+
+# ============================= Researcher LINK tables ================================
 
 class StoryAuthorLink(SQLModel, table=True):
     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
     researcher_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researcher.id")
 
+
+# ============================= Researcher model / table ==============================
 
 class ResearcherBase(SQLModel):
     bio: Optional[str] = Field()

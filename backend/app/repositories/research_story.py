@@ -1,24 +1,24 @@
 import math
-from typing import List, Optional
 import random
+from typing import List, Optional
 
 from fastapi import Depends
-from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
+from sqlmodel import select, Session
 
+from app.core.trending_cache import get_cache_len, get_trending
 from app.db import get_session
 from app.models.filter import ModelFilter
+from app.models.pagination import Page, Paginator
 from app.models.research_story import ResearchStory, ResearchStoryCreate, ResearchStoryUpdate, ResearchStoryShortRead, \
     StoryTagLink, StoryLikeLink
-from app.models.user import User
 from app.models.tag import Tag, UserTagLink
-from app.repositories.tag import get_tag_repository
-from app.repositories.researcher import get_researcher_repository
+from app.models.user import User
 from app.repositories.institution import get_institution_repository
-from app.utils.model import assign_members_from_dict
+from app.repositories.researcher import get_researcher_repository
+from app.repositories.tag import get_tag_repository
 from app.utils.exceptions import NonExistentEntry
-from app.models.pagination import Page, Paginator
-from app.core.trending_cache import get_cache_len, get_trending
+from app.utils.model import assign_members_from_dict
 
 
 class ResearchStoryRepository:
@@ -47,6 +47,7 @@ class ResearchStoryRepository:
                                             page_count=paginator.get_page_count(self.session, query))
 
     def get_recommended(self, current_user_id: int, n: int) -> List[ResearchStory]:
+        # get all stories with tagged with at least one of the user's preference tags
         all_recommended_stories = (self.session.query(ResearchStory)
                                    .join(StoryTagLink, ResearchStory.id == StoryTagLink.story_id)
                                    .join(Tag, Tag.id == StoryTagLink.tag_id)
@@ -107,7 +108,6 @@ class ResearchStoryRepository:
             story = self.session.exec(select(ResearchStory).where(ResearchStory.id == story_id)).one()
         except NoResultFound:
             raise NonExistentEntry('ResearchStory_id', story_id)
-        # should be using user_repository here, but it doesn't work for some reason
         current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
         if liked and current_user not in story.likes:
             story.likes.append(current_user)

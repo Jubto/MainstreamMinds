@@ -1,15 +1,15 @@
 from fastapi import Depends
-from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound
+from sqlmodel import select, Session
 
 from app.db import get_session
-from app.models.pagination import Page, Paginator
-from app.repositories.base import BaseRepository
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
-from app.models.researcher import Researcher
+from app.models.pagination import Page, Paginator
 from app.models.research_story import ResearchStoryShortRead, ResearchStory
-from app.utils.model import assign_members_from_dict
+from app.models.researcher import Researcher
+from app.repositories.base import BaseRepository
 from app.utils.exceptions import NonExistentEntry
+from app.utils.model import assign_members_from_dict
 
 
 class InstitutionRepository(BaseRepository[Institution, InstitutionUpdate, InstitutionCreate]):

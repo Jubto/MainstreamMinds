@@ -1,8 +1,8 @@
+import re
 from typing import Callable, Any, Type, List, TypeVar
 
 from fastapi import HTTPException
 from sqlmodel import SQLModel
-import re
 
 # https://uibakery.io/regex-library/email-regex-python
 email_regex_pattern: str = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"

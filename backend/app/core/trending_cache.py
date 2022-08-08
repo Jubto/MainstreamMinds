@@ -1,7 +1,7 @@
 from typing import List
 
-from app.settings import get_settings
 from app.db import redis_handle
+from app.settings import get_settings
 
 CACHE_SIZE = get_settings().CACHE_SIZE
 
@@ -26,9 +26,9 @@ def update_trending(story_id: int):
 
 # at worst: O(logN + top_n), where N is the number of stories in the db
 def get_trending(page: int, page_size: int) -> List[int]:
-    return list(map(lambda x: int(x.decode("utf-8")), redis_handle.zrange("counter", page*page_size, page_size, True)))
+    return list(
+        map(lambda x: int(x.decode("utf-8")), redis_handle.zrange("counter", page * page_size, page_size, True)))
 
 
 def get_cache_len() -> int:
-    # this is going to include stories that were trending at one point but now have counter value 0... which is fine ig
     return redis_handle.zcard("counter")

@@ -38,7 +38,6 @@ class CommentRepository:
 
     def set_comment_like(self, current_user_id: int, comment_id: int, liked: bool):
         comment = self.session.exec(select(Comment).where(Comment.id == comment_id)).one()
-        # should be using user_repository here, but it doesn't work for some reason
         current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
         if liked and current_user not in comment.user_likes:
             comment.user_likes.append(current_user)
@@ -49,7 +48,6 @@ class CommentRepository:
 
     def get_comment_like(self, current_user_id: int, comment_id: int) -> bool:
         comment = self.session.exec(select(Comment).where(Comment.id == comment_id)).one()
-        # should be using user_repository here, but it doesn't work for some reason
         current_user = self.session.exec(select(User).where(User.id == current_user_id)).one()
         return current_user in comment.user_likes
 

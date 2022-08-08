@@ -3,15 +3,15 @@ from typing import List, Optional
 from fastapi import Depends
 
 from app.models.filter import ModelFilter
+from app.models.pagination import Page, Paginator
 from app.models.research_story import (
     ResearchStory,
     ResearchStoryShortRead, ResearchStoryCreate, ResearchStoryUpdate,
 )
 from app.repositories.research_story import ResearchStoryRepository, get_researchstory_repository
+from app.repositories.researcher import ResearcherRepository, get_researcher_repository
 from app.utils.exceptions import AuthorDetailsMissing
 from app.utils.model import ModelFieldsMapping
-from app.models.pagination import Page, Paginator
-from app.repositories.researcher import ResearcherRepository, get_researcher_repository
 
 
 class ResearchStoryService:
@@ -26,8 +26,8 @@ class ResearchStoryService:
         self.researcher_repository = researcher_repository
         self.field_mappings = ModelFieldsMapping()
 
-    def get_all(self, paginator: Paginator, filter_by: Optional[ModelFilter[ResearchStory]]) -> Page[
-        ResearchStoryShortRead]:
+    def get_all(self, paginator: Paginator, filter_by: Optional[ModelFilter[ResearchStory]]) \
+            -> Page[ResearchStoryShortRead]:
         return self.repository.get_all(paginator, filter_by)
 
     def get(self, story_id: int) -> ResearchStory:
@@ -55,6 +55,7 @@ class ResearchStoryService:
     def delete(self, current_user_id: int, story_id: int) -> int:
         researcher = self.researcher_repository.get_researcher_by_user_id(current_user_id)
         story = self.repository.get(story_id)
+        # check researcher is listed as an author of the story to be deleted
         if not [author for author in story.researchers if author.id == researcher.id]:
             raise AuthorDetailsMissing
         self.repository.delete(story_id)

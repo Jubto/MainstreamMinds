@@ -3,11 +3,14 @@ from typing import List, Optional
 from sqlmodel import Relationship, SQLModel, Field
 
 
+# ============================= Institution LINK tables =============================
 
 class InstitutionStoryLink(SQLModel, table=True):
     institution_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="institution.id")
     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
 
+
+# ============================= Institution models / table =============================
 
 class InstitutionBase(SQLModel):
     name: str = Field(index=True)
