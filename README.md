@@ -58,3 +58,6 @@ docker-compose down
 To deploy the application without docker you are required to setup each component individually.
 To do this please go and and follow the deployment instructions for the `backend` and `frontend` in
 the files `backend/README.md` and `frontend/README.md` respectively.
+
+## Populating Data
+See `backend/README.md`

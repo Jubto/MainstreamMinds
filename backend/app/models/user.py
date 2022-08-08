@@ -5,9 +5,9 @@ from pydantic import BaseModel, validator
 from sqlalchemy import Column, Enum
 from sqlmodel import SQLModel, Field, Relationship
 
-from app.models.tag import Tag, UserTagLink
-from app.models.research_story import StoryLikeLink
 from app.models.comment import UserCommentLikesLink
+from app.models.research_story import StoryLikeLink
+from app.models.tag import Tag, UserTagLink
 from app.utils.model import email_validator, password_validator
 
 

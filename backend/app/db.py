@@ -1,7 +1,8 @@
 import re
-import redis
 
+import redis
 from sqlmodel import create_engine, SQLModel, Session
+
 from app.settings import get_settings
 
 db_conn = get_settings().DB_CONN

@@ -4,11 +4,11 @@ from fastapi import Depends
 
 from app.models.filter import ModelFilter
 from app.models.pagination import Paginator, Page
-from app.models.user import Role
+from app.models.research_story import ResearchStoryShortRead
 from app.models.researcher import ResearcherCreate, ResearcherUpdate, Researcher, ResearcherRead
+from app.models.user import Role
 from app.repositories.researcher import ResearcherRepository, get_researcher_repository
 from app.repositories.user import UserRepository, get_user_repository
-from app.models.research_story import ResearchStoryShortRead
 
 
 class ResearcherService:

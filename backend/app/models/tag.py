@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from sqlmodel import SQLModel, Field, Relationship
+
 from app.models.research_story import StoryTagLink
 
 
