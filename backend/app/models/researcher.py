@@ -3,7 +3,7 @@ from datetime import datetime
 
 from pydantic import validator
 from sqlmodel import SQLModel, Field, Relationship
-from app.models.institution import Institution, InstitutionResearcherLink
+from app.models.institution import Institution, InstitutionResearcherLink, InstitutionRead
 from app.utils.model import email_validator
 
 
@@ -54,3 +54,4 @@ class ResearcherRead(ResearcherBase):
     id: int
     user_id: int
     user: Optional["UserRead"]
+    institution: Optional["InstitutionRead"]
