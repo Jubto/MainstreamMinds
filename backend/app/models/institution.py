@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-from sqlalchemy import Column, Enum
 from sqlmodel import Relationship, SQLModel, Field
 
 
@@ -23,7 +22,6 @@ class InstitutionBase(SQLModel):
 
 class Institution(InstitutionBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    # Institution contact - User object?
 
     researchers: List["Researcher"] = Relationship(back_populates="institution", link_model=InstitutionResearcherLink)
     stories: List["ResearchStory"] = Relationship(back_populates="institutions", link_model=InstitutionStoryLink)
@@ -39,5 +37,3 @@ class InstitutionUpdate(InstitutionBase):
 
 class InstitutionCreate(InstitutionBase):
     pass
-
-

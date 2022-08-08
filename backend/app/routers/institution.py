@@ -1,7 +1,6 @@
-from app.models.research_story import ResearchStory
 from fastapi import APIRouter, Depends, Path
 
-from app.core.security import get_request_user_id, is_consumer, is_researcher
+from app.core.security import is_researcher
 from app.models.institution import InstitutionRead, InstitutionCreate, InstitutionUpdate
 from app.models.pagination import Page, Paginator, get_paginator
 from app.services.institution import InstitutionService
@@ -12,9 +11,9 @@ router = APIRouter(tags=['institution'])
 
 
 @router.get(
-    "/", 
+    "/",
     description='Returns all institutions in the database',
-    response_model=Page[InstitutionRead], 
+    response_model=Page[InstitutionRead],
 )
 async def get_institutions(
         paginator: Paginator = Depends(get_paginator),
@@ -24,7 +23,7 @@ async def get_institutions(
 
 
 @router.get(
-    "/{institution_id}", 
+    "/{institution_id}",
     description='Returns details for an institution given its id',
     response_model=InstitutionRead,
 )
@@ -36,10 +35,10 @@ async def get_institution_by_id(
 
 
 @router.patch(
-    "/{institution_id}", 
+    "/{institution_id}",
     description='Updates the details of an institution given its id and updated information',
     response_model=int,
-    dependencies=[Depends(is_researcher)] 
+    dependencies=[Depends(is_researcher)]
 )
 async def update_institution(
         institution: InstitutionUpdate,
@@ -50,7 +49,7 @@ async def update_institution(
 
 
 @router.post(
-    "/", 
+    "/",
     description='Creates an institution given the appropriate information',
     response_model=int,
     dependencies=[Depends(is_researcher)]
@@ -63,7 +62,7 @@ async def create_institution(
 
 
 @router.delete(
-    "/{institution_id}", 
+    "/{institution_id}",
     description='Deletes an institution given its id',
     dependencies=[Depends(is_researcher)]
 )
@@ -72,7 +71,7 @@ async def delete_institution(
         institution_service: InstitutionService = Depends(InstitutionService),
 ):
     return institution_service.delete_institution(institution_id)
-    
+
 
 @router.get(
     "/{institution_id}/researchers",
