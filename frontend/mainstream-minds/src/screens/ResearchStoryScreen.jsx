@@ -73,6 +73,7 @@ const ResearchStoryScreen = () => {
     msmAPI.get(`/research_stories/${id}`)
       .then((res) => {
         setStory(res.data)
+        console.log(res.data)
         setResearcher(res.data.researchers[0])
         const researcherTmp = res.data.researchers[0]
         setBgColor(getColourForString(researcherTmp.user.first_name + researcherTmp.user.last_name))

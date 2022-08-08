@@ -8,21 +8,33 @@ const Tags = (props) => {
   const navigate = useNavigate()
   const tags = props.tags
   const tagSize = props.tagSize || ""
-  const handleClick = (name) => {
-    navigate(`/search?tags=${name}`)
-  };
+  const disable = props.disable || false
+
+  const handleClick = (tagName) => {
+    if (props.setUnSelect) {
+      props.setUnSelect(tagName)
+    }
+    else if (!disable) {
+      navigate(`/search?tags=${tagName}`)
+    }
+  }
 
   return (
-    <Stack direction="row" spacing={1} sx={{padding: '12px 0', overflow: 'hidden'}}>
-      {tags && tags.length!==0 && tags.map((value) => (
-          <Chip 
-            key={value.name}
-            label={value.name}
-            onClick={() => handleClick(value.name)} 
-            sx={{ bgcolor: getColourForString(value.name), color: 'white'}}
+    <Stack direction="row" spacing={1} sx={{ padding: '12px 0', overflow: 'hidden' }}>
+      {tags && tags.length !== 0 && tags.map((tag) => {
+        const tagName = tag?.name ? tag.name : tag
+        return (
+          <Chip
+            key={tagName}
+            label={tagName}
+            onClick={() => handleClick(tagName)}
+            sx={{ bgcolor: getColourForString(tagName), color: 'white' }}
             size={tagSize}
           />
-        ))
+        )
+      }
+
+      )
       }
     </Stack>
   );

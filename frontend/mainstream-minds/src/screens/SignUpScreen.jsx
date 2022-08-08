@@ -107,7 +107,7 @@ const SignUpScreen = () => {
             name="firstName"
             label="First Name"
             placeholder="First Name"
-            sx={{width: '100%'}}
+            fullWidth
             onChange={() => {
               formErrors.firstName && setFormErrors(prevState => {
                 return {...prevState, firstName: false}
@@ -121,7 +121,8 @@ const SignUpScreen = () => {
             name="lastName"
             label="Last Name"
             placeholder="Last Name"
-            sx={{mt: 3, width: '100%'}}
+            fullWidth
+            sx={{mt: 3}}
             onChange={() => {
               formErrors.lastName && setFormErrors(prevState => {
                 return {...prevState, lastName: false}
@@ -135,7 +136,8 @@ const SignUpScreen = () => {
             name="email"
             label="Email"
             placeholder="Email"
-            sx={{mt: 3, width: '100%'}}
+            fullWidth
+            sx={{mt: 3}}
             onChange={() => {
               formErrors.email && setFormErrors(prevState => {
                 return {...prevState, email: false}
@@ -150,7 +152,8 @@ const SignUpScreen = () => {
             name="password"
             label="Password"
             placeholder="Password"
-            sx={{mt: 3, width: '100%'}}
+            fullWidth
+            sx={{mt: 3}}
             error={formErrors.password}
             onChange={() => {
               formErrors.password && setFormErrors(prevState => {
