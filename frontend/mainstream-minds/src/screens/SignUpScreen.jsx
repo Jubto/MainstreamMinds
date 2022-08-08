@@ -1,6 +1,7 @@
 import {useState} from "react";
 import useAuth from "../hooks/useAuth";
 import useGlobal from "../hooks/useGlobal";
+import useLocalStorage from "../hooks/useLocalStorage";
 import msmLogin from "../api/msmLogin";
 import msmAPI from "../api/msmAPI";
 import {useNavigate, useLocation, Link} from 'react-router-dom';
@@ -11,7 +12,7 @@ import LogInLogoPanel from "../components/account/LogInLogoPanel";
 const SignUpScreen = () => {
   const {setAuth} = useAuth();
   const context = useGlobal();
-  const [, setAccount] = context.account;
+  const [, setAuthStored] = useLocalStorage('auth', '')
   const [errorMsg, setErrorMsg] = useState(null)
 
   const navigate = useNavigate();
@@ -79,6 +80,7 @@ const SignUpScreen = () => {
         const resLogin = await msmLogin.post('/users/login', formParams);
         const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
         setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
+        setAuthStored({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role})
         navigate(from, {replace: true});
       } catch (err) {
         if (err.response?.status === 409) {

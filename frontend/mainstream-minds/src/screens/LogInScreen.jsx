@@ -1,6 +1,7 @@
 import {useState} from "react";
 import useAuth from "../hooks/useAuth";
 import useGlobal from "../hooks/useGlobal";
+import useLocalStorage from "../hooks/useLocalStorage";
 import msmLogin from "../api/msmLogin";
 import {useNavigate, useLocation, Link} from 'react-router-dom';
 import {Box, Button, Grid, TextField, Typography} from "@mui/material";
@@ -9,7 +10,7 @@ import LogInLogoPanel from "../components/account/LogInLogoPanel";
 const LogInScreen = () => {
   const {setAuth} = useAuth();
   const context = useGlobal();
-  const [, setAccount] = context.account;
+  const [, setAuthStored] = useLocalStorage('auth', '')
   const [errorMsg, setErrorMsg] = useState(null)
 
   const [formErrors, setFormErrors] = useState({
@@ -52,6 +53,7 @@ const LogInScreen = () => {
         const resLogin = await msmLogin.post('/users/login', formParams);
         const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
         setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
+        setAuthStored({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role})
         if (location.state?.redirect) {
           navigate(from, { state: { redirect: location.state.redirect } })
         }
