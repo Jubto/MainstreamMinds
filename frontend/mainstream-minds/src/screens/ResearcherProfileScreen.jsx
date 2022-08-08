@@ -73,7 +73,7 @@ const ResearcherProfileScreen = () => {
 
 
       <Box sx={{display: 'flex', alignItems: 'center'}}>
-        <Avatar sx={{bgcolor: bgColour, width: 256, height: 256, mr: 2, marginRight: '48px'}}/>
+        <Avatar sx={{bgcolor: bgColour, width: 220, height: 220, mr: 2, marginRight: '48px'}}/>
 
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
           <Typography variant='h3'>
@@ -88,7 +88,7 @@ const ResearcherProfileScreen = () => {
               <Typography variant='subtitle1' sx={{mt: 2}}>
                 {researcher.institution_position}
               </Typography>
-              <Typography variant='subtitle2' sx={{mt: 2}}>
+              <Typography variant='subtitle1' sx={{mt: 2}}>
                 {researcher.institution_email}
               </Typography>
             </>
@@ -100,9 +100,9 @@ const ResearcherProfileScreen = () => {
 
       </Box>
 
-      <Typography variant='h4' sx={{mt: 5, fontWeight: 500, mb: 2}}>
+      <h2 style={{marginTop: '48px'}}>
         Research Stories
-      </Typography>
+      </h2>
 
       {storyCards.length ?
         <Grid container spacing={3}>
