@@ -22,6 +22,7 @@ const AccountScreen = () => {
   const [type, setType] = useState(null)
   const [id, setID] = useState(null)
   const [interests, setInterests] = useState()
+  const [allTags, setAllTags] = useState({})
 
   const navigate = useNavigate();
   const regis = location.state?.from?.pathname || "/researcher/register";
@@ -47,6 +48,26 @@ const AccountScreen = () => {
           setErrorMsg('Could not reach backend server')
         }
       }
+    }
+
+    const getTags = async () => {
+      try {
+        const resTags = await msmAPI.get(`tags/`)
+        setAllTags(resTags.data.items)
+        console.log(resTags.data.items)
+        setErrorMsg(null)
+      }
+      catch (err) {
+        if (!err?.response) {
+          setErrorMsg('No Server Response')
+        } else if (err.response?.status === 401) {
+          setErrorMsg('Forbidden, try login')
+        } else {
+          setErrorMsg(`err: ${err}`)
+          console.log(err)
+        }
+      }
+
     }
     
     const getInterests = async () => {
@@ -74,8 +95,9 @@ const AccountScreen = () => {
         intParams.append('tag', "netflix"); // 
         const resInterests = await msmAPI.patch(`tags/preference_tags?${intParams}`)
         setInterests(resInterests.data)
+        getInterests()
         console.log(interests, resInterests.data)
-        setErrorMsg(null)
+       // setErrorMsg(null)
       }
       catch (err) {
         if (!err?.response) {
@@ -95,6 +117,7 @@ const AccountScreen = () => {
       getUserDetails()
       console.log("ID IS")
       console.log(id)
+      getTags()
       getInterests() //when this works need to pass interests in return
       console.log("interests are")
       console.log(interests)
@@ -132,14 +155,16 @@ return (
         <SearchStack tags={interests}></SearchStack>
         } 
         {interests && interests.length==0 && <Subtitle>No interests to show</Subtitle>}
-        <Autocomplete
-              disablePortal
-              id="add-interests"
-              options={interests}
-              sx={{ width: 300 , m: 3}}
-              renderInput={(params) => <TextField {...params} label="Add Interests" />}
-               />
-        <Button onClick={addInterests}>Add</Button>
+          <Autocomplete 
+                disablePortal
+                id="add-interests"
+                multiple
+                options={allTags}
+                sx={{ width: 300 , m: 3}}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => <TextField {...params} label="Add Interests" />}
+                />
+          <Button variant='contained' onClick={addInterests}>Add</Button>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
         <CarouselTitle>
