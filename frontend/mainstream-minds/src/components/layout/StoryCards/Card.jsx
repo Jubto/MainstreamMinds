@@ -3,9 +3,10 @@ import useMsmApi from "../../../hooks/useMsmApi";
 import CardMedia from '@mui/material/CardMedia';
 import { Typography } from '@mui/material/';
 import { CardTitle, StyledCard, CardContent } from "./CardStyles";
+import { FlexBox } from "../../styles/util.styled";
 import Tags from "../Tags"
 import BookmarkIcon from '@mui/icons-material/Bookmark';
-
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 const Card = (props) => {
 	const msmAPI = useMsmApi() // hook which applies JWT to api calls
@@ -16,9 +17,11 @@ const Card = (props) => {
 	// Pass story info in and render
 	const title = props.title
 	const tags = props.tags
-	const researcherId = props.researcher
+	const researcher = props.researcher
 	const storyId = props.storyId
 	const thumbnail = props.thumbnail
+	console.log(`I am card ${title}`)
+	console.log(researcher)
 
 	const getLiked = async () => {
 		try {
@@ -61,9 +64,12 @@ const Card = (props) => {
 				<CardTitle>
 					{title}
 				</CardTitle>
+				<FlexBox gap='0.5rem'>
 				<Typography variant="body2" color="text.secondary">
-					researcher
+					{researcher?.user.first_name} {researcher?.user.last_name}
 				</Typography>
+				<TaskAltIcon color='primary' fontSize='small' />
+				</FlexBox>
 			</CardContent>
 			<div>
 				<Tags tags={tags} tagSize="small"/>

@@ -26,7 +26,7 @@ const ScrollStories = (props) => {
               key={idx} 
               title={value.title} 
               tags={value.tags}
-              researcherId={value.researchers[0]}
+              researcher={value.researchers[0]}
               storyId={value.id}
               showLikes={props.showLikes}
               thumbnail={value.thumbnail}
