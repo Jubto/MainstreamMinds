@@ -1,5 +1,4 @@
 import { useState, useEffect} from "react"
-
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useNavigate, useLocation } from "react-router-dom"
@@ -11,6 +10,7 @@ import { Box } from "@mui/system";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 import AccountDetails from "../components/account/ProfileComponents/AccountDetails"
 import { CarouselTitle } from "../components/layout/StoryCards/CardStyles"
+
 //user details are breaking now >:(
 const AccountScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
@@ -20,12 +20,13 @@ const AccountScreen = () => {
   const [username, setUsername] = useState(null)
   const [type, setType] = useState(null)
   const [id, setID] = useState(null)
-  const [interests, setInterests] = useState({})
+  const [interests, setInterests] = useState()
 
   const navigate = useNavigate();
   const regis = location.state?.from?.pathname || "/researcher/register";
   //console.log(regis)
 
+  
     const getUserDetails = async () => {
       try {
         const resUser = await msmAPI.get(`/users/me`)
@@ -60,11 +61,34 @@ const AccountScreen = () => {
           setErrorMsg('Forbidden, try login')
         } else {
           setErrorMsg(`err: ${err}`)
-          console.log("ERROR IS:")
           console.log(err)
         }
       }
     }
+    const addInterests = async () => {
+      console.log("setting interests")
+      try {
+        const intParams = new URLSearchParams(); // backend requires form data, not json data
+        intParams.append('tag', "netflix"); // 
+        const resInterests = await msmAPI.patch(`tags/preference_tags?${intParams}`)
+        setInterests(resInterests.data)
+        console.log(interests, resInterests.data)
+        setErrorMsg(null)
+      }
+      catch (err) {
+        if (!err?.response) {
+          setErrorMsg('No Server Response')
+        } else if (err.response?.status === 401) {
+          setErrorMsg('Forbidden, try login')
+        } else {
+          setErrorMsg(`err: ${err}`)
+          console.log(err)
+        }
+      }
+    }
+
+   
+
     useEffect(() => {
       getUserDetails()
       console.log("ID IS")
@@ -77,7 +101,8 @@ const AccountScreen = () => {
 
   const showTags = [ //replace w getting interests
     {name: "science"},
-    {name: "psychology"}
+    {name: "psychology"},
+    {name: "aaahh"}
   ]
 
 //maybe closer
@@ -102,7 +127,11 @@ return (
         <CarouselTitle>
           My Interests
         </CarouselTitle>
-        <SearchStack tags={showTags} sx={{ml:8}}/>
+        {interests && interests.length!=0 && 
+        <SearchStack tags={interests}></SearchStack>
+        } 
+        {interests && interests.length==0 && <Typography>No tags</Typography>}
+        <Button onClick={addInterests}>Add</Button>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
         <CarouselTitle>
@@ -130,5 +159,7 @@ return (
 
 //need to have a fn or something to determine if researcher or regular user to decide what screen to render?
 //I'm sure there's a non code-reusey way to do this?
+
+//something to do with first render 
 
 export default AccountScreen
