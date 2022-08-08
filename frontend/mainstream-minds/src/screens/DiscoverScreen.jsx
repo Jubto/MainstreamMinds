@@ -91,8 +91,8 @@ const DiscoverScreen = () => {
     <Page>
       {auth.accessToken ? (
           <>
-            <CardCarousel carouselTitle="Liked Stories" extension="/liked"/>
-            <CardCarousel carouselTitle="Recommended" extension="/recommendations"/>
+            <CardCarousel carouselTitle="Liked Stories" extension="/liked" emptyText="Try liking a story!"/>
+            <CardCarousel carouselTitle="Recommended" extension="/recommendations" emptyText="Add some interests so we can recommend stories you might like."/>
           </>
         ) :
         <DiscoverBanner/>
