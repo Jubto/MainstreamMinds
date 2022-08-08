@@ -2,4 +2,3 @@ export const BASE_URL = process.env.REACT_APP_BACKEND_URL ? process.env.REACT_AP
 export const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
 ];
-
