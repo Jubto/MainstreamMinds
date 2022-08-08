@@ -90,6 +90,9 @@ return (
       {type == 1 && 
         <Box borderBottom="1px solid #ccc" mb={4}>
         <CardCarousel carouselTitle="My Stories" extension="/recommendations"/>
+        <Button variant='contained' component={Link} to={'/upload-story'} state={{ from: location }} sx={{ml:7, mb:2}}>
+            Post a New Story
+          </Button>
       </Box>
       }
       <Box borderBottom="1px solid #ccc">
