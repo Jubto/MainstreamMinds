@@ -25,7 +25,7 @@ const AccountDetails = (props) => {
   const [errorMsg, setErrorMsg] = useState(null)
   const [username, setUsername] = useState(null)
   const [email, setEmail] = useState(null)
-  const [id, setID] = useState(null)
+  const [role, setRole] = useState(null)
   const tags = props.tags;
   const UserIcon = <PersonIcon/>
   const PWIcon = <PasswordIcon/>
@@ -38,7 +38,7 @@ const AccountDetails = (props) => {
       const resUser = await msmAPI.get(`/users/me`)
       setUsername(resUser.data.first_name)
       setEmail(resUser.data.email)
-      setID(resUser.data.id)
+      setRole(resUser.data.role)
       console.log(resUser.data)
       setErrorMsg(null)
     }
@@ -60,7 +60,7 @@ const AccountDetails = (props) => {
   //I have no clue why I can't change these icons without it crashing????
  
   return (
-    <Box> {id == 2 && 
+    <Box> {role == 2 && 
 
         <Grid item xs={12} md={6}>
             <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">

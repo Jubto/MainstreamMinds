@@ -62,7 +62,7 @@ const ResearcherRegScreen = () => {
         try {
           const body = {
             bio: enteredBio,
-            institution_id: 0 //do this properly
+            institution_id: 1 //do this properly
           }
           const resReg = await msmAPI.post('/researchers', body);
           // Registration success - login with details
