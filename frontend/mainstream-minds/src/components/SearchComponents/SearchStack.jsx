@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import SearchChip from './SearchChip';
-
+import { Typography } from '@mui/material';
 const SearchStack = (props) => {
   const tags = props.tags;
   const selected = [] // todo: persist selected tag style
