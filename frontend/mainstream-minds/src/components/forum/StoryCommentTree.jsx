@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { timeSince } from "../../utils/helpers";
 import CommentField from "./CommentField";
-import { randomColour } from '../styles/colours';
+import { getColourForString } from '../styles/colours';
 import {
   CommentContainer,
   CommentButton,
@@ -30,7 +30,7 @@ const StoryComment = ({
   const [isParent, setIsParent] = useState(false)
   const [writeReply, setWriteReply] = useState(false)
   const [hasLiked, setHasLiked] = useState(false)
-  const [avatarBgColor, setAvatarBcColor] = useState('')
+  const [bgColor, setBgColor] = useState('')
   const [replyTo, setReplyTo] = useState('')
   const [replyID, setReplyID] = useState('')
 
@@ -60,7 +60,7 @@ const StoryComment = ({
   }
 
   useEffect(() => {
-    setAvatarBcColor(randomColour())
+    setBgColor(getColourForString(comment.user.first_name + comment.user.last_name))
     setIsParent(comment.parent_id === 0)
     setReplyTo(comment.parent_id ? `@${comment.user.first_name} ` : '')
     setReplyID(comment.parent_id ? comment.parent_id : comment.id)
@@ -75,7 +75,7 @@ const StoryComment = ({
     <CommentContainer direction='column' >
       <CommentHeader>
         <Avatar sx={{
-          bgcolor: avatarBgColor,
+          bgcolor: bgColor,
           width: isParent ? 'inital' : 34,
           height: isParent ? 'inital' : 34
         }}
