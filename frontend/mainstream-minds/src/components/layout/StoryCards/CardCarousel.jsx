@@ -51,7 +51,7 @@ const CardCarousel = (props) => {
           <AddInterestBtn />
         </IconButton>}
       </CarouselTitle>
-      <ScrollStories story={story}/>
+      <ScrollStories story={story} emptyText={props.emptyText}/>
     </CarouselContainer>
   );
 }
