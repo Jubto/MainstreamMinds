@@ -111,6 +111,7 @@ const DiscoverScreen = () => {
         : console.log('no interests to show')}
       <CardCarousel carouselTitle="Science" extension="?tags=science"/>
       <CardCarousel carouselTitle="Physics" extension="?tags=physics"/>
+      <CardCarousel carouselTitle="Engineering" extension="?tags=engineering"/>
       {/* <Typography variant='h5'>
         Temp routes
       </Typography>
