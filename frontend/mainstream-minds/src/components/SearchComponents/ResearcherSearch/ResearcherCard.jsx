@@ -41,7 +41,7 @@ const ResearcherCard = (props) => {
   })
 
   return(
-    <ResearcherCardContainer>
+    <ResearcherCardContainer onClick={toProfile}>
       {/* <p>{props.value}</p> */}
       <Avatar sx={{ bgcolor: bgColour, width: 58, height: 58, mr: 1, marginRight: '16px' }} />
       <ResearcherDetails>
@@ -54,7 +54,6 @@ const ResearcherCard = (props) => {
         {institutionPosition && <Typography variant="body2">
           {institutionPosition}
         </Typography>}
-        <Button onClick={toProfile}>Go</Button>
       </ResearcherDetails>
     </ResearcherCardContainer>
 
