@@ -11,12 +11,13 @@ const ResearcherCarousel = (props) => {
   const [errorMsg, setErrorMsg] = useState(null)
   const componentRef = useRef(null)
   const { width, height } = useResize(componentRef)
+  const extension = props.extension
 
   const [researchers, setResearchers] = useState({})
 
   const getResearchers = async () => {
     try {
-      const resResearcher = await msmAPI.get(`/researchers`)
+      const resResearcher = await msmAPI.get(`/researchers${extension}`)
       setResearchers(resResearcher.data)
       console.log(resResearcher, researchers)
       //console.log("researchers",resResearcher.data.items, typeof(researchers))
@@ -33,13 +34,11 @@ const ResearcherCarousel = (props) => {
 
   useEffect(() => {
     getResearchers()
-  }, [])
+  }, [props.extension])
 
   const scroll = (scrollOffset) => {
     componentRef.current.scrollLeft += scrollOffset;
   };
-
-
 
   return(
     <ResearcherContainer>
@@ -55,7 +54,7 @@ const ResearcherCarousel = (props) => {
             console.log(key,value, idx)
             return (<ResearcherCard key={key} value={value}/>)
           })
-            : <p>Nothin</p>
+            : <p>No researchers to show</p>
           }
         </StyledResearcherCarousel>
 

@@ -3,26 +3,36 @@ const searchTags = [
     name: "science"
   },
   {
-    name: "psychology"
+    name: "physics"
   },
   {
-    name: "agriculture"
+    name: "engineering"
   },
   {
-    name: "computers"
-  },
-  {
-    name: "global issues"
-  },
-  {
-    name: "law"
-  },
-  {
-    name: "journalism"
+    name: "history"
   },
   {
     name: "robotics"
   },
+  {
+    name: "chemistry"
+  },
+  {
+    name: "lawyer"
+  },
+  {
+    name: "legal"
+  },
+  {
+    name: "research"
+  },
+  {
+    name: "psychology"
+  },
+  {
+    name: "medicine"
+  },
+  
 ]
 
 export default searchTags;
