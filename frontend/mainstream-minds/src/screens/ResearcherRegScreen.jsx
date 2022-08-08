@@ -57,15 +57,25 @@ const ResearcherRegScreen = () => {
       //Disregarding supervisors name for now
       const enteredBio = data.get('bio');
 
+      /* {
+  "bio": "string",
+  "institution_id": 0,
+  "institution_email": "string",
+  "institution_position": "string"
+}*/
       if ('no errors') {
         setErrorMsg(null)
         try {
           const body = {
             bio: enteredBio,
-            institution_id: 1 //do this properly
+            institution_id: 1, //do this properly
+            institution_email: enteredEmail,
+            institution_position: enteredPos
+
           }
           const resReg = await msmAPI.post('/researchers', body);
           // Registration success - login with details
+          const resID = resReg.data.researcher_id
           const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resReg.data.access_token}`}});
           setAuth({accessToken: resReg.data.access_token, role: currentUserProfile.data.role});
           navigate(from, {replace: true});

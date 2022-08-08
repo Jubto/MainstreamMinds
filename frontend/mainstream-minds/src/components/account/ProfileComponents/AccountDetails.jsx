@@ -31,6 +31,9 @@ const AccountDetails = (props) => {
   const PWIcon = <PasswordIcon/>
   const EmailIcon = <AlternateEmailIcon/>
   const DelIcon = <RemoveCircleOutlineIcon/>
+  const InstIcon = <SchoolIcon/>
+  const PosIcon = <WorkOutlineIcon/>
+  const DowngradeIcon = <SettingsBackupRestoreIcon/>
  
 
   const getUserDetails = async () => {
@@ -67,10 +70,10 @@ const AccountDetails = (props) => {
                 Researcher Settings
             </Typography>
                 <List >
-                    <DetailItem label="Institution" info="University" icon={EmailIcon} route={UpdateName}/>
+                    <DetailItem label="Institution" info="University" icon={InstIcon} route={UpdateName}/>
                     <DetailItem label="Institution Email" info={email} icon={EmailIcon} route={UpdateEmail}/>
-                    <DetailItem label="Position" info="Position" icon={EmailIcon} route={UpdatePassword}/>
-                    <DetailItem label="Downgrade Account" info='' icon={EmailIcon} route={DeleteAccount}/>
+                    <DetailItem label="Position" info="Position" icon={PosIcon} route={UpdatePassword}/>
+                    <DetailItem label="Downgrade Account" info='' icon={DowngradeIcon} route={DeleteAccount}/>
                 </List>
             
         </Grid>
