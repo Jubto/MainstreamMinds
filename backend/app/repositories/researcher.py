@@ -36,7 +36,7 @@ class ResearcherRepository:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
     def get_all(self, filter_by: Optional[ModelFilter[Researcher]], paginator: Paginator) -> Page[ResearcherRead]:
-        query = select(Researcher).join(Researcher.user).join(User.preference_tags, isouter=True).distinct()
+        query = select(Researcher).join(Researcher.user).join(User.preference_tags, isouter=True).join(Researcher.institution, isouter=True).distinct()
         if filter_by:
             query = filter_by.apply_filter_to_query(query)
         return Page[ResearcherRead](items=self.session.exec(paginator.paginate(query)).all(),
