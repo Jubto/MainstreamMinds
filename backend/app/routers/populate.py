@@ -16,6 +16,12 @@ from app.services.user import UserService
 
 router = APIRouter(tags=['populate'])
 base_path = pathlib.Path.cwd() / "app/data"
+acceptable_tags = ["science", "psycology", "statistics", "agriculture", "computer", 
+                   "global", "history", "chemistry", "geography", "research", "lawyer", 
+                   "journalism", "robotics" "medicine", "engineering", "physiotherapy", 
+                   "philosophy", "physics", "quantum", "gene", "genome", "disease", 
+                   "legal", "fertility", "research", "university"]
+
 @router.post(
     "/", 
     description='populates database',
@@ -30,7 +36,8 @@ async def populate_database(
         user_service: UserService = Depends(UserService),
 ):
     populate_universities(institution_service)
-    populate_researchers(user_service, researcher_service)
+    populate_tags(tag_service)
+    populate_researchers(user_service, researcher_service, tag_service)
     populate_research_stories(n, story_service, tag_service, researcher_service)
     
     return f'populated database'
@@ -51,9 +58,19 @@ def populate_universities(
                 print(f"Institution created with id: {inst_id}")
 
 
+def populate_tags(tag_service):
+    for tag_name in acceptable_tags:
+        tag = tag_service.get_tag_by_name(tag_name)
+        if not tag:
+            tag_obj = TagCreate(name = tag_name)
+            tag_service.create_tag(tag_obj)
+            print(f"Tag created with name: {tag_name}")
+            
+
 def populate_researchers(
         user_service: UserService = Depends(UserService),
         researcher_service: ResearcherService = Depends(ResearcherService),
+        tag_service: TagService = Depends(TagService),
     ):
         file_path = base_path / "user_researcher.json"
         with open(file_path) as json_file:
@@ -73,6 +90,7 @@ def populate_researchers(
                                                    institution_id = inst)
 
                 researcher_service.upgrade(researcher_info, new_user.id)
+                add_researcher_preference_tags(tag_service, new_user.id)
 
 
 def populate_research_stories(
@@ -107,6 +125,15 @@ def populate_research_stories(
 
         return f'added {number_of_stories} new stories'
 
+def add_researcher_preference_tags(tag_service, current_user_id):
+    """
+    Assigns 1-3 preference tags for each researcher.
+    """
+    num_tags = random.randint(1,3)
+    for _ in range(num_tags):
+        index = random.randint(0,len(acceptable_tags)-1)
+        tag_service.add_preference_tag(current_user_id, acceptable_tags[index])
+
 
 def generate_tags(tag_service, tag_list):
     """
@@ -117,7 +144,6 @@ def generate_tags(tag_service, tag_list):
     tag_id_list = []
     for tag_name in tag_list:
         tag = tag_service.get_tag_by_name(tag_name)
-        print("tag collected:", tag)
         if not tag:
             tag_obj = TagCreate(name = tag_name)
             tag_info = tag_service.create_tag(tag_obj)
