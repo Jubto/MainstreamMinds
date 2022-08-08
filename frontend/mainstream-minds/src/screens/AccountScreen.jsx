@@ -96,7 +96,7 @@ return (
       </Box>
       }
       <Box borderBottom="1px solid #ccc">
-        <CardCarousel carouselTitle="My Watch List" extension="/recommendations"/>
+        <CardCarousel carouselTitle="My Liked List" extension="/liked"/>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3}>
         <CarouselTitle>
