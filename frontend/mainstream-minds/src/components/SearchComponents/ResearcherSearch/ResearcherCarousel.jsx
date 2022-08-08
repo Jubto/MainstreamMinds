@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import useMsmApi from "../../../hooks/useMsmApi"
 import { CarouselContainer, CarouselTitle} from "../../layout/StoryCards/CardStyles"
 import ResearcherCard from "./ResearcherCard"
-import { ResearcherCarouselTitle, ResearcherContainer } from "./ResearcherStyles"
+import { ResearcherCarousel as StyledResearcherCarousel, ResearcherContainer } from "./ResearcherStyles"
 
 
 const ResearcherCarousel = (props) => {
@@ -14,7 +14,8 @@ const ResearcherCarousel = (props) => {
   const getResearchers = async () => {
     try {
       const resResearcher = await msmAPI.get(`/researchers`)
-      setResearchers(resResearcher.data.items)
+      setResearchers(resResearcher.data)
+      console.log(resResearcher, researchers)
       //console.log("researchers",resResearcher.data.items, typeof(researchers))
       setErrorMsg(null)
     }
@@ -35,15 +36,14 @@ const ResearcherCarousel = (props) => {
   return(
     <ResearcherContainer>
       <h2>Researchers</h2>
-      <CarouselContainer>
-        {/* {(researchers && researchers.length!==0) ? Object.entries(researchers).map(([key,value]) => {
-          <ResearcherCard key={key} value={value}/>
-          console.
-          //if (key == "")
+      <StyledResearcherCarousel>
+        {(researchers.items && researchers.items.length!==0) ? Object.entries(researchers.items).map(([key,value], idx) => {
+          console.log(key,value, idx)
+          return (<ResearcherCard key={key} value={value}/>)
         })
           : <p>Nothin</p>
-        } */}
-      </CarouselContainer>
+        }
+      </StyledResearcherCarousel>
     </ResearcherContainer>
   )
 }

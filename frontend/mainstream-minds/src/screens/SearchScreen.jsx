@@ -88,7 +88,7 @@ const SearchScreen = () => {
                       key={idx} 
                       title={value.title} 
                       tags={value.tags}
-                      researcherId={value.researchers[0]}
+                      researcher={value.researchers[0]}
                       storyId={value.id}
                       showLikes={!!auth.accessToken}
                       thumbnail={value.thumbnail}
