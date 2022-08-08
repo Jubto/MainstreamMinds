@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Optional, List
 
 from app.core.security import is_researcher, get_request_user_id, is_consumer
@@ -6,7 +5,7 @@ from app.models.filter import FieldFilter, FilterOperation, FilterCompound, Filt
     FilterExpression
 from app.models.institution import Institution
 from app.models.pagination import Page, Paginator, get_paginator
-from app.core.trending_cache import get_trending, update_trending, get_cache_len
+from app.core.trending_cache import update_trending
 
 from fastapi import APIRouter, Depends, Path, Query, BackgroundTasks
 
@@ -22,11 +21,6 @@ from app.services.research_story import ResearchStoryService
 router = APIRouter(tags=['story'])
 
 
-class ordering(str, Enum):
-    ASC = 'ascending'
-    DESC = 'descending'
-
-
 @router.get(
     "",
     response_model=Page[ResearchStoryShortRead]
@@ -37,8 +31,6 @@ async def get_stories_by_filters(
         institutions: Optional[List[int]] = Query(default=None,
                                                   description="Only return list which have these institutions id's"),
         tags: Optional[List[str]] = Query(default=None, description="Only return list which contain these tag names"),
-        like_count: Optional[ordering] = Query(default=None, description='Order list by like count'),
-        comment_count: Optional[ordering] = Query(default=None, description='Order list by comment count'),
         search: Optional[str] = Query(default=None,
                                       description='Generic search against story title, summary, content, transcript'),
         paginator: Paginator = Depends(get_paginator),

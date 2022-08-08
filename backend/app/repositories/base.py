@@ -1,9 +1,7 @@
 import math
-from typing import TypeVar, Generic, Any, Type, List, Optional
+from typing import TypeVar, Generic, Any, Type, Optional
 
-from fastapi import Depends
 from sqlmodel import Session, SQLModel, select
-from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
@@ -37,10 +35,8 @@ class BaseRepository(Generic[ModelT, UpdateModelT, CreateModelT]):
         if filter_by:
             query = filter_by.apply_filter_to_query(query)
 
-        # TODO: Avoid using len and .all() for count as is inefficient but haven't
-        #  found a good way to invoke sql count with sqlmodel
         return Page[ModelT](items=self.session.exec(paginator.paginate(query)).all(),
-                            page_count=math.ceil(len(self.session.exec(query).all()) / paginator.page_size))
+                            page_count=paginator.get_page_count(self.session, query))
 
     def create(self, create_model: CreateModelT, mappings: ModelFieldsMapping = None) -> ModelT:
         entity = self.model()

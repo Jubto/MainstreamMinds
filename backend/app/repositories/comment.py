@@ -1,5 +1,4 @@
 from typing import List
-import math
 
 from fastapi import Depends
 from sqlalchemy import func
@@ -7,11 +6,9 @@ from sqlmodel import select, Session
 
 from app.db import get_session
 from app.models.comment import CommentCreate, Comment, CommentRead, UserCommentLikesLink
-from app.models.pagination import Page, Paginator
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.model import assign_members_from_dict
-from app.utils.exceptions import NonExistentEntry
 
 
 class CommentRepository:

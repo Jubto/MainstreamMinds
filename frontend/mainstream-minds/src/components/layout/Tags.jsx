@@ -5,11 +5,11 @@ import { getColourForString } from '../styles/colours';
 import { useNavigate } from 'react-router-dom';
 
 const Tags = (props) => {
-  const tags = props.tags;
+  const navigate = useNavigate()
+  const tags = props.tags
   const tagSize = props.tagSize || ""
   const handleClick = (name) => {
-    console.info('You clicked the Chip.', name);
-    //props.passTag()
+    navigate(`/search?tags=${name}`)
   };
 
   return (

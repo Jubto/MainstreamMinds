@@ -66,7 +66,5 @@ class ResearchStoryLongRead(ResearchStoryShortRead):
     content_body: str = Field()
 
 
-# i dont think the fields in update should be optional - consider youtube upload
-# when you go to fill out the frontend form for update, the fields will be pre-filled with the current data
 class ResearchStoryUpdate(ResearchStoryCreate):
     pass
