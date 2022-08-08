@@ -4,7 +4,7 @@ const ResearcherCard = (props) => {
 
   return(
     <ResearcherCardContainer>
-      {props.value}
+      <p>{props.value}</p>
     </ResearcherCardContainer>
 
   )
