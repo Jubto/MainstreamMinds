@@ -39,9 +39,6 @@ async def populate_database(
 def populate_universities(
         institution_service: InstitutionService = Depends(InstitutionService),
     ):
-        # script_dir = os.path.dirname(__file__)
-        # file_path = script_dir + 'institutions.json'
-        # Just using full file path because was having issues accessing data without it - happy for it to be overwritten
         file_path = base_path / "institutions.json"
         with open(file_path) as json_file:
             uni_data = json.load(json_file)
@@ -58,7 +55,6 @@ def populate_researchers(
         user_service: UserService = Depends(UserService),
         researcher_service: ResearcherService = Depends(ResearcherService),
     ):
-        
         file_path = base_path / "user_researcher.json"
         with open(file_path) as json_file:
             user_data = json.load(json_file)
@@ -113,6 +109,11 @@ def populate_research_stories(
 
 
 def generate_tags(tag_service, tag_list):
+    """
+    Takes a list of tag names and generates an appropriate list of ids.
+    If the tag already exists it uses the existing id, if not, creates a tag.
+    """
+
     tag_id_list = []
     for tag_name in tag_list:
         tag = tag_service.get_tag_by_name(tag_name)
@@ -127,6 +128,9 @@ def generate_tags(tag_service, tag_list):
 
 
 def generate_authors():
+    """
+    Randomly assigns an author to a research story.
+    """
     # To be used if able to cope with multiple authors
     # num_auth = random.randint(0,3)
     # authors = []
@@ -137,6 +141,9 @@ def generate_authors():
 
 
 def generate_institutions(researcher_service, authors):
+    """
+    Uses the given authors to collect the associated institutions for a given list of authors.
+    """
     institutions = []
     for author in authors:
         inst = researcher_service.get_researcher_by_id(author)
