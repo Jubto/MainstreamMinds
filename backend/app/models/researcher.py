@@ -1,8 +1,10 @@
 from typing import Optional, List
 from datetime import datetime
 
+from pydantic import validator
 from sqlmodel import SQLModel, Field, Relationship
 from app.models.institution import Institution, InstitutionResearcherLink
+from app.utils.model import email_validator
 
 
 class StoryAuthorLink(SQLModel, table=True):
@@ -13,6 +15,14 @@ class StoryAuthorLink(SQLModel, table=True):
 class ResearcherBase(SQLModel):
     bio: Optional[str] = Field()
     institution_id: Optional[int] = Field(foreign_key="institution.id")
+    institution_email: Optional[str] = Field(default=None)
+    institution_position: Optional[str] = Field(default=None)
+
+    @validator('institution_email')
+    def user_email_validator(cls, value):
+        if value is None:
+            return value
+        return email_validator(value)
 
 
 class Researcher(ResearcherBase, table=True):

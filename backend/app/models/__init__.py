@@ -13,3 +13,4 @@ ResearchStoryShortRead.update_forward_refs(ResearcherRead=ResearcherRead, Instit
 ResearchStoryLongRead.update_forward_refs(ResearcherRead=ResearcherRead, InstitutionRead=InstitutionRead, TagRead=TagRead)
 ResearcherRead.update_forward_refs(UserRead=UserRead)
 CommentRead.update_forward_refs(UserRead=UserRead)
+UserRead.update_forward_refs(TagRead=TagRead)
