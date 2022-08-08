@@ -8,6 +8,15 @@ import {getColourForString} from "../components/styles/colours";
 import {Box} from "@mui/system";
 import Tags from "../components/layout/Tags";
 import Card from "../components/layout/StoryCards/Card";
+import {styled} from "@mui/material";
+
+const StyledBox = styled('div')`
+  display: flex;
+  flex-direction: row;
+  > * { 
+    margin: 0 40px 0 0;
+  }
+`
 
 const ResearcherProfileScreen = () => {
   const location = useLocation();
@@ -56,8 +65,7 @@ const ResearcherProfileScreen = () => {
   const bgColour = getColourForString(researcher.user.first_name + researcher.user.last_name);
 
   const storyCards = stories.map((value, idx) => {
-    return <Grid item xs>
-      <Card
+    return <Card
         key={idx}
         title={value.title}
         tags={value.tags}
@@ -65,7 +73,6 @@ const ResearcherProfileScreen = () => {
         storyId={value.id}
         thumbnail={value.thumbnail}
       />
-    </Grid>;
   })
 
   return (
@@ -105,9 +112,10 @@ const ResearcherProfileScreen = () => {
       </h2>
 
       {storyCards.length ?
-        <Grid container spacing={3}>
+        <StyledBox >
+        
           {storyCards}
-        </Grid>
+        </StyledBox>
         :
         <Typography variant='h5' sx={{color: 'rgba(0,0,0,0.6)'}}>
           No Research Stories

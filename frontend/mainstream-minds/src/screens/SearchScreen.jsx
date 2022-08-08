@@ -77,7 +77,7 @@ const SearchScreen = () => {
         />
         <SearchStack tags={searchTags} selectedTags={[]}/>
       </SearchContainer>
-      <ResearcherCarousel />
+      <ResearcherCarousel extension={location.search}/>
       <ResultsContainer >
         <h2>Results</h2>
         <ResultsContents>
