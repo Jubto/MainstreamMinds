@@ -37,8 +37,8 @@ async def populate_database(
 ):
     populate_universities(institution_service)
     populate_tags(tag_service)
-    populate_researchers(user_service, researcher_service, tag_service)
-    populate_research_stories(n, story_service, tag_service, researcher_service)
+    populate_researchers(institution_service, researcher_service, tag_service, user_service)
+    populate_research_stories(n, researcher_service, story_service, tag_service)
 
     return f'populated database'
 
@@ -58,7 +58,9 @@ def populate_universities(
                 print(f"Institution created with id: {inst_id}")
 
 
-def populate_tags(tag_service):
+def populate_tags(
+        tag_service: TagService = Depends(TagService),
+    ):
     for tag_name in acceptable_tags:
         tag = tag_service.get_tag_by_name(tag_name)
         if not tag:
@@ -68,9 +70,10 @@ def populate_tags(tag_service):
             
 
 def populate_researchers(
-        user_service: UserService = Depends(UserService),
+        institution_service: InstitutionService = Depends(InstitutionService),
         researcher_service: ResearcherService = Depends(ResearcherService),
         tag_service: TagService = Depends(TagService),
+        user_service: UserService = Depends(UserService),
     ):
         file_path = base_path / "user_researcher.json"
         with open(file_path) as json_file:
@@ -79,16 +82,27 @@ def populate_researchers(
                 user_obj = UserCreate(first_name = user['first_name'], 
                                       last_name = user['last_name'], 
                                       email = user['email'], 
-                                      password = user['password']) 
+                                      password = 'testpassword') 
                 new_user = user_service.create(user_obj)
                 print(f"User created with id: {new_user.id}")
 
                 inst = user['institution']
-                if inst == 0: 
+                inst_email = None
+                position = None
+                if inst > 0: 
+                    inst = user['institution']
+                    institution = institution_service.get_institution_by_id(inst)
+                    inst_email = user['first_name']+user['last_name']+"@"+institution.name.split(' ')[0]+".com"
+                    inst_email = inst_email.lower()
+                    print("institution email is:", inst_email)
+                    position = user["position"]
+                else:
                     inst = None
+                    
                 researcher_info = ResearcherCreate(bio = user['bio'],
-                                                   institution_id = inst
-                                                   )
+                                                   institution_id = inst,
+                                                   institution_email = inst_email,
+                                                   institution_position = position)
 
                 researcher_service.upgrade(researcher_info, new_user.id)
                 add_researcher_preference_tags(tag_service, new_user.id)
@@ -96,9 +110,9 @@ def populate_researchers(
 
 def populate_research_stories(
         number_of_stories: int,
+        researcher_service: ResearcherService = Depends(ResearcherService),
         story_service: ResearchStoryService = Depends(),
         tag_service: TagService = Depends(TagService),
-        researcher_service: ResearcherService = Depends(ResearcherService),
 ):
     file_path = base_path / "research_stories.json"
     with open(file_path) as json_file:
