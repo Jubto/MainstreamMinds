@@ -1,6 +1,8 @@
 import { styled } from "@mui/material"
 import { grey } from "@mui/material/colors"
 
+export const researcherCardSize = 260
+
 export const ResearcherContainer = styled('div')`
   width: 100%;
   padding: 16px 12px;
@@ -9,13 +11,16 @@ export const ResearcherContainer = styled('div')`
 export const ResearcherCarousel = styled('div')`
   display: flex;
   flex-direction: row;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  width: 90vw;
 `
 
 export const ResearcherCardContainer = styled('div')`
   margin: 12px 16px;
   display: flex;
   flex-direction: row;
-  min-width: 260px;
+  min-width: ${260}px;
   border: 0.5px solid ${grey[300]};
   border-radius: 4px;
   padding: 12px;
@@ -39,4 +44,9 @@ margin: 0;
 export const ResearcherInstitution = styled('p')`
 margin: 0;
 color: ${grey[700]};
+`
+
+export const ScrollResearchers = styled('div')`
+  display: flex;
+  flex-direction: row;
 `
