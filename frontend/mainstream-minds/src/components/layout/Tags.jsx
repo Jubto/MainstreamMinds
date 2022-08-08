@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { randomColour } from '../styles/colours';
+import { getColourForString } from '../styles/colours';
 import { useNavigate } from 'react-router-dom';
 
 const Tags = (props) => {
@@ -19,7 +19,7 @@ const Tags = (props) => {
             key={value.name}
             label={value.name}
             onClick={() => handleClick(value.name)} 
-            sx={{ bgcolor: randomColour(), color: 'white'}}
+            sx={{ bgcolor: getColourForString(value.name), color: 'white'}}
             size={tagSize}
           />
         ))
