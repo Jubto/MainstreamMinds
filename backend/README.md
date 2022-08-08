@@ -1,3 +1,7 @@
+# Backend Deployment/Running Instructions
+
+To deploy/run the backend without using docker follow all the instructions listed below.
+
 ## Poetry - Installation
 
 Poetry documentation: `https://python-poetry.org/docs/`
@@ -65,4 +69,5 @@ If you get the issue `uvicorn is not a recognised command` or similar
 then try running the backend using `poetry run python3 -m uvicorn app.main:app --reload`
 
 ## Docs
-`https://127.0.0.1:8000/docs`
+
+The swagger documentation can be accessed at <https://127.0.0.1:8000/docs>
