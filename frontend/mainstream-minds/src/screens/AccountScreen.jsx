@@ -92,7 +92,7 @@ const AccountScreen = () => {
       console.log("setting interests")
       try {
         const intParams = new URLSearchParams(); // backend requires form data, not json data
-        intParams.append('tag', "computer"); // 
+        intParams.append('tag', "netflix"); // 
         const resInterests = await msmAPI.patch(`tags/preference_tags?${intParams}`)
         setInterests(resInterests.data)
         getInterests()
