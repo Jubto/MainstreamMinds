@@ -22,8 +22,9 @@ import useAuth from "../hooks/useAuth";
 const ResearcherRegScreen = () => {
   const {setAuth} = useAuth();
   const [errorMsg, setErrorMsg] = useState(null)
-    const [value, setValue] = useState('Enter a brief bio');
-    const [formErrors, setFormErrors] = useState({
+  const [insts, setInsts] = useState({})
+  const [value, setValue] = useState('Enter a brief bio');
+  const [formErrors, setFormErrors] = useState({
       error: false,
       firstName: null,
       lastName: null,
@@ -39,6 +40,17 @@ const ResearcherRegScreen = () => {
 
 
   //fix this to get institutions from the be 
+  const getInstitutions = async () =>{
+    const resInst = await msmAPI.get('/institutions?page=0&page_size=40');//this is hardcoded, do it properly
+    console.log(resInst.data.items)
+    setInsts(resInst.data.items)
+    //return resInst.data.items;
+  }
+
+  const getNames = async () =>{
+    //Remove
+  }
+
   const Institution = [
     { label: 'UNSW'},
     { label: 'USYD' },
@@ -50,7 +62,6 @@ const ResearcherRegScreen = () => {
     const handleSubmit = async (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      console.log("Doing the thing")
       const selectedInst = data.get('institution-name');
       const enteredEmail = data.get('instEmail');
       const enteredPos = data.get('position');
@@ -86,6 +97,10 @@ const ResearcherRegScreen = () => {
       }
 
     }
+    useEffect(() => {
+      getInstitutions()
+      //console.log(username)
+    }, [])
 
   return (
     <Page align={'center'}>
@@ -108,8 +123,9 @@ const ResearcherRegScreen = () => {
               required
               disablePortal
               id="institution-name"
-              options={Institution}
+              options={insts}
               sx={{ width: 300 }}
+              getOptionLabel={(option) => option.name}
               renderInput={(params) => <TextField {...params} label="Institution Name" />}
                />
             </Grid><br/>
