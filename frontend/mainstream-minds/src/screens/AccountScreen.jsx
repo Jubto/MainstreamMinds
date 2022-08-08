@@ -10,117 +10,114 @@ import Tags from "../components/layout/Tags"
 import { Box } from "@mui/system";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 import AccountDetails from "../components/account/ProfileComponents/AccountDetails"
-
+import { CarouselTitle } from "../components/layout/StoryCards/CardStyles"
+//user details are breaking now >:(
 const AccountScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
   const { auth, setAuth } = useAuth()
   const location = useLocation()
   const [errorMsg, setErrorMsg] = useState(null)
-
+  const [username, setUsername] = useState(null)
+  const [type, setType] = useState(null)
+  const [id, setID] = useState(null)
+  const [interests, setInterests] = useState({})
 
   const navigate = useNavigate();
   const regis = location.state?.from?.pathname || "/researcher/register";
-  console.log(regis)
+  //console.log(regis)
 
-  const handleUpgrade = async (event) => {
-  
-    event.preventDefault();
+    const getUserDetails = async () => {
       try {
+        const resUser = await msmAPI.get(`/users/me`)
+        setUsername(resUser.data.first_name)
+        setType(resUser.data.role)
+        setID(resUser.data.id)
+        //console.log(resUser.role)
         setErrorMsg(null)
-        const test_p = {
-          bio: "this is a test",
-          institution_id: 1
+      }
+      catch (err) {
+        if (!err?.response) {
+          setErrorMsg('No Server Response')
+        } else if (err.response?.status === 401) {
+          setErrorMsg('Forbidden, try login')
+        } else {
+          setErrorMsg('Could not reach backend server')
         }
-        const resUpgrade = await msmAPI.post('/researchers', test_p);
-       // setAuth({ accessToken: resLogin.data.access_token, role: 1 }); //this is v hard code-y 
-        console.log(resUpgrade);
-        navigate(regis, { replace: true });
       }
-      catch(err){
-          //setErrorMsg(err.response.data.detail)
-      }
-       // setAuth({ accessToken: resLogin.data.access_token, role: 0 }); // globally sets auth, note: temporarily leaving role: 0 (remove once /api/user/me endpoint exists)
-        // TODO backend set up /api/user/me endpoint, send valid jwt, returns user details + role
-       // navigate(from, { replace: true });
-     
-    }
-
-  const getName = async() => {
-    console.log("hi")
-    try{
-      const userDetails = msmAPI.get('/users/current_user_details')
-      console.log(userDetails)
-      //const name = userDetails.data.first_name
-      console.log("it worked")
-      //console.log(userDetails.data.first_name)
-      return (
-        <div>
-        
-      </div>
-      )
-    }
-    catch(err){
-      console.log("it did not")
-      console.log(err)
     }
     
-  }
-  const getType = async () => {
-    console.log("hi")
-  }
+    const getInterests = async () => {
+      try {
+        const resInterests = await msmAPI.get(`tags/preference_tags`)
+        setInterests(resInterests.data)
+        console.log(interests, resInterests.data)
+        setErrorMsg(null)
+      }
+      catch (err) {
+        if (!err?.response) {
+          setErrorMsg('No Server Response')
+        } else if (err.response?.status === 401) {
+          setErrorMsg('Forbidden, try login')
+        } else {
+          setErrorMsg(`err: ${err}`)
+          console.log("ERROR IS:")
+          console.log(err)
+        }
+      }
+    }
+    useEffect(() => {
+      getUserDetails()
+      console.log("ID IS")
+      console.log(id)
+      getInterests() //when this works need to pass interests in return
+      console.log("interests are")
+      console.log(interests)
+      //console.log(username)
+    }, [])
+
   const showTags = [ //replace w getting interests
-    {
-      name: "science"
-    },
-    {
-      name: "psychology"
-    },
-    {
-      name: "agriculture"
-    },
-    {
-      name: "computers"
-    },
-    {
-      name: "global issues"
-    },
-    {
-      name: "law"
-    },
-    {
-      name: "journalism"
-    },
-    {
-      name: "robotics"
-    },
+    {name: "science"},
+    {name: "psychology"}
   ]
 
 //maybe closer
 //Hi {getName()}
-  return (
+// call function after h4 to check and render researcher stuff
+ //remember to change to id == 2
+ //then make itactually show their stories
+return (
     <Page align={'left'}>
       <Typography variant='h4'>
-       Hi Username!
+       Hi {username}!
       </Typography><br/>
+      {id == 2 && 
+        <Box borderBottom="1px solid #ccc">
+        <CardCarousel carouselTitle="My Stories" extension="/recommendations"/>
+      </Box>
+      }
       <Box borderBottom="1px solid #ccc">
         <CardCarousel carouselTitle="My Watch List" extension="/recommendations"/>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3}>
-        <Typography variant='h5'>
+        <CarouselTitle>
           My Interests
-        </Typography>
-        <SearchStack tags={showTags} />
+        </CarouselTitle>
+        <SearchStack tags={showTags} sx={{ml:8}}/>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
-        <Typography variant='h5'>
+        <CarouselTitle>
           My Account Details
-        </Typography>
-        <Typography variant='p' m={2}>
-          Have an idea that you want to share with the world?
-        </Typography> <br></br>
-        <Button variant='contained' onClick={handleUpgrade} sx={{ m: 5 }}>
-          Register as a Verified Researcher
-        </Button><br></br>
+        </CarouselTitle>
+        {id == 1 && 
+        <Box>
+          <Typography variant='p' m={8}>
+            Have an idea that you want to share with the world?
+          </Typography> <br></br>
+          <Button variant='contained' component={Link} to={'/researcher/registration'} state={{ from: location }} sx={{ml:12}}>
+            Register as a Verified Researcher
+          </Button><br></br>
+          </Box>
+        }
         <AccountDetails/>
  
       </Box>
