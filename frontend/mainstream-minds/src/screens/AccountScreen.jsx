@@ -9,8 +9,9 @@ import Tags from "../components/layout/Tags"
 import { Box } from "@mui/system";
 import CardCarousel from "../components/layout/StoryCards/CardCarousel"
 import AccountDetails from "../components/account/ProfileComponents/AccountDetails"
-import { CarouselTitle } from "../components/layout/StoryCards/CardStyles"
-
+import { CarouselTitle, Subtitle} from "../components/layout/StoryCards/CardStyles"
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 //user details are breaking now >:(
 const AccountScreen = () => {
   const msmAPI = useMsmApi() // hook which applies JWT to api calls
@@ -130,7 +131,14 @@ return (
         {interests && interests.length!=0 && 
         <SearchStack tags={interests}></SearchStack>
         } 
-        {interests && interests.length==0 && <Typography>No Interests</Typography>}
+        {interests && interests.length==0 && <Subtitle>No interests to show</Subtitle>}
+        <Autocomplete
+              disablePortal
+              id="add-interests"
+              options={interests}
+              sx={{ width: 300 , m: 3}}
+              renderInput={(params) => <TextField {...params} label="Add Interests" />}
+               />
         <Button onClick={addInterests}>Add</Button>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>

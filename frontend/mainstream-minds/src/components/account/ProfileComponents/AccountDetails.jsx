@@ -60,10 +60,10 @@ const AccountDetails = (props) => {
   }
   const getResearcherDetails = async () => {
     try {
-      const resUser = await msmAPI.get(`/researchers/me`)
-      setInstitution(resUser.data.institution_id) //change this whenn backend is updated
-      setInstEmail(resUser.data.institution_email)
-      setPosition(resUser.data.institution_position)
+      const resResearcher = await msmAPI.get(`/researchers/me`)
+      setInstitution(resResearcher.data.institution.name) //change this whenn backend is updated
+      setInstEmail(resResearcher.data.institution_email)
+      setPosition(resResearcher.data.institution_position)
       setErrorMsg(null)
     }
     catch (err) {
