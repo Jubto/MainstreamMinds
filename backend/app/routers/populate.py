@@ -94,7 +94,6 @@ def populate_researchers(
                     institution = institution_service.get_institution_by_id(inst)
                     inst_email = user['first_name']+user['last_name']+"@"+institution.name.split(' ')[0]+".com"
                     inst_email = inst_email.lower()
-                    print("institution email is:", inst_email)
                     position = user["position"]
                 else:
                     inst = None
