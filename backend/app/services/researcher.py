@@ -24,6 +24,9 @@ class ResearcherService:
         self.user_repository.update_role(current_user_id, Role.RESEARCHER)
         return researcher_id
 
+    def get_researcher_by_user_id(self, user_id: int) -> Researcher:
+        return self.repository.get_researcher_by_user_id(user_id)
+
     def get_all(self, filter_by: Optional[ModelFilter[Researcher]], paginator: Paginator) -> Page[ResearcherRead]:
         return self.repository.get_all(filter_by, paginator)
 
