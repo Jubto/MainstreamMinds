@@ -60,7 +60,7 @@ const AccountDetails = (props) => {
   //I have no clue why I can't change these icons without it crashing????
  
   return (
-    <Box> {role == 2 && 
+    <Box> {role == 1 && 
 
         <Grid item xs={12} md={6}>
             <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">

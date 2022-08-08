@@ -90,7 +90,7 @@ return (
       <Typography variant='h4'>
        Hi {username}!
       </Typography><br/>
-      {type == 2 && 
+      {type == 1 && 
         <Box borderBottom="1px solid #ccc">
         <CardCarousel carouselTitle="My Stories" extension="/recommendations"/>
       </Box>
@@ -108,7 +108,7 @@ return (
         <CarouselTitle>
           My Account Details
         </CarouselTitle>
-        {type == 1 && 
+        {type == 2 && 
         <Box>
           <Typography variant='p' m={8}>
             Have an idea that you want to share with the world?
