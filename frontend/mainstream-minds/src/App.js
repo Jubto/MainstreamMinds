@@ -2,6 +2,7 @@ import React from 'react';
 import ContextProvider from './context/ContextProvider';
 import AuthProvider from './context/AuthProvider';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PersistentLogin from './components/layout/PersistentLogin';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import AccountScreen from './screens/AccountScreen';
 import DiscoverScreen from './screens/DiscoverScreen';
@@ -45,21 +46,23 @@ function App() {
           <Router>
             <AppBar hideForRoutes={['/login', '/sign-up']} />
             <Routes>
-              <Route path='/' element={<DiscoverScreen />} />
-              <Route path='/search' element={<SearchScreen />} />
-              <Route path='/search/:tags' element={<SearchScreen/>} />
-              <Route path='/login' element={<LogInScreen />} />
-              <Route path='/sign-up' element={<SignUpScreen />} />
-              <Route path='/researcher/:id' element={<ResearcherProfileScreen />} />
-              <Route path='/research-story/:id' element={<ResearchStoryScreen />} />
-              <Route path='/unauthorized' element={<Unauthorized />} />
-              <Route element={<ProtectedRoute allowedRole={[ROLES.user]} />}>
-                <Route path='/account' element={<AccountScreen />} />
-                <Route path='/researcher/registration' element={<ResearcherRegScreen />} />
-              </Route>
-              <Route element={<ProtectedRoute allowedRole={[ROLES.researcher]} />}>
-                <Route path='/upload-story' element={<UploadStoryScreen />} />
-                <Route path='/preview-story' element={<PreviewStoryScreen />} />
+              <Route element={<PersistentLogin />} >
+                <Route path='/' element={<DiscoverScreen />} />
+                <Route path='/search' element={<SearchScreen />} />
+                <Route path='/search/:tags' element={<SearchScreen />} />
+                <Route path='/login' element={<LogInScreen />} />
+                <Route path='/sign-up' element={<SignUpScreen />} />
+                <Route path='/researcher/:id' element={<ResearcherProfileScreen />} />
+                <Route path='/research-story/:id' element={<ResearchStoryScreen />} />
+                <Route path='/unauthorized' element={<Unauthorized />} />
+                <Route element={<ProtectedRoute allowedRole={[ROLES.user]} />}>
+                  <Route path='/account' element={<AccountScreen />} />
+                  <Route path='/researcher/registration' element={<ResearcherRegScreen />} />
+                </Route>
+                <Route element={<ProtectedRoute allowedRole={[ROLES.researcher]} />}>
+                  <Route path='/upload-story' element={<UploadStoryScreen />} />
+                  <Route path='/preview-story' element={<PreviewStoryScreen />} />
+                </Route>
               </Route>
             </Routes>
             <Footer />

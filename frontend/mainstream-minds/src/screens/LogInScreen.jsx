@@ -1,17 +1,16 @@
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
-import useGlobal from "../hooks/useGlobal";
-import useLocalStorage from "../hooks/useLocalStorage";
+import usePersistentAuth from "../hooks/usePersistentAuth";
 import msmLogin from "../api/msmLogin";
 import {useNavigate, useLocation, Link} from 'react-router-dom';
 import {Box, Button, Grid, TextField, Typography} from "@mui/material";
 import LogInLogoPanel from "../components/account/LogInLogoPanel";
 
 const LogInScreen = () => {
-  const {setAuth} = useAuth();
-  const context = useGlobal();
-  const [, setAuthStored] = useLocalStorage('auth', '')
+  const {auth, setAuth} = useAuth();
+  const [storedAuth, setAuthStored] = usePersistentAuth('auth', '')
   const [errorMsg, setErrorMsg] = useState(null)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const [formErrors, setFormErrors] = useState({
     error: false,
@@ -47,28 +46,42 @@ const LogInScreen = () => {
     if (!formErrors.error) {
       try {
         setErrorMsg(null)
-        const formParams = new URLSearchParams(); // backend requires form data, not json data
-        formParams.append('username', email); // temp note: backend OAUTH form maps username to email
+        const formParams = new URLSearchParams();
+        formParams.append('username', email); 
         formParams.append('password', password);
         const resLogin = await msmLogin.post('/users/login', formParams);
         const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
         setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
         setAuthStored({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role})
-        if (location.state?.redirect) {
-          navigate(from, { state: { redirect: location.state.redirect } })
-        }
-        else {
-          navigate(from, { replace: true });
-        }
-
+        setLoggedIn(true)
       } catch (err) {
         if (err.response?.status === 401) {
-          console.log("HERE ERIN")
           setErrorMsg(err.response.data.detail)
         }
       }
     }
   }
+
+  useEffect(() => {
+    // to ensure usePersistentAuth has had time to set storedAuth before redirect
+    if (loggedIn && storedAuth) {
+      if (location.state?.redirect) {
+        navigate(from, { state: { redirect: location.state.redirect } })
+      }
+      else {
+        navigate(from, { replace: true });
+      }
+    }
+  }, [loggedIn, storedAuth])
+
+  useEffect(() => {
+    // if user refreshes on a protected route, for a brief moment logout
+    // because usePersistentAuth hasn't had time to reset auth
+    // This redirects them back once it has done so
+    if (auth && !loggedIn) {
+      navigate(-1)
+    } 
+  }, [auth])
 
   return (
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>

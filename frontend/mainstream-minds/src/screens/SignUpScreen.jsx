@@ -1,7 +1,6 @@
-import {useState} from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
-import useGlobal from "../hooks/useGlobal";
-import useLocalStorage from "../hooks/useLocalStorage";
+import usePersistentAuth from "../hooks/usePersistentAuth";
 import msmLogin from "../api/msmLogin";
 import msmAPI from "../api/msmAPI";
 import {useNavigate, useLocation, Link} from 'react-router-dom';
@@ -11,9 +10,9 @@ import LogInLogoPanel from "../components/account/LogInLogoPanel";
 
 const SignUpScreen = () => {
   const {setAuth} = useAuth();
-  const context = useGlobal();
-  const [, setAuthStored] = useLocalStorage('auth', '')
+  const [storedAuth, setAuthStored] = usePersistentAuth('auth', '')
   const [errorMsg, setErrorMsg] = useState(null)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,7 +80,7 @@ const SignUpScreen = () => {
         const currentUserProfile = await msmLogin.get('/users/me', {headers: {Authorization: `Bearer ${resLogin.data.access_token}`}});
         setAuth({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role});
         setAuthStored({accessToken: resLogin.data.access_token, role: currentUserProfile.data.role})
-        navigate(from, {replace: true});
+        setLoggedIn(true)
       } catch (err) {
         if (err.response?.status === 409) {
           setErrorMsg('Email already exists in the database.')
@@ -92,6 +91,18 @@ const SignUpScreen = () => {
       }
     }
   }
+
+  useEffect(() => {
+    // to ensure usePersistentAuth has had time to set storedAuth before redirect
+    if (loggedIn && storedAuth) {
+      if (location.state?.redirect) {
+        navigate(from, { state: { redirect: location.state.redirect } })
+      }
+      else {
+        navigate(from, { replace: true });
+      }
+    }
+  }, [loggedIn, storedAuth])
 
   return (
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>
