@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { monthNames } from "../utils/enums"
+import {useState, useEffect} from "react"
+import {useLocation, useNavigate} from "react-router-dom"
+import {monthNames} from "../utils/enums"
 import useAuth from "../hooks/useAuth"
 import useMsmApi from "../hooks/useMsmApi"
-import { useParams } from "react-router-dom"
-import { getColourForString } from "../components/styles/colours"
+import {useParams} from "react-router-dom"
+import {getColourForString} from "../components/styles/colours"
 import Page from "../components/layout/Page"
 import Tags from "../components/layout/Tags"
 import StoryForum from "../components/forum/StoryForum"
-import { FlexBox } from "../components/styles/util.styled"
+import {FlexBox} from "../components/styles/util.styled"
 import {
   StoryContainer,
   StoryDetailsContainer,
@@ -16,7 +16,8 @@ import {
   AuthorContainer,
   StoryBody
 } from "../components/story/story.styled"
-import { Avatar, Box, Button, Tooltip, Typography } from "@mui/material"
+import {Avatar, Box, Button, Tooltip, Typography} from "@mui/material"
+import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
@@ -24,8 +25,8 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 const ResearchStoryScreen = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const { id } = useParams()
-  const { auth } = useAuth()
+  const {id} = useParams()
+  const {auth} = useAuth()
   const msmAPI = useMsmApi()
   const [researcher, setResearcher] = useState({})
   const [researcherInstitution, setResearcherInstitution] = useState({})
@@ -43,15 +44,14 @@ const ResearchStoryScreen = () => {
     if (story.papers.includes('http')) {
       if (auth.accessToken) {
         window.open(location.state.redirect, '_blank')
-      }
-      else {
-        navigate('/login', { state: { from: location, redirect: story.papers } })
+      } else {
+        navigate('/login', {state: {from: location, redirect: story.papers}})
       }
     }
   }
 
   const setLike = () => {
-    !auth.accessToken && navigate('/login', { state: { from: location } })
+    !auth.accessToken && navigate('/login', {state: {from: location}})
     const queryParams = new URLSearchParams();
     queryParams.append('story_id', id)
     queryParams.append('liked', !hasLiked)
@@ -60,8 +60,7 @@ const ResearchStoryScreen = () => {
       msmAPI.put(`/research_stories/like?${queryParams}`)
         .then((res) => console.log(res))
         .catch((err) => console.error(err))
-    }
-    else {
+    } else {
       setNumStoryLikes(numStoryLikes - 1)
       msmAPI.put(`/research_stories/like?${queryParams}`)
         .then((res) => console.log(res))
@@ -90,7 +89,7 @@ const ResearchStoryScreen = () => {
     msmAPI.get(`/research_stories/like?story_id=${id}`)
       .then((res) => setHasLiked(res.data))
       .catch((err) => console.error(err))
-    
+
     if (location.state?.redirect) {
       window.open(location.state.redirect, '_blank')
     }
@@ -101,13 +100,13 @@ const ResearchStoryScreen = () => {
     <Page>
       <StoryContainer>
         <iframe width="1204px" height="663px" src={story.video_link}
-          title="YouTube video player" frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
+                title="YouTube video player" frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
         />
         <StoryDetailsContainer>
           <StoryMetrics>
-            <Typography variant='h5' sx={{ fontWeight: 700 }}>
+            <Typography variant='h5' sx={{fontWeight: 700}}>
               {story.title}
             </Typography>
             <FlexBox gap='16px'>
@@ -121,12 +120,12 @@ const ResearchStoryScreen = () => {
                 }
               </Typography>
             </FlexBox>
-            <FlexBox gap='8px' >
+            <FlexBox gap='8px'>
               <Button
                 onClick={setLike}
                 variant='contained'
-                startIcon={<ThumbUpOffAltIcon />}
-                sx={{ height: '30px' }}
+                startIcon={hasLiked ? <ThumbUpOffAltRoundedIcon/> : <ThumbUpOffAltIcon/>}
+                sx={{height: '30px'}}
               >
                 {hasLiked ? 'liked' : 'like'}
               </Button>
@@ -134,8 +133,8 @@ const ResearchStoryScreen = () => {
                 <Button
                   onClick={goToPaper}
                   variant='contained'
-                  startIcon={<MenuBookIcon />}
-                  sx={{ height: '30px' }}
+                  startIcon={<MenuBookIcon/>}
+                  sx={{height: '30px'}}
                 >
                   Read Journal
                 </Button>
@@ -143,11 +142,11 @@ const ResearchStoryScreen = () => {
             </FlexBox>
           </StoryMetrics>
           <AuthorContainer>
-            <Avatar sx={{ bgcolor: bgColor, width: 58, height: 58, mr: 1 }}>
+            <Avatar sx={{bgcolor: bgColor, width: 58, height: 58, mr: 1}}>
               {researcher.user?.first_name[0].toUpperCase()}{researcher.user?.last_name[0].toUpperCase()}
             </Avatar>
             <Box>
-              <Typography sx={{ fontWeight: 700, mb: -0.5 }}>
+              <Typography sx={{fontWeight: 700, mb: -0.5}}>
                 {researcher.user?.first_name} {researcher.user?.last_name}
               </Typography>
               <Typography variant='caption'>
@@ -159,8 +158,8 @@ const ResearchStoryScreen = () => {
         <StoryBody>
           {story.summary}
         </StoryBody>
-        <Tags tags={story.tags} tagSize="medium" />
-        <Box sx={{ mb: '4rem' }} />
+        <Tags tags={story.tags} tagSize="medium"/>
+        <Box sx={{mb: '4rem'}}/>
         <StoryForum
           storyID={id}
           researcher={researcher}
