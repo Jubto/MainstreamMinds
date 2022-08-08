@@ -14,7 +14,7 @@ Read the instructions for each method below.
 The docker based deployment requires the installation of `docker` and `docker-compose`.
 
 Please set this up for your platform following the official documentation:
-- <https://docs.docker.com/compose/install/>
+- <https://docs.docker.com/engine/install/>
 - <https://docs.docker.com/compose/install/>
 
 The application has only been tested to work using linux based containers which is what is
@@ -31,6 +31,8 @@ the following command.
 ```shell
 docker-compose up -d
 ```
+(Note: Depending on your OS and installation, you may have to run these commands as `docker compose ...` instead. You 
+may also require root permissions, ie `sudo`)
 
 Upon first launch this will trigger a build of all the images for the services but upon subsequent
 runs it will not. As such if any of the source files for the backend or frontend have changed
@@ -45,6 +47,11 @@ After the up command has been run all the services for the application should ha
 Unless anything was changed in the `docker-compose.yaml` file you can navigate to 
 <http://127.0.0.1> to see the frontend and <http://127.0.0.1:8080/docs> to view the swagger 
 documentation for the backend API.
+
+To stop the docker container, run
+```shell
+docker-compose down
+```
 
 ### Deployment without Docker
 
