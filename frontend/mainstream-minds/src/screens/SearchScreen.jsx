@@ -81,12 +81,11 @@ const SearchScreen = () => {
         <ResultsGrid container rowSpacing={3} columnSpacing={{xs:'auto', sm:2, md:3}} >
           {(story && story.length!==0) ? Object.entries(story).map(([key, value], idx) => (
                 <ResultsGridItem item>
-
                   <Card 
                     key={idx} 
                     title={value.title} 
                     tags={value.tags}
-                    researcherId={value.researchers[0]}
+                    researcher={value.researchers[0]}
                     storyId={value.id}
                     showLikes={!!auth.accessToken}
                     thumbnail={value.thumbnail}
