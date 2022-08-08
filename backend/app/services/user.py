@@ -3,9 +3,9 @@ from typing import Optional
 from fastapi import Depends
 
 from app.core.security import get_password_hash
+from app.models.filter import ModelFilter
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
-from app.models.filter import ModelFilter
 from app.models.user import User, UserCreate, UserUpdate
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.exceptions import EmailAlreadyExistsHttpException

@@ -17,6 +17,7 @@ export const CardCarouselStyle = styled('div')`
   overflow: hidden;
   width: 100%;
   scroll-behavior: smooth;
+  /* flex-wrap: wrap; */
   > * { 
     margin: 0 40px 0 0;
   }

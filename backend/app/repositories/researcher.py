@@ -1,18 +1,18 @@
 from typing import Optional
 
 from fastapi import Depends
-from sqlmodel import select, Session
 from sqlalchemy.exc import NoResultFound, IntegrityError
+from sqlmodel import select, Session
 
 from app.db import get_session
 from app.models.filter import ModelFilter
 from app.models.institution import Institution
 from app.models.pagination import Paginator, Page
+from app.models.research_story import ResearchStory, ResearchStoryShortRead
 from app.models.researcher import ResearcherCreate, Researcher, ResearcherUpdate, ResearcherRead
 from app.models.user import User
-from app.utils.model import assign_members_from_dict
-from app.models.research_story import ResearchStory, ResearchStoryShortRead
 from app.utils.exceptions import NonExistentEntry, AlreadyResearcher
+from app.utils.model import assign_members_from_dict
 
 
 class ResearcherRepository:
@@ -36,7 +36,8 @@ class ResearcherRepository:
             raise NonExistentEntry('institution_id', new_researcher.institution_id)
 
     def get_all(self, filter_by: Optional[ModelFilter[Researcher]], paginator: Paginator) -> Page[ResearcherRead]:
-        query = select(Researcher).join(Researcher.user).join(User.preference_tags, isouter=True).distinct()
+        query = select(Researcher).join(Researcher.user).join(User.preference_tags, isouter=True).join(
+            Researcher.institution, isouter=True).distinct()
         if filter_by:
             query = filter_by.apply_filter_to_query(query)
         return Page[ResearcherRead](items=self.session.exec(paginator.paginate(query)).all(),

@@ -1,15 +1,15 @@
 from datetime import datetime
 from typing import List, Optional
-from sqlmodel import Relationship, SQLModel, Field
-from pydantic import validator
 
-from app.models.researcher import StoryAuthorLink
+from pydantic import validator
+from sqlmodel import Relationship, SQLModel, Field
+
 from app.models.institution import InstitutionStoryLink
+from app.models.researcher import StoryAuthorLink
 from app.utils.model import youtube_validator
 
 
-# ============================= Research story LINK tables =============================
-
+# ============================= Research story LINK tables ==============================
 
 class StoryLikeLink(SQLModel, table=True):
     story_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="researchstory.id")
@@ -21,7 +21,7 @@ class StoryTagLink(SQLModel, table=True):
     tag_id: Optional[int] = Field(default=None, primary_key=True, foreign_key="tag.id")
 
 
-# ============================= research story models / table =============================
+# ============================= Research story models / table =============================
 
 class ResearchStoryBase(SQLModel):
     title: str = Field()

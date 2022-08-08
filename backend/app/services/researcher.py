@@ -4,11 +4,11 @@ from fastapi import Depends
 
 from app.models.filter import ModelFilter
 from app.models.pagination import Paginator, Page
-from app.models.user import Role
+from app.models.research_story import ResearchStoryShortRead
 from app.models.researcher import ResearcherCreate, ResearcherUpdate, Researcher, ResearcherRead
+from app.models.user import Role
 from app.repositories.researcher import ResearcherRepository, get_researcher_repository
 from app.repositories.user import UserRepository, get_user_repository
-from app.models.research_story import ResearchStoryShortRead
 
 
 class ResearcherService:
@@ -23,6 +23,9 @@ class ResearcherService:
         researcher_id = self.repository.add_researcher(new_researcher, current_user_id)
         self.user_repository.update_role(current_user_id, Role.RESEARCHER)
         return researcher_id
+
+    def get_researcher_by_user_id(self, user_id: int) -> Researcher:
+        return self.repository.get_researcher_by_user_id(user_id)
 
     def get_all(self, filter_by: Optional[ModelFilter[Researcher]], paginator: Paginator) -> Page[ResearcherRead]:
         return self.repository.get_all(filter_by, paginator)

@@ -1,11 +1,12 @@
 from fastapi import APIRouter
-from .user import router as user_router
-from .researcher import router as researcher_router
-from .tag import router as tag_router
-from .research_story import router as story_router
+
 from .comment import router as comment_router
 from .institution import router as institution_router
 from .populate import router as populate_router
+from .research_story import router as story_router
+from .researcher import router as researcher_router
+from .tag import router as tag_router
+from .user import router as user_router
 
 api_router = APIRouter()
 api_router.include_router(user_router, prefix='/users')

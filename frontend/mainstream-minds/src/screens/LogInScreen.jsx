@@ -60,8 +60,10 @@ const LogInScreen = () => {
         else {
           navigate(from, { replace: true });
         }
+
       } catch (err) {
         if (err.response?.status === 401) {
+          console.log("HERE ERIN")
           setErrorMsg(err.response.data.detail)
         }
       }
@@ -84,6 +86,7 @@ const LogInScreen = () => {
             name="email"
             label="Email"
             placeholder="Email"
+            fullWidth
             onChange={() => {
               formErrors.email && setFormErrors(prevState => {
                 return {...prevState, email: false}
@@ -91,7 +94,6 @@ const LogInScreen = () => {
             }}
             error={formErrors.email}
             helperText={formErrors.email ? 'Invalid email.' : ''}
-            sx={{width: '100%'}}
           />
           <TextField
             required
@@ -99,13 +101,14 @@ const LogInScreen = () => {
             name="password"
             label="Password"
             placeholder="Password"
+            fullWidth
             error={formErrors.password}
             onChange={() => {
               formErrors.password && setFormErrors(prevState => {
                 return {...prevState, password: false}
               })
             }}
-            sx={{mt: 3, width: '100%'}}
+            sx={{mt: 3}}
             helperText={formErrors.password ? 'Password must be at least 8 characters long' : ''}
           />
           <br/>

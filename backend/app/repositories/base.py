@@ -1,10 +1,10 @@
-import math
 from typing import TypeVar, Generic, Any, Type, Optional
 
 from sqlmodel import Session, SQLModel, select
+
+from app.models.filter import ModelFilter
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
-from app.models.filter import ModelFilter
 from app.utils.model import assign_members_from_dict, ModelFieldsMapping
 
 ModelT = TypeVar('ModelT', bound=SQLModel)

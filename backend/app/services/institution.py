@@ -2,8 +2,8 @@ from fastapi import Depends
 
 from app.models.institution import Institution, InstitutionRead, InstitutionCreate, InstitutionUpdate
 from app.models.pagination import Paginator, Page
-from app.models.researcher import Researcher
 from app.models.research_story import ResearchStoryShortRead
+from app.models.researcher import Researcher
 from app.repositories.institution import InstitutionRepository, get_institution_repository
 
 

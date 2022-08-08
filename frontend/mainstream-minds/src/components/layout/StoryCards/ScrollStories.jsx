@@ -9,6 +9,7 @@ const ScrollStories = (props) => {
   const componentRef = useRef(null)
   const { width, height } = useResize(componentRef)
   const numStories = (width/cardSize)-((width/cardSize)-Math.floor(width/cardSize))
+  const emptyText = props.emptyText
 
   const scroll = (scrollOffset) => {
     componentRef.current.scrollLeft += scrollOffset;
@@ -31,7 +32,7 @@ const ScrollStories = (props) => {
               showLikes={props.showLikes}
               thumbnail={value.thumbnail}
             />
-        )}, this) : <Subtitle>No stories to show</Subtitle>
+        )}, this) : <Subtitle>No stories to show. {emptyText}</Subtitle>
         }
         
       </CardCarouselStyle>

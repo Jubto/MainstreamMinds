@@ -4,12 +4,18 @@ from fastapi import APIRouter, Depends, Path, Query
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.core.security import authenticate_user, create_token, is_consumer, get_request_user_id
-from app.models.pagination import Page, Paginator, get_paginator
-from app.models.sorting import SortByFields, get_sort_by_fields
-from app.models.filter import FilterExpression, FieldFilter, FilterOperation, FilterCompound, FilterCompoundOperation, \
+from app.models.filter import (
+    FilterExpression,
+    FieldFilter,
+    FilterOperation,
+    FilterCompound,
+    FilterCompoundOperation,
     ModelFilter
+)
+from app.models.pagination import Page, Paginator, get_paginator
 from app.models.security import Token, TokenData
-from app.models.user import UserRead, User, UserCreate, UserUpdate
+from app.models.sorting import SortByFields, get_sort_by_fields
+from app.models.user import User, UserCreate, UserRead, UserUpdate
 from app.repositories.user import UserRepository, get_user_repository
 from app.services.user import UserService
 from app.utils.exceptions import InvalidUserCredentials
@@ -96,6 +102,9 @@ async def login_with_password(
         form_data: OAuth2PasswordRequestForm = Depends(),
         user_repository: UserRepository = Depends(get_user_repository),
 ):
+    """
+    Login to an existing account given a username and password
+    """
     user = authenticate_user(user_repository, form_data.username, form_data.password)
     if not user:
         raise InvalidUserCredentials()
@@ -108,4 +117,7 @@ async def register_user(
         created_user: UserCreate,
         user_service: UserService = Depends(UserService),
 ):
+    """
+    Create a new user
+    """
     user_service.create(created_user)
