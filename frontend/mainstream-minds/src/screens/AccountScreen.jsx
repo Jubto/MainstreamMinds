@@ -36,6 +36,7 @@ const AccountScreen = () => {
         //console.log(resUser.role)
         setErrorMsg(null)
       }
+   
       catch (err) {
         if (!err?.response) {
           setErrorMsg('No Server Response')
@@ -105,23 +106,22 @@ const AccountScreen = () => {
     {name: "aaahh"}
   ]
 
-//maybe closer
-//Hi {getName()}
-// call function after h4 to check and render researcher stuff
- //remember to change to id == 2
  //then make itactually show their stories
 return (
     <Page align={'left'}>
-      <Typography variant='h4'>
+      <Typography variant='h4' ml={8}>
        Hi {username}!
       </Typography><br/>
       {type == 1 && 
-        <Box borderBottom="1px solid #ccc">
+        <Box borderBottom="1px solid #ccc" mb={4}>
         <CardCarousel carouselTitle="My Stories" extension="/recommendations"/>
+        <Button variant='contained' component={Link} to={'/upload-story'} state={{ from: location }} sx={{ml:7, mb:2}}>
+            Post a New Story
+          </Button>
       </Box>
       }
       <Box borderBottom="1px solid #ccc">
-        <CardCarousel carouselTitle="My Watch List" extension="/recommendations"/>
+        <CardCarousel carouselTitle="My Liked List" extension="/liked"/>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3}>
         <CarouselTitle>
@@ -130,7 +130,7 @@ return (
         {interests && interests.length!=0 && 
         <SearchStack tags={interests}></SearchStack>
         } 
-        {interests && interests.length==0 && <Typography>No tags</Typography>}
+        {interests && interests.length==0 && <Typography>No Interests</Typography>}
         <Button onClick={addInterests}>Add</Button>
       </Box>
       <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
@@ -138,16 +138,16 @@ return (
           My Account Details
         </CarouselTitle>
         {type == 2 && 
-        <Box>
-          <Typography variant='p' m={8}>
+        <Box borderBottom="1px dashed #ACB4C4">
+          <Typography variant='p' mx={4}>
             Have an idea that you want to share with the world?
           </Typography> <br></br>
-          <Button variant='contained' component={Link} to={'/researcher/registration'} state={{ from: location }} sx={{ml:12}}>
+          <Button variant='contained' component={Link} to={'/researcher/registration'} state={{ from: location }} sx={{m:4}}>
             Register as a Verified Researcher
           </Button><br></br>
           </Box>
         }
-        <AccountDetails/>
+        <AccountDetails m={4}/>
  
       </Box>
     </Page>

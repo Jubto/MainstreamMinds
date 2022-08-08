@@ -26,11 +26,17 @@ const AccountDetails = (props) => {
   const [username, setUsername] = useState(null)
   const [email, setEmail] = useState(null)
   const [role, setRole] = useState(null)
+  const [institution, setInstitution] = useState(null)
+  const [instemail, setInstEmail] = useState(null)
+  const [position, setPosition] = useState(null)
   const tags = props.tags;
   const UserIcon = <PersonIcon/>
   const PWIcon = <PasswordIcon/>
   const EmailIcon = <AlternateEmailIcon/>
   const DelIcon = <RemoveCircleOutlineIcon/>
+  const InstIcon = <SchoolIcon/>
+  const PosIcon = <WorkOutlineIcon/>
+  const DowngradeIcon = <SettingsBackupRestoreIcon/>
  
 
   const getUserDetails = async () => {
@@ -52,8 +58,27 @@ const AccountDetails = (props) => {
       }
     }
   }
+  const getResearcherDetails = async () => {
+    try {
+      const resUser = await msmAPI.get(`/researchers/me`)
+      setInstitution(resUser.data.institution_id) //change this whenn backend is updated
+      setInstEmail(resUser.data.institution_email)
+      setPosition(resUser.data.institution_position)
+      setErrorMsg(null)
+    }
+    catch (err) {
+      if (!err?.response) {
+        setErrorMsg('No Server Response')
+      } else if (err.response?.status === 401) {
+        setErrorMsg('Forbidden, try login')
+      } else {
+        setErrorMsg('Could not reach backend server')
+      }
+    }
+  }
   useEffect(() => {
     getUserDetails()
+    getResearcherDetails()
     console.log(username)
   }, [])
 
@@ -61,16 +86,15 @@ const AccountDetails = (props) => {
  
   return (
     <Box> {role == 1 && 
-
         <Grid item xs={12} md={6}>
             <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
                 Researcher Settings
             </Typography>
                 <List >
-                    <DetailItem label="Institution" info="University" icon={EmailIcon} route={UpdateName}/>
-                    <DetailItem label="Institution Email" info={email} icon={EmailIcon} route={UpdateEmail}/>
-                    <DetailItem label="Position" info="Position" icon={EmailIcon} route={UpdatePassword}/>
-                    <DetailItem label="Downgrade Account" info='' icon={EmailIcon} route={DeleteAccount}/>
+                    <DetailItem label="Institution" info={institution} icon={InstIcon} route={UpdateName}/>
+                    <DetailItem label="Institution Email" info={instemail} icon={EmailIcon} route={UpdateEmail}/>
+                    <DetailItem label="Position" info={position} icon={PosIcon} route={UpdatePassword}/>
+                    <DetailItem label="Downgrade Account" info='' icon={DowngradeIcon} route={DeleteAccount}/>
                 </List>
             
         </Grid>
