@@ -17,21 +17,6 @@ const DiscoverScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null)
   const [story, setStory] = useState({})
   const [interests, setInterests] = useState({})
-  const Pop = async () => {
-    try{
-      const res = await msmAPI.post(`populate`, 20)
-    }
-    catch (err) {
-      if (!err?.response) {
-        setErrorMsg('No Server Response')
-      } else if (err.response?.status === 401) {
-        setErrorMsg('Forbidden, try login')
-      } else {
-        setErrorMsg(`err: ${err}`)
-        console.log(err)
-      }
-    }
-  }
 
   const getInterests = async () => {
     try {
@@ -52,6 +37,51 @@ const DiscoverScreen = () => {
     }
   }
 
+  const testPostStory = async () => {
+    // Testing jwt Bearer API call
+    try {
+      // all fields are required, schema avaliable on /docs
+      const story = {
+        title: "Test story",
+        summary: "Lorem",
+        authors: [
+          {
+            researcher_id: 0,
+            institution_id: 0
+          }
+        ],
+        papers: [
+          {
+            paper_title: "Breakthrough",
+            paper_abstract: "Science",
+            paper_link: "string",
+            paper_citations: 0
+          }
+        ],
+        tags: [
+          {
+            name: "SaaSy"
+          }
+        ],
+        content_body: "Vestibulum gravida dapibus risus, quis lacinia eros mattis viverra.",
+        thumbnail: "string",
+        video_link: "string",
+        transcript: "string"
+      }
+      const resStory = await msmAPI.post('/research_stories', story)
+      setStory(resStory.data)
+      setErrorMsg(null)
+    }
+    catch (err) {
+      if (!err?.response) {
+        setErrorMsg('No Server Response')
+      } else if (err.response?.status === 401) {
+        setErrorMsg('Forbidden, try login')
+      } else {
+        setErrorMsg('Could not reach backend server')
+      }
+    }
+  }
 
   useEffect(() => {
     getInterests()
@@ -119,7 +149,7 @@ const DiscoverScreen = () => {
         </ListItem >
       </List>
       <br />
-      <Button variant='contained' onClick={Pop} sx={{ mr: 5 }}>
+      <Button variant='contained' onClick={testPostStory} sx={{ mr: 5 }}>
         Press to post story
       </Button>
       {auth.accessToken
