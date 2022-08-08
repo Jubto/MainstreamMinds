@@ -1,15 +1,12 @@
-from typing import List, Optional
+from typing import Optional
 
 from fastapi import Depends
-from sqlalchemy import select
-from sqlmodel import Session
 
 from app.core.security import get_password_hash
-from app.db import get_session
 from app.models.pagination import Page, Paginator
 from app.models.sorting import SortByFields
 from app.models.filter import ModelFilter
-from app.models.user import Role, User, UserCreate, UserUpdate
+from app.models.user import User, UserCreate, UserUpdate
 from app.repositories.user import UserRepository, get_user_repository
 from app.utils.exceptions import EmailAlreadyExistsHttpException
 from app.utils.model import ModelFieldsMapping

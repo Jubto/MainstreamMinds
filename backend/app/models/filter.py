@@ -20,6 +20,7 @@ class FilterOperation(Enum):
     LT = 'lt'
     LTE = 'lte'
     IN = 'in'
+    CONTAINS = 'contains'
 
 
 @dataclass
@@ -39,6 +40,7 @@ class FieldFilter(Filter):
     value: Any
     operation: FilterOperation
     model: Type[ModelT]
+    relationship_field: Optional[Any] = None
 
     def __str__(self):
         return f'{self.field} {self.operation.value} {self.value}'
@@ -51,6 +53,9 @@ class FieldFilter(Filter):
             return col(model_field).ilike(f'%{self.value}%')
         elif self.operation == FilterOperation.IN:
             return col(model_field).in_(self.value)
+        elif self.operation == FilterOperation.CONTAINS:
+            assert self.relationship_field is not None, 'relationship_field needs to be set for FilterOperation.CONTAINS'
+            return self.relationship_field.any(model_field == self.value)
         elif self.operation == FilterOperation.EQ:
             return model_field == self.value
         elif self.operation == FilterOperation.NQ:

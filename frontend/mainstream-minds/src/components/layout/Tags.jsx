@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { randomColour } from '../styles/colours';
+import { getColourForString } from '../styles/colours';
 import { useNavigate } from 'react-router-dom';
 
 const Tags = (props) => {
-  const tags = props.tags;
+  const navigate = useNavigate()
+  const tags = props.tags
   const tagSize = props.tagSize || ""
   const handleClick = (name) => {
-    console.info('You clicked the Chip.', name);
-    //props.passTag()
+    navigate(`/search?tags=${name}`)
   };
 
   return (
@@ -19,7 +19,7 @@ const Tags = (props) => {
             key={value.name}
             label={value.name}
             onClick={() => handleClick(value.name)} 
-            sx={{ bgcolor: randomColour(), color: 'white'}}
+            sx={{ bgcolor: getColourForString(value.name), color: 'white'}}
             size={tagSize}
           />
         ))

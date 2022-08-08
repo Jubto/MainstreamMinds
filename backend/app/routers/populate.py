@@ -23,7 +23,7 @@ acceptable_tags = ["science", "psycology", "statistics", "agriculture", "compute
                    "legal", "fertility", "research", "university"]
 
 @router.post(
-    "/", 
+    "/",
     description='populates database',
     # dependencies=[Depends(is_researcher)] 
 )
@@ -39,7 +39,7 @@ async def populate_database(
     populate_tags(tag_service)
     populate_researchers(user_service, researcher_service, tag_service)
     populate_research_stories(n, story_service, tag_service, researcher_service)
-    
+
     return f'populated database'
 
 
@@ -98,32 +98,32 @@ def populate_research_stories(
         story_service: ResearchStoryService = Depends(),
         tag_service: TagService = Depends(TagService),
         researcher_service: ResearcherService = Depends(ResearcherService),
-    ):
-        file_path = base_path / "research_stories.json"
-        with open(file_path) as json_file:
-            story_data = json.load(json_file)
-            i = 0
-            for story in story_data:
-                if i >= number_of_stories: break
-                
-                tag_ids = generate_tags(tag_service, story['tags'])
-                authors = generate_authors()
-                institutions = generate_institutions(researcher_service, authors)
-                
-                story_obj = ResearchStoryCreate(title = story['title'], 
-                                                summary = story['description'], 
-                                                papers = 'https://www.jstor.org/', 
-                                                thumbnail = story['thumbnail_link'], 
-                                                video_link = 'www.youtube.com/watch?v='+story['video_id'], 
-                                                authors = authors, 
-                                                institutions = institutions, 
-                                                tags = tag_ids, 
-                                                content_body = story['description']) 
-                new_user = story_service.create(story_obj)
-                print(f"Story created with id: {new_user.id}")
-                i += 1
+):
+    file_path = base_path / "research_stories.json"
+    with open(file_path) as json_file:
+        story_data = json.load(json_file)
+        i = 0
+        for story in story_data:
+            if i >= number_of_stories: break
 
-        return f'added {number_of_stories} new stories'
+            tag_ids = generate_tags(tag_service, story['tags'])
+            authors = generate_authors()
+            institutions = generate_institutions(researcher_service, authors)
+
+            story_obj = ResearchStoryCreate(title=story['title'],
+                                            summary=story['description'],
+                                            papers='https://www.jstor.org/',
+                                            thumbnail=story['thumbnail_link'],
+                                            video_link='www.youtube.com/watch?v=' + story['video_id'],
+                                            authors=authors,
+                                            institutions=institutions,
+                                            tags=tag_ids,
+                                            content_body=story['description'])
+            new_user = story_service.create(story_obj)
+            print(f"Story created with id: {new_user.id}")
+            i += 1
+
+    return f'added {number_of_stories} new stories'
 
 def add_researcher_preference_tags(tag_service, current_user_id):
     """
@@ -145,7 +145,7 @@ def generate_tags(tag_service, tag_list):
     for tag_name in tag_list:
         tag = tag_service.get_tag_by_name(tag_name)
         if not tag:
-            tag_obj = TagCreate(name = tag_name)
+            tag_obj = TagCreate(name=tag_name)
             tag_info = tag_service.create_tag(tag_obj)
             tag_id_list.append(tag_info.id)
         else:
@@ -163,7 +163,7 @@ def generate_authors():
     # for num in range(num_auth):
     #     author = random.randint(0,40)
     #     authors.append(author)
-    return [random.randint(1,40)]
+    return [random.randint(1, 40)]
 
 
 def generate_institutions(researcher_service, authors):

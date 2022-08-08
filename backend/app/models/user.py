@@ -52,6 +52,7 @@ class UserUpdate(UserBase):
 class UserRead(UserBase):
     id: int
     role: Role = Field(sa_column=Column(Enum(Role)))
+    preference_tags: List["TagRead"]
 
 
 class UserGetQuery(BaseModel):

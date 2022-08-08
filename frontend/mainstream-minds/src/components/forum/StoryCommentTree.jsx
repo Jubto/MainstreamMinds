@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { timeSince } from "../../utils/helpers";
+import {useState, useEffect} from "react"
+import {useLocation, useNavigate} from "react-router-dom"
+import {timeSince} from "../../utils/helpers";
 import CommentField from "./CommentField";
-import { randomColour } from '../styles/colours';
+import {getColourForString} from '../styles/colours';
 import {
   CommentContainer,
   CommentButton,
@@ -12,10 +12,10 @@ import {
   CommentTreeContainer,
   CommentsContainer
 } from "./forum.styled";
-import { Avatar, Tooltip, Typography } from "@mui/material";
+import {Avatar, Tooltip, Typography} from "@mui/material";
+import ThumbUpOffAltRoundedIcon from '@mui/icons-material/ThumbUpOffAltRounded';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ReplyIcon from '@mui/icons-material/Reply';
-
 
 const StoryComment = ({
   comment,
@@ -30,12 +30,12 @@ const StoryComment = ({
   const [isParent, setIsParent] = useState(false)
   const [writeReply, setWriteReply] = useState(false)
   const [hasLiked, setHasLiked] = useState(false)
-  const [avatarBgColor, setAvatarBcColor] = useState('')
+  const [bgColor, setBgColor] = useState('')
   const [replyTo, setReplyTo] = useState('')
   const [replyID, setReplyID] = useState('')
 
   const setLike = () => {
-    !auth.accessToken && navigate('/login', { state: { from: location } })
+    !auth.accessToken && navigate('/login', {state: {from: location}})
     const queryParams = new URLSearchParams();
     queryParams.append('comment_id', comment.id)
     queryParams.append('liked', !hasLiked)
@@ -44,8 +44,7 @@ const StoryComment = ({
       msmAPI.put(`/comments/like?${queryParams}`)
         .then((res) => console.log(res))
         .catch((err) => console.error(err))
-    }
-    else {
+    } else {
       comment.num_likes && comment.num_likes--
       msmAPI.put(`/comments/like?${queryParams}`)
         .then((res) => console.log(res))
@@ -55,37 +54,37 @@ const StoryComment = ({
   }
 
   const openReply = () => {
-    !auth.accessToken && navigate('/login', { state: { from: location } })
+    !auth.accessToken && navigate('/login', {state: {from: location}})
     setWriteReply(true)
   }
 
   useEffect(() => {
-    setAvatarBcColor(randomColour())
+    setBgColor(getColourForString(comment.user.first_name + comment.user.last_name))
     setIsParent(comment.parent_id === 0)
     setReplyTo(comment.parent_id ? `@${comment.user.first_name} ` : '')
     setReplyID(comment.parent_id ? comment.parent_id : comment.id)
     if (auth) {
-      msmAPI.get('/comments/like', { params: { comment_id: comment.id } })
+      msmAPI.get('/comments/like', {params: {comment_id: comment.id}})
         .then((res) => res.data && setHasLiked(true))
         .catch((err) => console.error(err))
     }
   }, [])
 
   return (
-    <CommentContainer direction='column' >
+    <CommentContainer direction='column'>
       <CommentHeader>
         <Avatar sx={{
-          bgcolor: avatarBgColor,
+          bgcolor: bgColor,
           width: isParent ? 'inital' : 34,
           height: isParent ? 'inital' : 34
         }}
         >
           {comment.user.first_name[0].toUpperCase()}{comment.user.last_name[0].toUpperCase()}
         </Avatar>
-        <Typography sx={{ fontWeight: 700 }}>
+        <Typography sx={{fontWeight: 700}}>
           {comment.user.first_name} {comment.user.last_name}
         </Typography>
-        <Typography sx={{ color: 'msm.dull' }}>
+        <Typography sx={{color: 'msm.dull'}}>
           {timeSince(comment.timestamp)}
         </Typography>
       </CommentHeader>
@@ -94,20 +93,21 @@ const StoryComment = ({
       </CommentBody>
       {hideButtons
         ? ''
-        : <CommentFooter >
-          <Tooltip title='like comment' >
+        : <CommentFooter>
+          <Tooltip title='like comment'>
             <CommentButton
               onClick={setLike}
-              startIcon={<ThumbUpOffAltIcon sx={{ color: 'msm.dull' }}/>}
+              startIcon={hasLiked ? <ThumbUpOffAltRoundedIcon sx={{color: 'msm.dull'}}/> :
+                <ThumbUpOffAltIcon sx={{color: 'msm.dull'}}/>}
               sx={{ml: comment.num_likes ? 0 : '-0.75rem'}}
             >
-              {comment.num_likes ? `${comment.num_likes} ${comment.num_likes === 1 ? 'like' : 'likes' }` : ''}
+              {comment.num_likes ? `${comment.num_likes} ${comment.num_likes === 1 ? 'like' : 'likes'}` : ''}
             </CommentButton>
           </Tooltip>
-          <Tooltip title='reply' >
+          <Tooltip title='reply'>
             <CommentButton
               onClick={openReply}
-              startIcon={<ReplyIcon sx={{ color: 'msm.dull' }} />}
+              startIcon={<ReplyIcon sx={{color: 'msm.dull'}}/>}
               sx={{ml: comment.num_likes ? 0 : '-2rem'}}
             >
               Reply
@@ -132,7 +132,7 @@ const StoryComment = ({
 }
 
 
-const StoryCommentTree = ({ comments, setComments, msmAPI, auth }) => {
+const StoryCommentTree = ({comments, setComments, msmAPI, auth}) => {
   const [showReplies, setShowReplies] = useState(false)
   const [rootReplyComment, setRootReplyComment] = useState([])
 
@@ -152,7 +152,7 @@ const StoryCommentTree = ({ comments, setComments, msmAPI, auth }) => {
       />
       <CommentButton
         onClick={handleShowComments}
-        sx={{ ml: 1, mt: -1, mb: (comments.length - 1 > rootReplyComment.length) && !showReplies ? 2 : 0 }}
+        sx={{ml: 1, mt: -1, mb: (comments.length - 1 > rootReplyComment.length) && !showReplies ? 2 : 0}}
       >
         {comments.length > 1 && (comments.length - 1 > rootReplyComment.length)
           ? showReplies
@@ -176,10 +176,9 @@ const StoryCommentTree = ({ comments, setComments, msmAPI, auth }) => {
               ))}
             </CommentsContainer>
           )
-        }
-        else if (rootReplyComment.length) {
+        } else if (rootReplyComment.length) {
           return (
-            <CommentsContainer sx={{ pb: 0, mt: showReplies ? 0 : -2, mb: 2 }}>
+            <CommentsContainer sx={{pb: 0, mt: showReplies ? 0 : -2, mb: 2}}>
               {rootReplyComment.map((comment, idx) => (
                 <StoryComment
                   key={idx}
@@ -192,8 +191,7 @@ const StoryCommentTree = ({ comments, setComments, msmAPI, auth }) => {
               ))}
             </CommentsContainer>
           )
-        }
-        else {
+        } else {
           return ''
         }
       })()}

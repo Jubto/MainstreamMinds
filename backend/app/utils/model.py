@@ -4,8 +4,6 @@ from fastapi import HTTPException
 from sqlmodel import SQLModel
 import re
 
-from app.settings import Settings
-
 # https://uibakery.io/regex-library/email-regex-python
 email_regex_pattern: str = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
 email_regex: re = re.compile(email_regex_pattern)
@@ -35,7 +33,6 @@ def assign_members_from_dict(class_instance: object, dict_to_assign: dict,
     for field, value in dict_to_assign.items():
         if field_mappings:
             field, value = field_mappings.map_field(field, value)
-            # print(field, value)
         setattr(class_instance, field, value)
 
 
@@ -55,7 +52,6 @@ def password_validator(value: str) -> str:
         'Password must be at least 8 characters long')
 
 
-
 def email_validator(value: str) -> str:
     if email_regex.match(value):
         return value
@@ -67,4 +63,3 @@ def youtube_validator(value: str) -> str:
         return "https://youtube.com/embed/" + match.group(1)
     else:
         raise ValueError('Youtube url invalid')
-
