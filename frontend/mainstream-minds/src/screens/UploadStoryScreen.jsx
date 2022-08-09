@@ -76,7 +76,7 @@ const UploadStoryScreen = () => {
     return false
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const videoLink = data.get('videoLink');
@@ -118,6 +118,17 @@ const UploadStoryScreen = () => {
     }
 
     if (!formErrors.error) {
+      let institutionTagId = null
+      try {
+        const postRes = await msmApi.post('/tags/', { name: researcher.institution.name })
+        institutionTagId = postRes.data.id
+      }
+      catch (err) {
+        const getRes = await msmApi.get(`/tags/${researcher.institution.name}`)
+        institutionTagId = getRes.data.id
+      }
+      const storyTags = Array.from(selectedTopics).map((tagName) => AllTopicsLookup[tagName])
+      storyTags.push(institutionTagId)
       const body = {
         title: storyTitle,
         summary: storyDesc,
@@ -131,7 +142,7 @@ const UploadStoryScreen = () => {
         institutions: [
           researcher.institution_id
         ],
-        tags: Array.from(selectedTopics).map((tagName) => AllTopicsLookup[tagName]),
+        tags: storyTags,
         content_body: "string"
       }
       msmApi.post('/research_stories', body)
