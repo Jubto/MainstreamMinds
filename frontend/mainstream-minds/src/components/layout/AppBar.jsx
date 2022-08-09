@@ -62,8 +62,9 @@ const AppBar = (props) => {
 
   useEffect(() => {
     // to ensure usePersistentAuth has had time to set storedAuth before redirect
-    if (!storedAuth) {
+    if (!storedAuth && loggedOut) {
       navigate('/')
+      setLoggedOut(false)
     }
   }, [loggedOut, storedAuth])
 
