@@ -13,6 +13,8 @@ import {styled} from "@mui/material";
 const StyledBox = styled('div')`
   display: flex;
   flex-direction: row;
+  width: 90vw;
+  flex-wrap: wrap;
   > * { 
     margin: 0 40px 0 0;
   }
