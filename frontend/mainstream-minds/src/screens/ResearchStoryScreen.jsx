@@ -43,7 +43,7 @@ const ResearchStoryScreen = () => {
   const goToPaper = () => {
     if (story.papers.includes('http')) {
       if (auth.accessToken) {
-        window.open(location.state.redirect, '_blank')
+        window.open(story.papers, '_blank')
       } else {
         navigate('/login', {state: {from: location, redirect: story.papers}})
       }
