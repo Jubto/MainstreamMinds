@@ -43,8 +43,8 @@ const ResearcherCard = (props) => {
   })
 
   return(
-    <ResearcherCardContainer onClick={toProfile}>
-      <ResearcherCardContents>
+    <ResearcherCardContainer >
+      <ResearcherCardContents onClick={toProfile} sx={{cursor: 'pointer'}}>
         {/* <p>{props.value}</p> */}
         <Avatar sx={{ bgcolor: bgColour, width: avatarSize, height: avatarSize, mr: 1, marginRight: '16px' }} />
         <ResearcherDetails>
