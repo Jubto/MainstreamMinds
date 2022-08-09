@@ -142,7 +142,7 @@ const ResearchStoryScreen = () => {
               </Tooltip>
             </FlexBox>
           </StoryMetrics>
-          <AuthorContainer>
+          <AuthorContainer onClick={() => navigate(`/researcher/${researcher.id}`)}>
             <Avatar sx={{bgcolor: bgColor, width: 58, height: 58, mr: 1}}>
               {researcher.user?.first_name[0].toUpperCase()}{researcher.user?.last_name[0].toUpperCase()}
             </Avatar>

@@ -1,4 +1,4 @@
-import { styled } from "@mui/material"
+import { styled, Typography } from "@mui/material"
 import { CardMedia as MuiCardMedia, Card as MuiCard } from "@mui/material";
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -33,6 +33,10 @@ export const StyledCard = styled(MuiCard)`
   width: ${cardSize}px;
   border: none; 
   box-shadow: none; 
+
+  &:hover {
+    box-shadow: 0px 10px 22px -10px rgba(0,0,0,0.5);
+  }
 `
 
 export const CarouselTitle = styled('h2')`
@@ -44,6 +48,7 @@ export const CardTitle = styled('h4')`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 `
 
 export const CardLink = styled(MuiCardMedia)`
@@ -51,7 +56,7 @@ export const CardLink = styled(MuiCardMedia)`
 `
 
 export const CardContent = styled('div')`
-  padding: 12px 0 0 0;
+  padding: 12px 8px 0 8px;
 `
 
 export const NextIcon = styled(ExpandCircleDownIcon)`
@@ -72,4 +77,11 @@ export const Subtitle = styled('p')`
 
 export const AddInterestBtn = styled(AddCircleOutlineIcon)`
   color: ${grey[300]};
+`
+
+export const AuthorText = styled(Typography)`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `

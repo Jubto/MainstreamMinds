@@ -14,6 +14,7 @@ export const ResearcherCarousel = styled('div')`
   overflow: hidden;
   scroll-behavior: smooth;
   width: 90vw;
+  padding: 12px 0;
 `
 
 export const ResearcherCardContainer = styled('div')`
@@ -21,6 +22,9 @@ export const ResearcherCardContainer = styled('div')`
   min-width: ${260}px;
   border: 0.5px solid ${grey[300]};
   border-radius: 4px;
+  &:hover {
+    box-shadow: 0px 10px 22px -19px rgba(0,0,0,0.5);
+  }
 `
 export const ResearcherCardContents = styled('div')`
   display: flex;

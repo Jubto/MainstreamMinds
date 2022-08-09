@@ -63,7 +63,8 @@ class ResearchStoryRepository:
             return random.sample(all_recommended_stories, n)  # enough recommended stories to satisfy
 
     def get_liked(self, current_user_id: int, paginator: Paginator):
-        query = (select(ResearchStory).join(ResearchStory.likes)
+        query = (select(ResearchStory)
+                 .join(StoryLikeLink, ResearchStory.id == StoryLikeLink.story_id)
                  .where(StoryLikeLink.user_id == current_user_id)).distinct()
         return Page[ResearchStoryShortRead](items=self.session.exec(paginator.paginate(query)).all(),
                                             page_count=paginator.get_page_count(self.session, query))
