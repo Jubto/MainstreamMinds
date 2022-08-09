@@ -21,7 +21,7 @@ const ResearcherCard = (props) => {
   const from = location.state?.from?.pathname || "/";
   const avatarSize = '70px'
 
-  console.log(props.value)
+  // console.log(props.value)
   
   const bgColour = getColourForString(user.first_name+user.last_name)
 

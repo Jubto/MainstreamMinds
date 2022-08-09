@@ -13,7 +13,7 @@ import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import DetailItem from './DetailItem';
+import {DetailItem, EditableDetailItem} from './DetailItem';
 import { useState, useEffect } from "react"
 import useMsmApi from "../../../hooks/useMsmApi"
 import useAuth from "../../../hooks/useAuth"
@@ -82,6 +82,9 @@ const AccountDetails = (props) => {
     console.log(username)
   }, [])
 
+  const testFn = () => {
+    console.log("Testing time babey")
+  }
   //I have no clue why I can't change these icons without it crashing????
  
   return (
@@ -91,10 +94,10 @@ const AccountDetails = (props) => {
                 Researcher Settings
             </Typography>
                 <List >
-                    <DetailItem label="Institution" info={institution} icon={InstIcon} route={UpdateName}/>
-                    <DetailItem label="Institution Email" info={instemail} icon={EmailIcon} route={UpdateEmail}/>
-                    <DetailItem label="Position" info={position} icon={PosIcon} route={UpdatePassword}/>
-                    <DetailItem label="Downgrade Account" info='' icon={DowngradeIcon} route={DeleteAccount}/>
+                    <EditableDetailItem label="Institution" info={institution} icon={InstIcon} route={UpdateName}/>
+                    <EditableDetailItem label="Institution Email" info={instemail} icon={EmailIcon} route={UpdateEmail}/>
+                    <EditableDetailItem label="Position" info={position} icon={PosIcon} route={UpdatePassword}/>
+                    <DetailItem label="Downgrade Account" info='' icon={DowngradeIcon} route={DeleteAccount} editable='false'/>
                 </List>
             
         </Grid>
@@ -104,9 +107,9 @@ const AccountDetails = (props) => {
                 Profile Settings
             </Typography>
                 <List >
-                    <DetailItem label="Username" info={username} icon={UserIcon} route={UpdateName}/>
-                    <DetailItem label="Email" info={email} icon={EmailIcon} route={UpdateEmail}/>
-                    <DetailItem label="Password" info="********" icon={PWIcon} route={UpdatePassword}/>
+                    <EditableDetailItem label="Username" info={username} icon={UserIcon} route={UpdateName}/>
+                    <EditableDetailItem label="Email" info={email} icon={EmailIcon} route={UpdateEmail}/>
+                    <EditableDetailItem label="Password" info="********" icon={PWIcon} route={UpdatePassword}/>
                     <DetailItem label="Delete Account" info='' icon={DelIcon} route={DeleteAccount}/>
                 </List>
             

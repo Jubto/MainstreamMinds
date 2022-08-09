@@ -19,7 +19,7 @@ const ResearcherCarousel = (props) => {
     try {
       const resResearcher = await msmAPI.get(`/researchers${extension}`)
       setResearchers(resResearcher.data)
-      console.log(resResearcher, researchers)
+      // console.log(resResearcher, researchers)
       //console.log("researchers",resResearcher.data.items, typeof(researchers))
       setErrorMsg(null)
     }
@@ -51,7 +51,7 @@ const ResearcherCarousel = (props) => {
         }
         <StyledResearcherCarousel ref={componentRef}>
           {(researchers.items && researchers.items.length!==0) ? Object.entries(researchers.items).map(([key,value], idx) => {
-            console.log(key,value, idx)
+            // console.log(key,value, idx)
             return (<ResearcherCard key={key} value={value}/>)
           })
             : <p>No researchers to show</p>
