@@ -27,6 +27,7 @@ const AccountScreen = () => {
   const [interests, setInterests] = useState(new Set())
   const [selectedInterest, setSelectedInterest] = useState(null)
   const [inputValue, setInputValue] = useState(null)
+  const [unSelect, setUnSelect] = useState('')
 
   const navigate = useNavigate();
   const regis = location.state?.from?.pathname || "/researcher/register";
@@ -127,7 +128,16 @@ const AccountScreen = () => {
     }
   }
 
-
+  useEffect(() => {
+    if (unSelect) {
+      interests.delete(unSelect)
+      setInterests(interests)
+      setUnSelect('')
+      msmAPI.delete(`tags/preference_tags?tag=${unSelect}`)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.error(err))
+    }
+  }, [unSelect])
 
   useEffect(() => {
     getUserDetails()
@@ -171,7 +181,7 @@ const AccountScreen = () => {
           <SearchStack tags={interests}></SearchStack>
         } */}
         {interests.size
-          ? <Tags tags={Array.from(interests)} tagSize="medium" disable={true} />
+          ? <Tags tags={Array.from(interests)} tagSize="medium" disable={true}  setUnSelect={setUnSelect} />
           : <Subtitle>
             No interests selected yet..
           </Subtitle>

@@ -5,9 +5,6 @@ const TagSelectPopper = (props) => {
     <Popper
       {...props}
       placement="bottom-start"
-      sx={{
-        '.MuiAutocomplete-paper': { height: '250px', overflow: 'hidden' },
-      }}
     />
   );
 }
