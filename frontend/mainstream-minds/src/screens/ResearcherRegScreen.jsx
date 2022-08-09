@@ -26,10 +26,10 @@ const ResearcherRegScreen = () => {
   const [value, setValue] = useState('Enter a brief bio');
   const [formErrors, setFormErrors] = useState({
       error: false,
-      firstName: null,
-      lastName: null,
+      instEmail: null,
+      position: null,
       email: null,
-      password: null,
+      bio: null,
     })
     const navigate = useNavigate();
     const location = useLocation();
@@ -62,19 +62,46 @@ const ResearcherRegScreen = () => {
     const handleSubmit = async (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      const selectedInst = data.get('institution-name');
-      const enteredEmail = data.get('instEmail');
-      const enteredPos = data.get('position');
+      const instName = data.get('instName');
+      const instEmail = data.get('instEmail');
+      const position = data.get('position');
       //Disregarding supervisors name for now
-      const enteredBio = data.get('bio');
+      const bio = data.get('bio');
 
-      /* {
-  "bio": "string",
-  "institution_id": 0,
-  "institution_email": "string",
-  "institution_position": "string"
-}*/
-      if ('no errors') {
+      formErrors.error = false;
+
+      if (!validateYTLink(videoLink)) {
+        setFormErrors(prevState => {
+          return { ...prevState, videoLink: true }
+        })
+        formErrors.error = true
+      }
+      if (!/^[\w]+(\s[\w]+)*$/.test(instName)) {
+        setFormErrors(prevState => {
+          return { ...prevState, storyTitle: true }
+        })
+        formErrors.error = true
+      }
+      if (!/^https?:\/\/.+$/.test(storyPaper)) {
+        setFormErrors(prevState => {
+          return { ...prevState, storyPaper: true }
+        })
+        formErrors.error = true
+      }
+      if (!storyDesc) {
+        setFormErrors(prevState => {
+          return { ...prevState, storyDesc: true }
+        })
+        formErrors.error = true
+      }
+      if (!selectedTopics.size) {
+        setFormErrors(prevState => {
+          return { ...prevState, storyTags: true }
+        })
+        formErrors.error = true
+      }
+  
+      if (!formErrors.error) {
         setErrorMsg(null)
         try {
           const body = {
@@ -122,7 +149,7 @@ const ResearcherRegScreen = () => {
               <Autocomplete
               required
               disablePortal
-              id="institution-name"
+              id="instName"
               options={insts}
               sx={{ width: 300 }}
               getOptionLabel={(option) => option.name}
