@@ -41,7 +41,7 @@ const ResearcherRegScreen = () => {
 
   //fix this to get institutions from the be 
   const getInstitutions = async () =>{
-    const resInst = await msmAPI.get('/institutions?page=0&page_size=40');//this is hardcoded, do it properly
+    const resInst = await msmAPI.get('/institutions?page_size=1000');// dont have time to implement pagination
     console.log(resInst.data.items)
     setInsts(resInst.data.items)
     //return resInst.data.items;
@@ -67,48 +67,40 @@ const ResearcherRegScreen = () => {
       const position = data.get('position');
       //Disregarding supervisors name for now
       const bio = data.get('bio');
-
       formErrors.error = false;
 
-      if (!validateYTLink(videoLink)) {
+      if (!/^[a-zA-Z]+(\s[a-zA-Z]+)*$/.test(instName)) {
         setFormErrors(prevState => {
-          return { ...prevState, videoLink: true }
+          return { ...prevState, instName: true }
         })
         formErrors.error = true
       }
-      if (!/^[\w]+(\s[\w]+)*$/.test(instName)) {
+      if (!/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(instEmail)) {
         setFormErrors(prevState => {
-          return { ...prevState, storyTitle: true }
+          return {...prevState, instEmail: true}
         })
         formErrors.error = true
       }
-      if (!/^https?:\/\/.+$/.test(storyPaper)) {
+      if (!/^[\w]+(\s[\w]+)*$/.test(position)) {
         setFormErrors(prevState => {
-          return { ...prevState, storyPaper: true }
+          return { ...prevState, position: true }
         })
         formErrors.error = true
       }
-      if (!storyDesc) {
+      if (!bio) {
         setFormErrors(prevState => {
-          return { ...prevState, storyDesc: true }
+          return { ...prevState, bio: true }
         })
         formErrors.error = true
       }
-      if (!selectedTopics.size) {
-        setFormErrors(prevState => {
-          return { ...prevState, storyTags: true }
-        })
-        formErrors.error = true
-      }
-  
       if (!formErrors.error) {
         setErrorMsg(null)
         try {
           const body = {
-            bio: enteredBio,
+            bio: bio,
             institution_id: 1, //do this properly
-            institution_email: enteredEmail,
-            institution_position: enteredPos
+            institution_email: instEmail,
+            institution_position: position
 
           }
           const resReg = await msmAPI.post('/researchers', body);
