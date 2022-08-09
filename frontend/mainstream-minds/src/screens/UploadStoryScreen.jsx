@@ -305,8 +305,8 @@ const UploadStoryScreen = ({ researcher }) => {
             <IconButton sx={{ pt: 0 }}>
               <CheckBoxIcon />
             </IconButton>
-            <Typography variant='subtitle1' color='primary'>
-              <b>Allow Comments</b> (Recommended)
+            <Typography variant='subtitle1' color='grey'>
+              <i>Allow Comments</i> (Recommended)
             </Typography>
           </FlexBox>
           <FlexBox justify='flex-end'>
