@@ -14,6 +14,8 @@ import { appendKeywordSearch, extractQuery, getTags } from "../components/Search
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 import { grey } from "@mui/material/colors"
 import { getStoredTags, storeTags } from "../components/SearchComponents/tagStore"
+import { Autocomplete } from "@mui/material"
+import SelectedTagStack from "../components/SearchComponents/SelectedTagStack"
 
 
 const SearchScreen = () => {
@@ -23,10 +25,12 @@ const SearchScreen = () => {
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
   const location = useLocation()
-  const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
 
   // Tag Search
   const [allTags, setAllTags] = useState([])
+  const [selectedTags, setSelectedTags] = useState(new Set()) 
+  const [selectedTag, setSelectedTag] = useState(null)
+  const [inputTag, setInputTag] = useState(null)
 
   // Get all stories
   const getStories = async () => {
@@ -65,10 +69,22 @@ const SearchScreen = () => {
     }
   }
 
-
   const getTagsAndSearch = () => {
     const queryArr = extractQuery(location.search)
     setSelectedTags(getTags(queryArr))
+  }
+
+  const addSelected = (selected) => {
+    setSelectedTag(selected);
+    if (selected) {
+      setSelectedTags(selectedTags.add(selected))
+    }
+  }
+
+  const handleEnterPress = (e) => {
+    if (e.key === 'Enter' && selectedTag) {
+      addSelected(selectedTag)
+    }
   }
 
   const searchKeyword = (e) => {
@@ -105,7 +121,22 @@ const SearchScreen = () => {
             sx={{maxWidth: 720, marginRight: '8px'}}
             onKeyDown={searchKeyword}
         />
-       {/*  <SearchStack tags={searchTags} selectedTags={[]}/> */}
+        <Autocomplete
+          disablePortal
+          options={Object.keys(allTags)}
+          onKeyDown={handleEnterPress}
+          size="small"
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Tags" />}
+          onChange={(e,newValue) => {
+            addSelected(newValue)
+          }}
+          inputValue={inputTag}
+            onInputChange={(e, newInputValue) => {
+              setInputTag(newInputValue);
+            }}
+        />
+        <SelectedTagStack tags={selectedTags} />
       </SearchContainer>
       <ResearcherCarousel extension={location.search}/>
       <ResultsContainer >
