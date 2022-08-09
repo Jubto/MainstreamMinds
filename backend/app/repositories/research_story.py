@@ -52,7 +52,7 @@ class ResearchStoryRepository:
                                    .join(StoryTagLink, ResearchStory.id == StoryTagLink.story_id)
                                    .join(Tag, Tag.id == StoryTagLink.tag_id)
                                    .join(UserTagLink, UserTagLink.tag_id == Tag.id)
-                                   .filter(UserTagLink.user_id == current_user_id)).all()
+                                   .filter(UserTagLink.user_id == current_user_id)).distinct().all()
         if len(all_recommended_stories) < n:
             all_stories = self.session.exec(select(ResearchStory)).all()
             if len(all_stories) < n:
