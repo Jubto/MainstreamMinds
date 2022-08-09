@@ -33,6 +33,10 @@ export const StyledCard = styled(MuiCard)`
   width: ${cardSize}px;
   border: none; 
   box-shadow: none; 
+
+  &:hover {
+    box-shadow: 0px 10px 22px -10px rgba(0,0,0,0.5);
+  }
 `
 
 export const CarouselTitle = styled('h2')`
@@ -52,7 +56,7 @@ export const CardLink = styled(MuiCardMedia)`
 `
 
 export const CardContent = styled('div')`
-  padding: 12px 0 0 0;
+  padding: 12px 8px 0 8px;
 `
 
 export const NextIcon = styled(ExpandCircleDownIcon)`
