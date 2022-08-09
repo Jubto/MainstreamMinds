@@ -24,7 +24,10 @@ const SearchScreen = () => {
   const location = useLocation()
   const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
 
+  // Tag Search
+  const [allTags, setAllTags] = useState([])
 
+  // Get all stories
   const getStories = async () => {
     try {
       console.log('getting stories',`/research_stories${location.search}`)
@@ -45,6 +48,9 @@ const SearchScreen = () => {
     }
   }
 
+  // Get all tags
+
+
   const getTagsAndSearch = () => {
     const queryArr = extractQuery(location.search)
     setSelectedTags(getTags(queryArr))
@@ -61,6 +67,9 @@ const SearchScreen = () => {
   useEffect(() => {
     getStories(location.search)
     getTagsAndSearch()
+
+    console.log(searchTags)
+    
   }, [location.search])
 
   return (
@@ -75,7 +84,7 @@ const SearchScreen = () => {
             sx={{maxWidth: 720, marginRight: '8px'}}
             onKeyDown={searchKeyword}
         />
-        <SearchStack tags={searchTags} selectedTags={[]}/>
+       {/*  <SearchStack tags={searchTags} selectedTags={[]}/> */}
       </SearchContainer>
       <ResearcherCarousel extension={location.search}/>
       <ResultsContainer >
