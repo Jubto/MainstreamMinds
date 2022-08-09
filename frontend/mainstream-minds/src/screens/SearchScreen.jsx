@@ -10,7 +10,7 @@ import { ResultsContainer, ResultsContents, ResultsGrid, ResultsGridItem, Search
 import SearchStack from "../components/SearchComponents/SearchTags/SelectedTagStack"
 import { useLocation, useNavigate } from "react-router-dom"
 //import {searchTags} from "../components/SearchComponents/searchTags"
-import { appendKeywordSearch, appendTagSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+import { appendKeywordSearch, appendTagSearch, extractQuery, getTags, tagToStringArr } from "../components/SearchComponents/searchHelpers"
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 import { grey } from "@mui/material/colors"
 import { getStoredTags, storeTags } from "../components/SearchComponents/tagStore"
@@ -71,7 +71,7 @@ const SearchScreen = () => {
 
   const getTagsAndSearch = () => {
     const queryArr = extractQuery(location.search)
-    setSelectedTags(getTags(queryArr))
+    setSelectedTags(tagToStringArr(queryArr))
     
   }
 
@@ -132,7 +132,7 @@ const SearchScreen = () => {
           onKeyDown={handleEnterPress}
           size="small"
           sx={{ width: 200 }}
-          renderInput={(params) => <TextField {...params} label="Tags" />}
+          renderInput={(params) => <TextField {...params} InputLabelProps={{shrink: true}} label="Tags" />}
           onChange={(e,newValue) => {
             addSelected(newValue)
           }}
