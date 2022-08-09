@@ -27,7 +27,7 @@ class Institution(InstitutionBase, table=True):
 
 
 class InstitutionRead(InstitutionBase):
-    pass
+    id: Optional[int]
 
 
 class InstitutionUpdate(InstitutionBase):
