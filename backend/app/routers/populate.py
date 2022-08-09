@@ -132,9 +132,9 @@ def populate_research_stories(
         for story in story_data:
             if i >= number_of_stories: break
 
-            tag_ids = generate_tags(tag_service, story['tags'])
             authors = generate_authors()
-            institutions = generate_institutions(researcher_service, authors)
+            institution_id_list, institution_names = generate_institutions(researcher_service, authors)
+            tag_ids = generate_tags(tag_service, story['tags'], institution_names)
 
             story_obj = ResearchStoryCreate(title=story['title'],
                                             summary=story['description'],
@@ -142,7 +142,7 @@ def populate_research_stories(
                                             thumbnail=story['thumbnail_link'],
                                             video_link='www.youtube.com/watch?v=' + story['video_id'],
                                             authors=authors,
-                                            institutions=institutions,
+                                            institutions=institution_id_list,
                                             tags=tag_ids,
                                             content_body=story['description'])
             new_user = story_service.create(story_obj)
@@ -162,14 +162,14 @@ def add_researcher_preference_tags(tag_service, current_user_id):
         tag_service.add_preference_tag(current_user_id, acceptable_tags[index])
 
 
-def generate_tags(tag_service, tag_list):
+def generate_tags(tag_service, tag_list, institution_names):
     """
     Takes a list of tag names and generates an appropriate list of ids.
     If the tag already exists it uses the existing id, if not, creates a tag.
     """
 
     tag_id_list = []
-    for tag_name in tag_list:
+    for tag_name in tag_list+institution_names:
         tag = tag_service.get_tag_by_name(tag_name)
         if not tag:
             tag_obj = TagCreate(name=tag_name)
@@ -197,10 +197,12 @@ def generate_institutions(researcher_service, authors):
     """
     Uses the given authors to collect the associated institutions for a given list of authors.
     """
-    institutions = []
+    institution_ids = []
+    institution_names = []
     for author in authors:
-        inst = researcher_service.get_researcher_by_id(author)
-        if inst.institution_id:
-            institutions.append(inst.institution_id)
+        researcher = researcher_service.get_researcher_by_id(author)
+        if researcher.institution:
+            institution_ids.append(researcher.institution.id)
+            institution_names.append(researcher.institution.name)
 
-    return institutions
+    return institution_ids, institution_names
