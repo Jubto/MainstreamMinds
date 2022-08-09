@@ -14,6 +14,7 @@ export const ResearcherCarousel = styled('div')`
   overflow: hidden;
   scroll-behavior: smooth;
   width: 90vw;
+  padding: 12px 0;
 `
 
 export const ResearcherCardContainer = styled('div')`
