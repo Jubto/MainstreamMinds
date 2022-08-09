@@ -1,4 +1,4 @@
-import { styled } from "@mui/material"
+import { styled, Typography } from "@mui/material"
 import { CardMedia as MuiCardMedia, Card as MuiCard } from "@mui/material";
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -44,6 +44,7 @@ export const CardTitle = styled('h4')`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 `
 
 export const CardLink = styled(MuiCardMedia)`
@@ -72,4 +73,11 @@ export const Subtitle = styled('p')`
 
 export const AddInterestBtn = styled(AddCircleOutlineIcon)`
   color: ${grey[300]};
+`
+
+export const AuthorText = styled(Typography)`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `
