@@ -93,5 +93,6 @@ venv.bak/
 # db
 *.db
 database.sql
+dump.rdb
 
 .env.local

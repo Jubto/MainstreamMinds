@@ -32,11 +32,7 @@ const CustomerPopper = function (props) {
 };
 
 
-const UploadStoryScreen = ({ researcher_REPLACE_ME }) => {
-  const researcher = {
-    id: 1,
-    institution_id: 10
-  } // TEMP, REPLACE with 'researcher_REPLACE_ME'
+const UploadStoryScreen = ({ researcher }) => {
   const navigate = useNavigate()
   const msmApi = useMsmApi()
   const vidLink = useRef('')
