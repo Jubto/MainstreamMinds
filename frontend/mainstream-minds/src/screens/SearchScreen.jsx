@@ -9,10 +9,11 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResultsContainer, ResultsContents, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
 import SearchStack from "../components/SearchComponents/SearchStack"
 import { useLocation, useNavigate } from "react-router-dom"
-import searchTags from "../components/SearchComponents/searchTags"
+//import {searchTags} from "../components/SearchComponents/searchTags"
 import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 import { grey } from "@mui/material/colors"
+import { getStoredTags, storeTags } from "../components/SearchComponents/tagStore"
 
 
 const SearchScreen = () => {
@@ -49,6 +50,20 @@ const SearchScreen = () => {
   }
 
   // Get all tags
+  const storeAllTags = async () => {
+    try {
+      const resTags = await msmAPI.get('/tags/?page_size=1000')
+      const tagMap = {}
+      resTags.data.items.forEach((t) => {
+        tagMap[t.name] = t.id
+      })
+      console.log(tagMap)
+      storeTags(tagMap)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
 
 
   const getTagsAndSearch = () => {
@@ -68,7 +83,13 @@ const SearchScreen = () => {
     getStories(location.search)
     getTagsAndSearch()
 
-    console.log(searchTags)
+    const storedTags = getStoredTags()
+    if (storedTags) {
+      setAllTags(getStoredTags)
+      console.log(allTags)
+    } else {
+      storeAllTags()
+    }
     
   }, [location.search])
 

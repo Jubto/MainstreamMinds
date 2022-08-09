@@ -1,10 +1,38 @@
-const searchTags = []
+const searchTags = [
+  {
+    name: "science"
+  },
+  {
+    name: "physics"
+  },
+  {
+    name: "engineering"
+  },
+  {
+    name: "history"
+  },
+  {
+    name: "robotics"
+  },
+  {
+    name: "chemistry"
+  },
+  {
+    name: "lawyer"
+  },
+  {
+    name: "legal"
+  },
+  {
+    name: "research"
+  },
+  {
+    name: "psychology"
+  },
+  {
+    name: "medicine"
+  },
+  
+]
 
-export const addTag = (tag) => {
-  searchTags.push(tag)
-  return searchTags;
-}
-
-export const getTags = () => {
-  return searchTags;
-}
+export default searchTags;
