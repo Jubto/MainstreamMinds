@@ -80,12 +80,15 @@ const ResearcherRegScreen = () => {
       try {
         const body = {
           bio: bio,
-          institution_id: selectedInst,
+          institution_id: insts[selectedInst],
           institution_email: instEmail,
           institution_position: position
 
         }
+        console.log(body)
         const resReg = await msmAPI.post('/researchers', body);
+        console.log('SETTING REG')
+        console.log(resReg.data.access_token)
         setAuth({ accessToken: resReg.data.access_token, role: 1 }); // login with new JWT
         navigate(from, { replace: true });
       }
@@ -194,7 +197,7 @@ const ResearcherRegScreen = () => {
                   <TextField fullWidth
                     id="bio"
                     name="bio"
-                    label="Bio"
+                    label="Describe your research"
                     placeholder="Describe what your research is like"
                     multiline
                     minRows={4}

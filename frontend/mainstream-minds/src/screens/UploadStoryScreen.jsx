@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import useMsmApi from "../hooks/useMsmApi"
 import Page from "../components/layout/Page"
 import Tags from "../components/layout/Tags"
@@ -32,10 +32,12 @@ const CustomerPopper = function (props) {
 };
 
 
-const UploadStoryScreen = ({ researcher }) => {
+const UploadStoryScreen = () => {
+  const location = useLocation()
   const navigate = useNavigate()
   const msmApi = useMsmApi()
   const vidLink = useRef('')
+  const [researcher, setResearcher] = useState({})
   const [videoLink, setVideoLink] = useState(null)
   const [selectedTopics, setSelectedTopics] = useState(new Set())
   const [selectedTopic, setSelectedTopic] = useState(null)
@@ -160,6 +162,10 @@ const UploadStoryScreen = ({ researcher }) => {
         setAllTopicsLookup(tagMap)
       })
       .catch((err) => console.error(err))
+
+    console.log('UPLOAD KENTO')
+    setResearcher(location.state?.body)
+    console.log(location.state?.body)
   }, [])
 
   return (
