@@ -21,6 +21,7 @@ const AccountScreen = () => {
   const [errorMsg, setErrorMsg] = useState(null)
   const [username, setUsername] = useState(null)
   const [researcher, setResearcher] = useState({})
+
   const [type, setType] = useState(null)
   const [id, setID] = useState(null)
   // const [interests, setInterests] = useState([])
@@ -56,6 +57,8 @@ const AccountScreen = () => {
       setID(resUser.data.id)
       const researcherRes = await msmAPI.get('/researchers/me')
       setResearcher(researcherRes.data)
+      console.log('KENTO @@@@@@')
+      console.log(researcherRes.data)
       setErrorMsg(null)
     }
 
@@ -167,7 +170,11 @@ const AccountScreen = () => {
       {type == 1 &&
         <>
           <Box sx={{ ml: -7 }}>
-            <CardCarousel carouselTitle="My Stories" extension="/recommendations" />
+            {researcher.id
+            ? <CardCarousel carouselTitle="My Stories" extension={`/?authors=${researcher.id}`} />
+            : ''
+            } 
+            
           </Box>
           <Button 
             variant='contained'

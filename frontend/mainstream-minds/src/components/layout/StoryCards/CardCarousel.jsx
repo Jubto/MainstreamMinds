@@ -18,6 +18,7 @@ const CardCarousel = (props) => {
 
   const getStories = async () => {
     try {
+      console.log(`CALL KENTO /research_stories${extension}`)
       const resStory = await msmAPI.get(`/research_stories${extension}`)
       setStory(resStory.data.items)
 			// console.log(resStory.data, typeof resStory.data)
