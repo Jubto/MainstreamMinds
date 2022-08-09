@@ -26,10 +26,10 @@ const ResearcherRegScreen = () => {
   const [value, setValue] = useState('Enter a brief bio');
   const [formErrors, setFormErrors] = useState({
       error: false,
-      firstName: null,
-      lastName: null,
+      instEmail: null,
+      position: null,
       email: null,
-      password: null,
+      bio: null,
     })
     const navigate = useNavigate();
     const location = useLocation();
@@ -41,7 +41,7 @@ const ResearcherRegScreen = () => {
 
   //fix this to get institutions from the be 
   const getInstitutions = async () =>{
-    const resInst = await msmAPI.get('/institutions?page=0&page_size=40');//this is hardcoded, do it properly
+    const resInst = await msmAPI.get('/institutions?page_size=1000');// dont have time to implement pagination
     console.log(resInst.data.items)
     setInsts(resInst.data.items)
     //return resInst.data.items;
@@ -62,26 +62,45 @@ const ResearcherRegScreen = () => {
     const handleSubmit = async (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      const selectedInst = data.get('institution-name');
-      const enteredEmail = data.get('instEmail');
-      const enteredPos = data.get('position');
+      const instName = data.get('instName');
+      const instEmail = data.get('instEmail');
+      const position = data.get('position');
       //Disregarding supervisors name for now
-      const enteredBio = data.get('bio');
+      const bio = data.get('bio');
+      formErrors.error = false;
 
-      /* {
-  "bio": "string",
-  "institution_id": 0,
-  "institution_email": "string",
-  "institution_position": "string"
-}*/
-      if ('no errors') {
+      if (!/^[a-zA-Z]+(\s[a-zA-Z]+)*$/.test(instName)) {
+        setFormErrors(prevState => {
+          return { ...prevState, instName: true }
+        })
+        formErrors.error = true
+      }
+      if (!/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(instEmail)) {
+        setFormErrors(prevState => {
+          return {...prevState, instEmail: true}
+        })
+        formErrors.error = true
+      }
+      if (!/^[\w]+(\s[\w]+)*$/.test(position)) {
+        setFormErrors(prevState => {
+          return { ...prevState, position: true }
+        })
+        formErrors.error = true
+      }
+      if (!bio) {
+        setFormErrors(prevState => {
+          return { ...prevState, bio: true }
+        })
+        formErrors.error = true
+      }
+      if (!formErrors.error) {
         setErrorMsg(null)
         try {
           const body = {
-            bio: enteredBio,
+            bio: bio,
             institution_id: 1, //do this properly
-            institution_email: enteredEmail,
-            institution_position: enteredPos
+            institution_email: instEmail,
+            institution_position: position
 
           }
           const resReg = await msmAPI.post('/researchers', body);
@@ -122,7 +141,7 @@ const ResearcherRegScreen = () => {
               <Autocomplete
               required
               disablePortal
-              id="institution-name"
+              id="instName"
               options={insts}
               sx={{ width: 300 }}
               getOptionLabel={(option) => option.name}
