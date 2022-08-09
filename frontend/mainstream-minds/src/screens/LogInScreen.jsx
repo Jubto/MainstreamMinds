@@ -78,10 +78,10 @@ const LogInScreen = () => {
     // if user refreshes on a protected route, for a brief moment logout
     // because usePersistentAuth hasn't had time to reset auth
     // This redirects them back once it has done so
-    if (auth && !loggedIn) {
+    if (storedAuth.accessToken && !loggedIn) {
       navigate(-1)
     } 
-  }, [auth])
+  }, [])
 
   return (
     <Grid container sx={{height: '100vh', width: '100vw'}} columns={10}>
