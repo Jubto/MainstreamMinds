@@ -7,15 +7,15 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResultsContainer, ResultsContents, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
-import SearchStack from "../components/SearchComponents/SearchStack"
+import SearchStack from "../components/SearchComponents/SearchTags/SelectedTagStack"
 import { useLocation, useNavigate } from "react-router-dom"
 //import {searchTags} from "../components/SearchComponents/searchTags"
-import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+import { appendKeywordSearch, appendTagSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 import { grey } from "@mui/material/colors"
 import { getStoredTags, storeTags } from "../components/SearchComponents/tagStore"
 import { Autocomplete } from "@mui/material"
-import SelectedTagStack from "../components/SearchComponents/SelectedTagStack"
+import SelectedTagStack from "../components/SearchComponents/SearchTags/SelectedTagStack"
 
 
 const SearchScreen = () => {
@@ -37,9 +37,9 @@ const SearchScreen = () => {
     try {
       console.log('getting stories',`/research_stories${location.search}`)
       const resStory = await msmAPI.get(`/research_stories${location.search}`)
-      console.log(resStory)
+      //console.log(resStory)
       setStory(resStory.data.items)
-      console.log(resStory.data)
+      //console.log(resStory.data)
       setErrorMsg(null)
     }
     catch (err) {
@@ -61,7 +61,7 @@ const SearchScreen = () => {
       resTags.data.items.forEach((t) => {
         tagMap[t.name] = t.id
       })
-      console.log(tagMap)
+      //console.log(tagMap)
       storeTags(tagMap)
     }
     catch (err) {
@@ -72,13 +72,16 @@ const SearchScreen = () => {
   const getTagsAndSearch = () => {
     const queryArr = extractQuery(location.search)
     setSelectedTags(getTags(queryArr))
+    
   }
 
   const addSelected = (selected) => {
     setSelectedTag(selected);
     if (selected) {
-      console.log(selected, typeof(selected))
-      setSelectedTags(selectedTags.push(selected))
+      //console.log(selected, typeof(selected))
+      selectedTags.push(selected)
+      const newPath = appendTagSearch(location.search, selected)
+      nav(`/search${newPath}`)
     }
   }
 
@@ -90,7 +93,7 @@ const SearchScreen = () => {
 
   const searchKeyword = (e) => {
     if (e.key === "Enter") {
-      console.log("search", e.target.value);
+      //console.log("search", e.target.value);
       const newPath = appendKeywordSearch(location.search, e.target.value)
       nav(`/search${newPath}`)
     }
@@ -98,12 +101,13 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getStories(location.search)
+    // Read url for tags
     getTagsAndSearch()
 
     const storedTags = getStoredTags()
     if (storedTags) {
-      setAllTags(getStoredTags)
-      console.log(allTags)
+      setAllTags(storedTags)
+      //console.log(allTags)
     } else {
       storeAllTags()
     }

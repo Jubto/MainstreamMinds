@@ -1,12 +1,15 @@
 import Stack from '@mui/material/Stack';
-import SearchChip from './SearchChip';
+import SelectedChip from './SelectedChip';
 
 const SelectedTagStack = (props) => {
   const tags = props.tags;
-  console.log(tags)
+
   return(
     <Stack direction="row" spacing={1} sx={{ overflow: 'auto'}}>
-      h
+      {tags && tags.length!==0 && tags.map((str) => {
+        //console.log("name",str)
+        return(<SelectedChip name={str} />)
+      })}
     </Stack>
   )
 }
