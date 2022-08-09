@@ -138,7 +138,7 @@ const ResearcherRegScreen = () => {
                           label="Institution Name"
                           InputLabelProps={{ shrink: true }}
                           error={formErrors.instName}
-                          helperText={formErrors.instName ? 'Must have institution selected.' : ''}
+                          helperText={formErrors.instName ? 'Please select an institution.' : ''}
                         />}
                   />
                 </Grid><br />
@@ -157,7 +157,7 @@ const ResearcherRegScreen = () => {
                       })
                     }}
                     error={formErrors.instEmail}
-                    helperText={formErrors.instEmail ? 'Must be a valid email.' : ''}
+                    helperText={formErrors.instEmail ? 'Must be a valid email address.' : ''}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -174,7 +174,7 @@ const ResearcherRegScreen = () => {
                       })
                     }}
                     error={formErrors.position}
-                    helperText={formErrors.position ? 'Must be a valid position.' : ''}
+                    helperText={formErrors.position ? 'A position title can only include letters and numbers.' : ''}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -190,7 +190,7 @@ const ResearcherRegScreen = () => {
                       })
                     }}
                     error={formErrors.supervisor}
-                    helperText={formErrors.supervisor ? 'Must be a valid supervisor name.' : ''}
+                    helperText={formErrors.supervisor ? 'A supervisors name can only include letters.' : ''}
                   />
                 </Grid>
                 <Grid item xs={8} my={4}>
@@ -198,7 +198,7 @@ const ResearcherRegScreen = () => {
                     id="bio"
                     name="bio"
                     label="Describe your research"
-                    placeholder="Describe what your research is like"
+                    placeholder="Describe your areas of interest in research."
                     multiline
                     minRows={4}
                     onChange={() => {

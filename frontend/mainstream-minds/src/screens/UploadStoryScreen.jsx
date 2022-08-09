@@ -222,7 +222,7 @@ const UploadStoryScreen = () => {
               })
             }}
             error={formErrors.storyTitle}
-            helperText={formErrors.storyTitle ? 'Must be a valid story title.' : ''}
+            helperText={formErrors.storyTitle ? 'Story titles can only contain letters, numbers, and spaces.' : ''}
           />
           <TextField
             required
@@ -236,7 +236,7 @@ const UploadStoryScreen = () => {
               })
             }}
             error={formErrors.storyPaper}
-            helperText={formErrors.storyPaper ? 'Must be a valid url.' : ''}
+            helperText={formErrors.storyPaper ? 'Must be a valid https url.' : ''}
           />
           <FlexBox sx={{ mt: '1rem' }}>
             <IconButton sx={{ pt: 0 }}>
@@ -283,7 +283,7 @@ const UploadStoryScreen = () => {
                 label="Research Topics"
                 InputLabelProps={{ shrink: true }}
                 error={formErrors.storyTags}
-                helperText={formErrors.storyTags ? 'Need to have at least one topic selected.' : ''}
+                helperText={formErrors.storyTags ? 'Please select at least one topic' : ''}
               />}
             PopperComponent={CustomerPopper}
             sx={{ mt: -1, mb: 2 }}
