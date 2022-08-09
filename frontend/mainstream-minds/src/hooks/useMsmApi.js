@@ -6,7 +6,6 @@ const useMsmApi = () => {
     const { auth } = useAuth();
 
     useEffect(() => {
-        console.log('Resetting AUTH tp: ', auth.accessToken)
         msmAPI.defaults.headers.Authorization = `Bearer ${auth.accessToken}`;
     }, [auth])
 
