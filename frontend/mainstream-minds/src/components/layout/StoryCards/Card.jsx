@@ -66,7 +66,7 @@ const Card = (props) => {
         </FlexBox>
       </CardContent>
       <div>
-        <Tags tags={tags} tagSize="small" />
+        <Tags tags={tags} tagSize="small" p={2}/>
       </div>
     </StyledCard>
   );

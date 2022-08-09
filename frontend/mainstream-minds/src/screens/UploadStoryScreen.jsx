@@ -183,7 +183,7 @@ const UploadStoryScreen = () => {
     <Page>
       <FlexBox component="form" noValidate onSubmit={handleSubmit} gap='4rem' sx={{ width: '100%' }}>
         <FlexBox direction='column' gap='1rem'>
-          <Typography variant='h3' sx={{ ml: -2.5, mb: 5 }}>
+          <Typography variant='h4' sx={{ ml: -.5, mb: 3 }}>
             Create New Story
           </Typography>
           <TextField
@@ -233,7 +233,7 @@ const UploadStoryScreen = () => {
               })
             }}
             error={formErrors.storyTitle}
-            helperText={formErrors.storyTitle ? 'Must be a valid story title.' : ''}
+            helperText={formErrors.storyTitle ? 'Story titles can only contain letters, numbers, and spaces.' : ''}
           />
           <TextField
             required
@@ -247,19 +247,19 @@ const UploadStoryScreen = () => {
               })
             }}
             error={formErrors.storyPaper}
-            helperText={formErrors.storyPaper ? 'Must be a valid url.' : ''}
+            helperText={formErrors.storyPaper ? 'Must be a valid https url.' : ''}
           />
           <FlexBox sx={{ mt: '1rem' }}>
             <IconButton sx={{ pt: 0 }}>
               <CheckBoxIcon />
             </IconButton>
-            <Typography variant='subtitle1' color='primary'>
-              <b>Generate Transcript</b> (Recommended)
+            <Typography variant='subtitle1' color='#6A6C6E'>
+              <i>Generate Transcript</i> (Not Available)
             </Typography>
           </FlexBox>
         </FlexBox>
         <FlexBox direction='column' gap='1rem' sx={{ mt: '7rem', width: '100%', maxWidth: '806px' }}>
-          <Typography variant='h4' sx={{ mb: -1, mt: -1 }}>
+          <Typography variant='h5' sx={{ mb: -1, mt: -5 }}>
             Research Topics
           </Typography>
           <FlexBox sx={{ overflowX: 'auto' }}>
@@ -294,12 +294,12 @@ const UploadStoryScreen = () => {
                 label="Research Topics"
                 InputLabelProps={{ shrink: true }}
                 error={formErrors.storyTags}
-                helperText={formErrors.storyTags ? 'Need to have at least one topic selected.' : ''}
+                helperText={formErrors.storyTags ? 'Please select at least one topic' : ''}
               />}
             PopperComponent={CustomerPopper}
             sx={{ mt: -1, mb: 2 }}
           />
-          <Typography variant='h4'>
+          <Typography variant='h5'>
             Research Story Description
           </Typography>
           <TextField
@@ -322,15 +322,16 @@ const UploadStoryScreen = () => {
             <IconButton sx={{ pt: 0 }}>
               <CheckBoxIcon />
             </IconButton>
-            <Typography variant='subtitle1' color='primary'>
-              <b>Allow Comments</b> (Recommended)
+            <Typography variant='subtitle1' color='#6A6C6E'>
+              <i>Allow Comments</i> (Required)
             </Typography>
           </FlexBox>
           <FlexBox justify='flex-end'>
-            <Button type='submit' variant='contained' sx={{ borderRadius: '50px', fontSize: '20px' }}>
+            <Button type='submit' variant='contained' sx={{ borderRadius: '50px', fontSize: '16px'}}>
               Publish Story
             </Button>
           </FlexBox>
+          <div></div>
         </FlexBox>
       </FlexBox>
     </Page>
