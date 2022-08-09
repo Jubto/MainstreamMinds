@@ -27,7 +27,7 @@ const Card = (props) => {
   const getLiked = async () => {
     try {
       const result = await msmAPI.get(`research_stories/like?story_id=${storyId}`)
-      console.log(result)
+      // console.log(result)
       setLiked(result.data)
       setErrorMsg(null)
     }

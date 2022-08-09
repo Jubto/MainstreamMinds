@@ -38,3 +38,12 @@ export const timeSince = (date) => {
   }
   return Math.floor(timeDif) + " seconds ago";
 }
+
+// get saved val from local storage
+export const getSavedValue = (key, initalVal) => {
+  const savedVal = JSON.parse(localStorage.getItem(key))
+  if (savedVal) {
+      return savedVal
+  }
+  return initalVal
+}
