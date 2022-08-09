@@ -9,8 +9,9 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const UpdateName = (props) => {
     //To-Do
+    console.log("Updating name");
     return(
-    console.log("Updating name")
+    <Typography>New Name</Typography>
     );
 }
 

@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import {AppBar as MuiAppBar} from "@mui/material"
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import usePersistentAuth from "../../hooks/usePersistentAuth";
 import Button from '@mui/material/Button';
 import ToolTip from '@mui/material/Tooltip';
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -12,9 +14,11 @@ import useAuth from "../../hooks/useAuth";
 
 
 const AppBar = (props) => {
+  const [storedAuth, setPersistentAuth] = usePersistentAuth('auth', '')
+  const {auth, setAuth} = useAuth();
   const navigate = useNavigate()
   const location = useLocation();
-  const {auth, setAuth} = useAuth();
+  const [loggedOut, setLoggedOut] = useState(false)
   const hideForRoutes = props.hideForRoutes;
 
   const guest = (
@@ -27,6 +31,7 @@ const AppBar = (props) => {
       sx={{mr: 2}}
       component={Link}
       to={'/login'}
+      onClick={() => setLoggedOut(false)}
       state={{ from: location }}
       >
           <LoginIcon/>
@@ -45,8 +50,17 @@ const AppBar = (props) => {
         aria-label="menu"
         sx={{ mr: 2 }}
         onClick={() => {
+          if (!storedAuth || storedAuth === 'LOGOUT_PING') {
+            setPersistentAuth('LOGOUT_PONG')
+          }
+          else if (!storedAuth || storedAuth === 'LOGOUT_PONG') {
+            setPersistentAuth('LOGOUT_PING')
+          }
+          else if (storedAuth.accessToken) {
+            setPersistentAuth('')
+          }
+          setLoggedOut(true)
           setAuth({})
-          navigate('/')
         }}
         >
             <LogoutIcon/>
@@ -54,6 +68,13 @@ const AppBar = (props) => {
       </ToolTip>
     </>
   );
+
+  useEffect(() => {
+    // to ensure usePersistentAuth has had time to set storedAuth before redirect
+    if ((storedAuth === 'LOGOUT_PING' || storedAuth === 'LOGOUT_PONG') && loggedOut) {
+      navigate('/')
+    }
+  }, [storedAuth, loggedOut])
 
   // Don't show app bar if location in hideForRoutes
   if (hideForRoutes.includes(location.pathname)) {

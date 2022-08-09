@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import useMsmApi from "../hooks/useMsmApi"
 import useAuth from "../hooks/useAuth"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Button, List, ListItem, Typography, styled } from "@mui/material"
+import { Button, Divider, List, ListItem, Typography, styled } from "@mui/material"
 import Page from "../components/layout/Page";
 import SearchStack from "../components/SearchComponents/SearchStack"
 import TagSelectPopper from "../components/story/TagSelectPopper"
@@ -20,6 +20,7 @@ const AccountScreen = () => {
   const location = useLocation()
   const [errorMsg, setErrorMsg] = useState(null)
   const [username, setUsername] = useState(null)
+  const [researcher, setResearcher] = useState({})
   const [type, setType] = useState(null)
   const [id, setID] = useState(null)
   // const [interests, setInterests] = useState([])
@@ -53,7 +54,8 @@ const AccountScreen = () => {
       setUsername(resUser.data.first_name)
       setType(resUser.data.role)
       setID(resUser.data.id)
-      //console.log(resUser.role)
+      const researcherRes = await msmAPI.get('/researchers/me')
+      setResearcher(researcherRes.data)
       setErrorMsg(null)
     }
 
@@ -134,8 +136,8 @@ const AccountScreen = () => {
       setInterests(interests)
       setUnSelect('')
       msmAPI.delete(`tags/preference_tags?tag=${unSelect}`)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.error(err))
+        .then((res) => console.log(res.data))
+        .catch((err) => console.error(err))
     }
   }, [unSelect])
 
@@ -159,32 +161,44 @@ const AccountScreen = () => {
   //then make itactually show their stories
   return (
     <Page align={'left'}>
-      <Typography variant='h4' ml={8}>
-        Hi {username}!
+      <Typography variant='h4' sx={{ mb: 2 }}>
+        Welcome to your profile page {username}!
       </Typography><br />
       {type == 1 &&
-        <Box borderBottom="1px solid #ccc" mb={4}>
-          <CardCarousel carouselTitle="My Stories" extension="/recommendations" />
-          <Button variant='contained' component={Link} to={'/upload-story'} state={{ from: location }} sx={{ ml: 7, mb: 2 }}>
+        <>
+          <Box sx={{ ml: -7 }}>
+            <CardCarousel carouselTitle="My Stories" extension="/recommendations" />
+          </Box>
+          <Button 
+            variant='contained'
+            component={Link}
+            to={'/upload-story'}
+            state={{ from: location, body: researcher}}
+            sx={{ mb: 3, mt:-1, width: '250px' }}
+          >
             Post a New Story
           </Button>
-        </Box>
+          <Divider />
+        </>
       }
-      <Box borderBottom="1px solid #ccc">
+      {/* <Box borderBottom="1px solid #ccc" sx={{ml:-5}}> */}
+      <Box sx={{ ml: -7 }}>
         <CardCarousel carouselTitle="My Liked List" extension="/liked" />
       </Box>
-      <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3}>
-        <CarouselTitle>
+      <Divider />
+      {/* </Box> */}
+      <Box borderBottom="1px solid #ccc" pt={3} pb={3}>
+        <CarouselTitle sx={{ ml: 0 }}>
           My Interests
         </CarouselTitle>
-        {/* {interests && interests.length != 0 &&
-          <SearchStack tags={interests}></SearchStack>
-        } */}
         {interests.size
-          ? <Tags tags={Array.from(interests)} tagSize="medium" disable={true}  setUnSelect={setUnSelect} />
-          : <Subtitle>
-            No interests selected yet..
-          </Subtitle>
+          ? <Tags tags={Array.from(interests)} tagSize="medium" disable={true} setUnSelect={setUnSelect} />
+          : <Box sx={{ mb: 3, ml: '-60px' }}>
+            <Subtitle>
+              No interests selected yet..
+            </Subtitle>
+          </Box>
+
         }
         <Autocomplete
           disablePortal
@@ -210,16 +224,16 @@ const AccountScreen = () => {
         />
         {/* <Button variant='contained' onClick={addInterests}>Add</Button> */}
       </Box>
-      <Box borderBottom="1px solid #ccc" m={2} pt={3} pb={3} w={90}>
-        <CarouselTitle>
+      <Box borderBottom="1px solid #ccc" pt={3} pb={3} w={90}>
+        <CarouselTitle sx={{ ml: 0 }}>
           My Account Details
         </CarouselTitle>
         {type == 2 &&
-          <Box borderBottom="1px dashed #ACB4C4">
-            <Typography variant='p' mx={4}>
+          <Box  >
+            <Typography variant='p'>
               Have an idea that you want to share with the world?
             </Typography> <br></br>
-            <Button variant='contained' component={Link} to={'/researcher/registration'} state={{ from: location }} sx={{ m: 4 }}>
+            <Button variant='contained' component={Link} to={'/researcher/registration'} state={{ from: location }} sx={{ mt: 3, mb: 3 }}>
               Register as a Verified Researcher
             </Button><br></br>
           </Box>
