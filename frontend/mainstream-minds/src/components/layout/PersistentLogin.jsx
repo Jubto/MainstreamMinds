@@ -10,7 +10,7 @@ const PersistentLogin = () => {
   useEffect(() => {
     if (!auth.accessToken) {
       // if this component mounts and localstorage contains auth, then log user back in
-      authStored && setAuth(authStored)
+      authStored.accessToken && setAuth(authStored)
     }
   }, [])
 

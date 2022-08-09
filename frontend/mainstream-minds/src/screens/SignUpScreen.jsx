@@ -94,7 +94,7 @@ const SignUpScreen = () => {
 
   useEffect(() => {
     // to ensure usePersistentAuth has had time to set storedAuth before redirect
-    if (loggedIn && storedAuth) {
+    if (loggedIn && storedAuth.accessToken) {
       if (location.state?.redirect) {
         navigate(from, { state: { redirect: location.state.redirect } })
       }

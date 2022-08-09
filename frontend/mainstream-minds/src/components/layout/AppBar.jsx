@@ -31,6 +31,7 @@ const AppBar = (props) => {
       sx={{mr: 2}}
       component={Link}
       to={'/login'}
+      onClick={() => setLoggedOut(false)}
       state={{ from: location }}
       >
           <LoginIcon/>
@@ -49,9 +50,17 @@ const AppBar = (props) => {
         aria-label="menu"
         sx={{ mr: 2 }}
         onClick={() => {
-          setAuth({})
-          setPersistentAuth('')
+          if (!storedAuth || storedAuth === 'LOGOUT_PING') {
+            setPersistentAuth('LOGOUT_PONG')
+          }
+          else if (!storedAuth || storedAuth === 'LOGOUT_PONG') {
+            setPersistentAuth('LOGOUT_PING')
+          }
+          else if (storedAuth.accessToken) {
+            setPersistentAuth('')
+          }
           setLoggedOut(true)
+          setAuth({})
         }}
         >
             <LogoutIcon/>
@@ -62,11 +71,10 @@ const AppBar = (props) => {
 
   useEffect(() => {
     // to ensure usePersistentAuth has had time to set storedAuth before redirect
-    if (!storedAuth && loggedOut) {
+    if ((storedAuth === 'LOGOUT_PING' || storedAuth === 'LOGOUT_PONG') && loggedOut) {
       navigate('/')
-      setLoggedOut(false)
     }
-  }, [loggedOut, storedAuth])
+  }, [storedAuth, loggedOut])
 
   // Don't show app bar if location in hideForRoutes
   if (hideForRoutes.includes(location.pathname)) {
