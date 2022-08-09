@@ -20,7 +20,7 @@ const Tags = (props) => {
   }
 
   return (
-    <Stack direction="row" spacing={1} sx={{ padding: '12px 0', overflow: 'hidden' }}>
+    <Stack direction="row" spacing={1} sx={{ padding: '12px 5px', overflow: 'hidden' }}>
       {tags && tags.length !== 0 && tags.map((tag) => {
         const tagName = tag?.name ? tag.name : tag
         return (
