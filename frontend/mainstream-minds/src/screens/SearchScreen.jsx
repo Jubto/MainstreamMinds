@@ -28,7 +28,7 @@ const SearchScreen = () => {
 
   // Tag Search
   const [allTags, setAllTags] = useState([])
-  const [selectedTags, setSelectedTags] = useState(new Set()) 
+  const [selectedTags, setSelectedTags] = useState([]) 
   const [selectedTag, setSelectedTag] = useState(null)
   const [inputTag, setInputTag] = useState(null)
 
@@ -77,7 +77,8 @@ const SearchScreen = () => {
   const addSelected = (selected) => {
     setSelectedTag(selected);
     if (selected) {
-      setSelectedTags(selectedTags.add(selected))
+      console.log(selected, typeof(selected))
+      setSelectedTags(selectedTags.push(selected))
     }
   }
 
