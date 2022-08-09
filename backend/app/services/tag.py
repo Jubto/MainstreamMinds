@@ -24,7 +24,8 @@ class TagService:
     def remove_preference_tag(self, current_user_id: int, tag: str):
         if not self.repository.get_tag_by_name(tag):
             raise NonExistentEntry('Tag.name', tag)
-        if tag not in self.repository.get_preference_tags(current_user_id):
+        current_user_preference_tag_names = [t.name for t in self.repository.get_preference_tags(current_user_id)]
+        if tag not in current_user_preference_tag_names:
             raise NonExistentEntry('Tag.name', tag)
         self.repository.remove_preference_tag(current_user_id, tag)
 
