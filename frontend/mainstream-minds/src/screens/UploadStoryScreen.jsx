@@ -166,7 +166,7 @@ const UploadStoryScreen = ({ researcher }) => {
     <Page>
       <FlexBox component="form" noValidate onSubmit={handleSubmit} gap='4rem' sx={{ width: '100%' }}>
         <FlexBox direction='column' gap='1rem'>
-          <Typography variant='h3' sx={{ ml: -2.5, mb: 5 }}>
+          <Typography variant='h4' sx={{ ml: -.5, mb: 3 }}>
             Create New Story
           </Typography>
           <TextField
@@ -237,12 +237,12 @@ const UploadStoryScreen = ({ researcher }) => {
               <CheckBoxIcon />
             </IconButton>
             <Typography variant='subtitle1' color='#6A6C6E'>
-              <i>Generate Transcript</i> (Recommended)
+              <i>Generate Transcript</i> (Not Available)
             </Typography>
           </FlexBox>
         </FlexBox>
         <FlexBox direction='column' gap='1rem' sx={{ mt: '7rem', width: '100%', maxWidth: '806px' }}>
-          <Typography variant='h4' sx={{ mb: -1, mt: -1 }}>
+          <Typography variant='h5' sx={{ mb: -1, mt: -5 }}>
             Research Topics
           </Typography>
           <FlexBox sx={{ overflowX: 'auto' }}>
@@ -282,7 +282,7 @@ const UploadStoryScreen = ({ researcher }) => {
             PopperComponent={CustomerPopper}
             sx={{ mt: -1, mb: 2 }}
           />
-          <Typography variant='h4'>
+          <Typography variant='h5'>
             Research Story Description
           </Typography>
           <TextField
@@ -306,14 +306,15 @@ const UploadStoryScreen = ({ researcher }) => {
               <CheckBoxIcon />
             </IconButton>
             <Typography variant='subtitle1' color='#6A6C6E'>
-              <i>Allow Comments</i> (Recommended)
+              <i>Allow Comments</i> (Required)
             </Typography>
           </FlexBox>
           <FlexBox justify='flex-end'>
-            <Button type='submit' variant='contained' sx={{ borderRadius: '50px', fontSize: '20px' }}>
+            <Button type='submit' variant='contained' sx={{ borderRadius: '50px', fontSize: '16px'}}>
               Publish Story
             </Button>
           </FlexBox>
+          <div></div>
         </FlexBox>
       </FlexBox>
     </Page>
