@@ -122,7 +122,7 @@ const UploadStoryScreen = () => {
         title: storyTitle,
         summary: storyDesc,
         papers: storyPaper,
-        thumbnail: "string",
+        thumbnail: "https://picsum.photos/200",
         video_link: videoLink,
         transcript: "string",
         authors: [
