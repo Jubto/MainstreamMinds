@@ -23,6 +23,18 @@ export const getTags = (array) => {
   return tagList
 }
 
+export const tagToStringArr = (array) => {
+  const tagList = []
+  array.forEach(element => {
+    if (element.startsWith("tags=")) {
+      const string = decodeSpaces(element.slice(5))
+      tagList.push(string)
+    }
+  });
+  console.log(tagList)
+  return tagList
+}
+
 export const getSearch = (array) => {
   let search = ""
   array.forEach(element => {
@@ -81,4 +93,9 @@ export const removeTagFromSearch = (searchPath, removeTag) => {
 export const encodeSpaces = (string) => {
   const strArr = string.split(' ')
   return(strArr.join('%20'))
+}
+
+const decodeSpaces = (string) => {
+  const strArr = string.split('%20')
+  return(strArr.join(' '))
 }

@@ -7,12 +7,15 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { ResultsContainer, ResultsContents, ResultsGrid, ResultsGridItem, SearchContainer } from "../components/SearchComponents/SearchStyles"
-import SearchStack from "../components/SearchComponents/SearchStack"
+import SearchStack from "../components/SearchComponents/SearchTags/SelectedTagStack"
 import { useLocation, useNavigate } from "react-router-dom"
-import searchTags from "../components/SearchComponents/searchTags"
-import { appendKeywordSearch, extractQuery, getTags } from "../components/SearchComponents/searchHelpers"
+//import {searchTags} from "../components/SearchComponents/searchTags"
+import { appendKeywordSearch, appendTagSearch, extractQuery, getTags, tagToStringArr } from "../components/SearchComponents/searchHelpers"
 import ResearcherCarousel from "../components/SearchComponents/ResearcherSearch/ResearcherCarousel"
 import { grey } from "@mui/material/colors"
+import { getStoredTags, storeTags } from "../components/SearchComponents/tagStore"
+import { Autocomplete } from "@mui/material"
+import SelectedTagStack from "../components/SearchComponents/SearchTags/SelectedTagStack"
 
 
 const SearchScreen = () => {
@@ -22,16 +25,21 @@ const SearchScreen = () => {
   const [story, setStory] = useState({})
   const [errorMsg, setErrorMsg] = useState(null)
   const location = useLocation()
-  const [selectedTags, setSelectedTags] = useState([]) // todo: implement persisting selected tag style
 
+  // Tag Search
+  const [allTags, setAllTags] = useState([])
+  const [selectedTags, setSelectedTags] = useState([]) 
+  const [selectedTag, setSelectedTag] = useState(null)
+  const [inputTag, setInputTag] = useState(null)
 
+  // Get all stories
   const getStories = async () => {
     try {
       console.log('getting stories',`/research_stories${location.search}`)
       const resStory = await msmAPI.get(`/research_stories${location.search}`)
-      console.log(resStory)
+      //console.log(resStory)
       setStory(resStory.data.items)
-      console.log(resStory.data)
+      //console.log(resStory.data)
       setErrorMsg(null)
     }
     catch (err) {
@@ -45,14 +53,47 @@ const SearchScreen = () => {
     }
   }
 
+  // Get all tags
+  const storeAllTags = async () => {
+    try {
+      const resTags = await msmAPI.get('/tags/?page_size=1000')
+      const tagMap = {}
+      resTags.data.items.forEach((t) => {
+        tagMap[t.name] = t.id
+      })
+      //console.log(tagMap)
+      storeTags(tagMap)
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
   const getTagsAndSearch = () => {
     const queryArr = extractQuery(location.search)
-    setSelectedTags(getTags(queryArr))
+    setSelectedTags(tagToStringArr(queryArr))
+    
+  }
+
+  const addSelected = (selected) => {
+    setSelectedTag(selected);
+    if (selected) {
+      //console.log(selected, typeof(selected))
+      selectedTags.push(selected)
+      const newPath = appendTagSearch(location.search, selected)
+      nav(`/search${newPath}`)
+    }
+  }
+
+  const handleEnterPress = (e) => {
+    if (e.key === 'Enter' && selectedTag) {
+      addSelected(selectedTag)
+    }
   }
 
   const searchKeyword = (e) => {
     if (e.key === "Enter") {
-      console.log("search", e.target.value);
+      //console.log("search", e.target.value);
       const newPath = appendKeywordSearch(location.search, e.target.value)
       nav(`/search${newPath}`)
     }
@@ -60,7 +101,17 @@ const SearchScreen = () => {
 
   useEffect(() => {
     getStories(location.search)
+    // Read url for tags
     getTagsAndSearch()
+
+    const storedTags = getStoredTags()
+    if (storedTags) {
+      setAllTags(storedTags)
+      //console.log(allTags)
+    } else {
+      storeAllTags()
+    }
+    
   }, [location.search])
 
   return (
@@ -75,7 +126,22 @@ const SearchScreen = () => {
             sx={{maxWidth: 720, marginRight: '8px'}}
             onKeyDown={searchKeyword}
         />
-        <SearchStack tags={searchTags} selectedTags={[]}/>
+        <Autocomplete
+          disablePortal
+          options={Object.keys(allTags)}
+          onKeyDown={handleEnterPress}
+          size="small"
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} InputLabelProps={{shrink: true}} label="Tags" />}
+          onChange={(e,newValue) => {
+            addSelected(newValue)
+          }}
+          inputValue={inputTag}
+            onInputChange={(e, newInputValue) => {
+              setInputTag(newInputValue);
+            }}
+        />
+        <SelectedTagStack tags={selectedTags} />
       </SearchContainer>
       <ResearcherCarousel extension={location.search}/>
       <ResultsContainer >
