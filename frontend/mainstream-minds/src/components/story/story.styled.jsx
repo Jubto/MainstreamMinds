@@ -30,6 +30,11 @@ export const AuthorContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 export const StoryBody = styled(Box)`

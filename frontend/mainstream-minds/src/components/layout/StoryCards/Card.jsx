@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import useMsmApi from "../../../hooks/useMsmApi";
 import { Typography } from '@mui/material/';
-import { CardLink, CardTitle, StyledCard, CardContent } from "./CardStyles";
+import { CardLink, CardTitle, StyledCard, CardContent, AuthorText } from "./CardStyles";
 import { FlexBox } from "../../styles/util.styled";
 import Tags from "../Tags"
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -21,8 +21,6 @@ const Card = (props) => {
   const researcher = props.researcher
   const storyId = props.storyId
   const thumbnail = props.thumbnail
-  //console.log(`I am card ${title}`)
-  //console.log(researcher)
 
   const getLiked = async () => {
     try {
@@ -41,12 +39,6 @@ const Card = (props) => {
       }
     }
   }
-  /* const getResearcher = async (id) => {
-  try {
-    const result = await msmAPI.get(`researchers/${id}`)
-  }
-  }
-  } */
 
   useEffect(() => {
     if (props.showLikes) {
@@ -63,13 +55,13 @@ const Card = (props) => {
         image={thumbnail}
       />
       <CardContent>
-        <CardTitle>
+        <CardTitle onClick={() => navigate(`/research-story/${storyId}`)}>
           {title}
         </CardTitle>
         <FlexBox gap='0.5rem'>
-          <Typography variant="body2" color="text.secondary">
+          <AuthorText variant="body2" color="text.secondary" onClick={() => navigate(`/researcher/${researcher.id}`)}>
             {researcher?.user.first_name} {researcher?.user.last_name}
-          </Typography>
+          </AuthorText>
           <TaskAltIcon color='primary' fontSize='small' />
         </FlexBox>
       </CardContent>
