@@ -30,7 +30,7 @@ const CommentField = ({
   const handleEnterPress = (e) => {
     if (e.key === 'Enter' && prevKey.current !== 'Shift') {
       submitComment() // if prev key press was shift key, i.e. Shift+Enter, it won't submit
-    } 
+    }
     else if (e.key !== 'Enter') {
       prevKey.current = e.key // allow for multiple shift enters in a row
     }
@@ -43,7 +43,7 @@ const CommentField = ({
     }
     const body = {
       body: replyTo + commentRef.current?.value,
-      parent_id: replyID ? replyID : parentID,
+      parent_id: replyID ? replyID : null,
       story_id: storyID
     }
     msmAPI.post('/comments', body)
@@ -51,7 +51,7 @@ const CommentField = ({
         const comment = res.data
         if (parentID || replyID) {
           // responding to a comment
-          if (parentID === 0) {
+          if (parentID == null) {
             setRootReplyComment(prevState => ([...prevState, comment]))
           }
           setComments((prevState) => {
