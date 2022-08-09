@@ -19,9 +19,9 @@ const CardCarousel = (props) => {
   const getStories = async () => {
     try {
       const resStory = await msmAPI.get(`/research_stories${extension}`)
-      setStory(resStory.data.items)
-			// console.log(resStory.data, typeof resStory.data)
-      // console.log(story, story.items)
+      setStory(resStory.data.items ? resStory.data.items : resStory.data)
+      console.log(`CALLED: /research_stories${extension}`)
+      console.log(resStory.data)
       setErrorMsg(null)
     }
     catch (err) {
